@@ -38,6 +38,12 @@ After installation, invoke skills in Claude Code:
 - **Provenance-first** — Track where ideas come from
 - **Community-driven** — Accept contributions
 
+## Publishing Skills
+
+Want to add or update skills? See [docs/workflows/skill-publish.md](docs/workflows/skill-publish.md).
+
+For optional ClawHub publishing, copy [.env.example](.env.example) to `.env` and add your token.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

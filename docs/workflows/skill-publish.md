@@ -184,11 +184,16 @@ Skills can optionally be published to [ClawHub](https://clawhub.ai) for broader 
 ```bash
 # 1. Create account at https://clawhub.ai
 # 2. Generate token at https://clawhub.ai/settings/tokens
-# 3. Install CLI
+# 3. Save token to .env
+cp .env.example .env
+# Edit .env and add your token: CLAWHUB_TOKEN=clh_xxx...
+
+# 4. Install CLI
 npm install -g clawhub
 
-# 4. Login
-clawhub login --token "YOUR_TOKEN" --no-browser
+# 5. Login
+source .env
+clawhub login --token "$CLAWHUB_TOKEN" --no-browser
 clawhub whoami
 ```
 
@@ -224,9 +229,10 @@ clawhub search essence
 
 ## Cross-References
 
+- **README.md**: Installation, available skills
 - **CONTRIBUTING.md**: Contribution guidelines, DCO sign-off
 - **SECURITY.md**: Vulnerability reporting
-- **README.md**: Installation, available skills
+- **.env.example**: ClawHub token template (for optional publishing)
 
 ---
 
