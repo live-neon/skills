@@ -455,6 +455,16 @@ The circuit breaker protects against repeated constraint violations:
 | `CIRCUIT_BREAKER_WINDOW_DAYS` | `30` | Rolling window for counting |
 | `CIRCUIT_BREAKER_COOLDOWN_HOURS` | `24` | Cooldown before HALF-OPEN |
 
+**Severity-Tiered Defaults**:
+
+| Severity | Violations | Window | Rationale |
+|----------|------------|--------|-----------|
+| CRITICAL | 3 | 30 days | High-risk constraints trip early |
+| IMPORTANT | 5 | 30 days | Standard threshold (validated) |
+| MINOR | 10 | 30 days | Low-risk, more tolerance |
+
+Individual constraints can override these defaults via metadata.
+
 ### Threat Model
 
 **What we protect against**:
@@ -570,6 +580,13 @@ Technical guides for skill implementation:
 |-------|---------|
 | [Semantic Similarity](docs/guides/SEMANTIC_SIMILARITY_GUIDE.md) | LLM-based action classification (REQUIRED for safety-critical skills) |
 
+**Two-Stage Matching** (default pattern for balancing accuracy and performance):
+1. **Stage 1**: Embedding similarity (<50ms) - fast filter, high recall
+2. **Stage 2**: LLM classification (500ms-2s) - accurate decision for candidates
+
+Use single-stage LLM for CRITICAL severity; two-stage for IMPORTANT/MINOR.
+See specification Performance Requirements for latency targets by skill category.
+
 ## Workflows
 
 | Workflow | Purpose |
@@ -630,6 +647,7 @@ This is by design—the failure-anchored learning system requires this pipeline.
 | 0.3.0 | 2026-02-13 | Phase 2 complete: 9 Core Memory layer skills implemented |
 | 0.4.0 | 2026-02-14 | Phase 3 complete: 10 Review & Detection layer skills implemented |
 | 0.5.0 | 2026-02-14 | Phase 4 complete: 9 Governance & Safety layer skills implemented |
+| 0.5.1 | 2026-02-14 | Added severity-tiered circuit breaker defaults, two-stage matching |
 
 ---
 

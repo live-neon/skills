@@ -93,7 +93,7 @@ Classify the change:
 
 Individual skill documentation:
 
-- [ ] Frontmatter (name, version, description, tags)
+- [ ] Frontmatter (name, version, description, tags, **layer**, **status**)
 - [ ] Usage section with correct arguments
 - [ ] Arguments table with defaults
 - [ ] Output examples with realistic format

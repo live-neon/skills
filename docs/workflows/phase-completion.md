@@ -80,6 +80,7 @@ cd tests && npm test
 - [ ] All existing tests pass
 - [ ] New integration tests created (if required by plan)
 - [ ] Contract tests validate data flow between skills
+- [ ] Performance within target latencies (see specification Performance Requirements)
 
 ### 4. Update Results File
 
