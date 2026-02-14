@@ -127,6 +127,58 @@ These skills have no dependencies on other agentic skills.
            └── 5 violations in 30 days → OPEN state
 ```
 
+### Circuit Breaker States
+
+The circuit breaker protects against repeated constraint violations:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                      CIRCUIT BREAKER STATES                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌──────────┐    5 violations     ┌──────────┐                      │
+│  │  CLOSED  │ ─────────────────►  │   OPEN   │                      │
+│  │ (normal) │    in 30 days       │ (tripped)│                      │
+│  └────┬─────┘                     └────┬─────┘                      │
+│       │                                │                             │
+│       │ action allowed                 │ action BLOCKED              │
+│       │                                │ + human notified            │
+│       │                                │                             │
+│       │                           ┌────▼─────┐                       │
+│       │    cooldown expires       │HALF-OPEN │                       │
+│       │◄───────────────────────── │ (testing)│                       │
+│       │    (24h) + no violations  └──────────┘                       │
+│                                        │                             │
+│                                        │ violation in test period    │
+│                                        │ → back to OPEN              │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**State Definitions**:
+
+| State | Behavior | Entry Condition | Exit Condition |
+|-------|----------|-----------------|----------------|
+| CLOSED | Normal operation, actions allowed | Initial state, or successful test period | 5 violations in 30 days |
+| OPEN | Actions BLOCKED, human notified | 5 violations in rolling 30-day window | 24-hour cooldown expires |
+| HALF-OPEN | Testing period, single violation trips back to OPEN | After OPEN cooldown | No violations in 24h → CLOSED |
+
+**Recovery Procedure** (when OPEN):
+
+1. **Notification**: Human receives alert with violation history
+2. **Investigation**: Review the 5+ violations to understand root cause
+3. **Resolution**: Either fix the underlying issue or adjust the constraint
+4. **Manual Reset**: Use `/circuit-breaker reset <constraint-id>` to force CLOSED
+5. **Auto-Recovery**: After 24h cooldown, enters HALF-OPEN for testing
+
+**Configuration** (environment variables):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CIRCUIT_BREAKER_THRESHOLD` | `5` | Violations before OPEN |
+| `CIRCUIT_BREAKER_WINDOW_DAYS` | `30` | Rolling window for counting |
+| `CIRCUIT_BREAKER_COOLDOWN_HOURS` | `24` | Cooldown before HALF-OPEN |
+
 ### Context Loading
 
 ```

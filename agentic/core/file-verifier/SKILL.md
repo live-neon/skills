@@ -112,6 +112,30 @@ The algorithm is auto-detected based on hash length:
 
 Use `--algorithm` to override if needed.
 
+**Limitation**: Length-based detection prevents supporting other algorithms with the same
+hash length. Future versions may adopt `algorithm:hash` format (e.g., `sha256:abc123...`)
+for explicit algorithm specification.
+
+## Security Considerations
+
+**MD5 Warning**: MD5 is cryptographically broken and vulnerable to collision attacks.
+When file-verifier auto-detects MD5 (32-char hash), it will display:
+
+```
+⚠️ Security Warning: MD5 hash detected. MD5 is collision-prone and unsuitable
+   for security-critical verification. Consider using SHA-256 for new workflows.
+```
+
+MD5 is acceptable for:
+- Detecting accidental corruption
+- Legacy system compatibility
+- Non-adversarial change detection
+
+MD5 is NOT suitable for:
+- Security verification against malicious tampering
+- Audit trails where integrity matters
+- Any scenario where collision attacks are a concern
+
 ## Use Cases
 
 1. **Golden Master Validation**: Verify derived files match their source

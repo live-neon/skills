@@ -10,7 +10,11 @@ tags: [agentic, memory, core, audit]
 # context-packet
 
 Generate auditable context packets that capture file state for reproducible reviews.
-Context packets provide cryptographic verification that reviewers see identical content.
+Context packets provide cryptographic hashes for file identity verification.
+
+> **Security Note**: Context packets are unsigned JSON. They verify file *identity* (same
+> content produces same hash), not *authenticity* (who created the packet). For tamper-proof
+> audit trails, consider adding cryptographic signing in your workflow (Phase 3 governance).
 
 ## Usage
 
@@ -24,7 +28,7 @@ Context packets provide cryptographic verification that reviewers see identical 
 |----------|----------|-------------|
 | files | Yes | One or more file paths to include in packet |
 | --output | No | Output file path (default: context-packet-TIMESTAMP.json) |
-| --algorithm | No | Hash algorithm: md5, sha256, both (default: both) |
+| --algorithm | No | Hash algorithm: sha256 (default), md5 (deprecated), both |
 
 ## Output
 
@@ -89,8 +93,19 @@ Hashes:
 |-----------|----------|
 | No files provided | Error: "At least one file path required" |
 | All files missing | Warning + generates packet with all missing entries |
-| Permission denied | Error entry for that file, continues with others |
+| Permission denied (read) | Error entry for that file, continues with others |
+| Output path not writable | Error: "Cannot write to output path: <path>" |
 | Binary file | Includes hashes but marks as binary (no line count) |
+
+## Security Considerations
+
+**MD5 Deprecation**: MD5 is collision-prone and unsuitable for security-critical verification.
+Use `--algorithm sha256` (now the default). MD5 support is retained only for compatibility
+with legacy systems.
+
+**Unsigned Packets**: Context packets verify file identity but not authenticity. A malicious
+actor could regenerate a packet with modified files. For true audit trails, sign packets
+externally or use Phase 3 governance skills when available.
 
 ## Use Cases
 

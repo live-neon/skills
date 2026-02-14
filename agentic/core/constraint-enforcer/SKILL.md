@@ -13,6 +13,12 @@ Check proposed actions against active constraints. Returns violations if any
 constraints would be breached. This is the runtime enforcement layer of the
 agentic memory system.
 
+> **Current Limitation**: This skill uses pattern matching (string/glob) for action
+> classification. Pattern matching can be evaded through aliases (`git push --force`
+> vs `git push -f`) or rephrasing. Phase 2+ will implement semantic action classification
+> using LLM-based analysis. See NEON-SOUL (`projects/live-neon/neon-soul/skills/neon-soul/SKILL.md`)
+> for the reference semantic matching implementation.
+
 ## Usage
 
 ```
@@ -29,6 +35,7 @@ agentic memory system.
 | --check-file | No | Check constraints relevant to a specific file |
 | --severity | No | Filter by minimum severity: critical, important, minor (default: all) |
 | --format | No | Output format: text, json (default: text) |
+| --allow-missing-constraints | No | Allow running when constraints directory is missing (default: error) |
 
 ## Output
 
@@ -141,10 +148,27 @@ Never execute destructive git operations without explicit confirmation.
 
 | Condition | Behavior |
 |-----------|----------|
-| Constraints path not found | Warning: "Constraints directory not found, no checks performed" |
+| Constraints path not found | Error: "Constraints directory not found. Use --allow-missing-constraints to bypass." |
 | Invalid constraint file | Warning: "Skipping invalid constraint: filename" |
 | No action provided | Error: "Action description required" |
 | Empty action string | Error: "Action description cannot be empty" |
+
+**Fail-Closed Design**: Missing constraints directory is an error by default. This prevents
+silent safety bypass from misconfiguration. Use `--allow-missing-constraints` only when
+intentionally running without constraints (e.g., initial setup).
+
+## Pattern Matching Limitations
+
+Current implementation uses string/glob matching:
+
+| Pattern | Matches | Does NOT Match |
+|---------|---------|----------------|
+| `git push --force` | "git push --force" | "git push -f" (same action!) |
+| `git reset` | "git reset --hard" | "git checkout ." (similar effect) |
+| `rm -rf` | "rm -rf /path" | "find . -delete" (same effect) |
+
+**Mitigation**: Document known aliases in constraint files. Phase 2+ will implement
+semantic action classification to understand intent, not just surface patterns.
 
 ## Severity Levels
 

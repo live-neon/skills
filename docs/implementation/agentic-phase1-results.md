@@ -195,6 +195,12 @@ Discovered 12 skills:
 |------|---------|---------------|
 | skill-loading.test.ts | SKILL.md format validation | ALL (12: 7 PBD + 5 Agentic) |
 
+**Coverage Gap** (from N=2 code review):
+
+The current test suite validates SKILL.md *structure* (metadata, sections) but not
+*behavior* (hash generation, constraint matching, transformations). Behavioral tests
+are planned for Phase 2. See `docs/issues/2026-02-13-agentic-phase1-code-review-remediation.md`.
+
 ## Next Steps
 
 1. **Phase 2 Preparation**:

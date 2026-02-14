@@ -27,6 +27,7 @@ Positive framing is more actionable, easier to follow, and reduces cognitive loa
 | rule | Yes* | Negative rule to transform (*not required with --batch/--constraint) |
 | --batch | No | File containing multiple rules (one per line) |
 | --constraint | No | Constraint file to transform in place |
+| --dry-run | No | Preview transformation without writing (use with --constraint) |
 | --format | No | Output format: text, json, markdown (default: text) |
 
 ## Transformation Patterns
@@ -144,6 +145,24 @@ POSITIVE: "Always ensure tests pass before deployment AND
 | Already positive | Info: "Rule already appears to be positively framed" |
 | Ambiguous negation | Returns transformation with note about ambiguity |
 | No clear transformation | Returns original with suggestions |
+| Constraint file not writable | Error: "Cannot write to constraint file: <path>" |
+
+## Safe Transformation Workflow
+
+When transforming constraint files in place (`--constraint`):
+
+1. **Preview first**: Always use `--dry-run` to see proposed changes
+2. **Backup recommended**: Copy constraint file before transformation
+3. **Review changes**: Verify semantic meaning is preserved
+4. **Apply**: Run without `--dry-run` to apply changes
+
+```bash
+# Safe workflow
+/positive-framer --constraint docs/constraints/active/git-safety.md --dry-run
+# Review proposed changes...
+cp docs/constraints/active/git-safety.md docs/constraints/active/git-safety.md.bak
+/positive-framer --constraint docs/constraints/active/git-safety.md
+```
 
 ## Quality Metrics
 
