@@ -1,0 +1,22 @@
+{
+  "name": "skills-tests",
+  "version": "1.0.0",
+  "description": "Test suite for all Live Neon skills",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "vitest run tests/e2e/",
+    "test:pbd": "vitest run --grep 'PBD'",
+    "test:agentic": "vitest run --grep 'Agentic'",
+    "test:real-llm": "USE_REAL_LLM=true vitest run"
+  },
+  "dependencies": {
+    "vitest": "^1.2.0",
+    "yaml": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

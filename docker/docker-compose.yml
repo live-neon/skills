@@ -1,0 +1,95 @@
+# Live Neon Skills Test Environment
+#
+# Unified test environment for ALL skills (PBD + Agentic)
+#
+# Usage:
+#   docker compose up -d                    # Start OpenClaw + skills
+#   docker compose --profile ollama up -d   # Include Ollama for real LLM
+#   docker compose --profile test up        # Run test suite
+#
+# Skills Mounted:
+#   - /skills/pbd/      - PBD methodology skills
+#   - /skills/agentic/  - Agentic memory skills
+
+services:
+  # OpenClaw runtime for skill execution
+  openclaw:
+    image: openclaw/openclaw:1.0.0
+    container_name: skills-test-openclaw
+    restart: unless-stopped
+    ports:
+      - "3000:3000"    # Web UI
+      - "8080:8080"    # API
+    environment:
+      - OPENCLAW_WORKSPACE=/workspace
+      - OPENCLAW_LOG_LEVEL=${OPENCLAW_LOG_LEVEL:-info}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENCLAW_SKILLS_PATH=/skills
+    volumes:
+      # All skills (read-only)
+      - ../pbd:/skills/pbd:ro
+      - ../agentic:/skills/agentic:ro
+      # Test workspace
+      - ../tests/fixtures/mock-workspace:/workspace
+    networks:
+      - skills-test-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Ollama for real LLM testing
+  ollama:
+    image: ollama/ollama:latest
+    container_name: skills-test-ollama
+    restart: unless-stopped
+    profiles:
+      - ollama
+      - full
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    networks:
+      - skills-test-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Test runner
+  test-runner:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+    container_name: skills-test-runner
+    profiles:
+      - test
+    environment:
+      - USE_REAL_LLM=${USE_REAL_LLM:-false}
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3}
+      - OPENCLAW_API_URL=http://openclaw:8080
+      - NODE_ENV=test
+    volumes:
+      - ../tests:/app/tests:ro
+      - ./test-output:/app/output
+    networks:
+      - skills-test-net
+    depends_on:
+      openclaw:
+        condition: service_healthy
+
+networks:
+  skills-test-net:
+    driver: bridge
+
+volumes:
+  ollama-data:

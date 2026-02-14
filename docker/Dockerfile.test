@@ -1,0 +1,28 @@
+# Skills Test Runner
+#
+# Unified test runner for all Live Neon skills.
+#
+# Build:
+#   docker build -t skills-test -f docker/Dockerfile.test .
+
+FROM node:20-slim
+
+LABEL maintainer="Live Neon"
+LABEL description="Skills Test Runner"
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY tests/package*.json ./
+RUN npm ci
+
+COPY tests/ ./tests/
+
+ENV NODE_ENV=test
+ENV OPENCLAW_API_URL=http://openclaw:8080
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node -e "console.log('ok')" || exit 1
+
+CMD ["npm", "test"]
