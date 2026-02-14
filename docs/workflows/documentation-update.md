@@ -387,14 +387,49 @@ grep "docs/guides/NEW_GUIDE" agentic/  # Skills should reference it
 
 ---
 
+## Next Steps (After Documentation Update)
+
+After completing documentation updates, **close the loop**:
+
+1. **Run closing-loops checklist** (from main project):
+   - Check for observation placeholders
+   - Check for documentation TODOs
+   - Verify cross-references working
+
+2. **If completing a phase**:
+   - Follow `docs/workflows/phase-completion.md`
+   - Update `docs/implementation/agentic-phase{N}-results.md`
+   - Mark phase complete in implementation plan
+
+3. **If creating/modifying skills**:
+   - Each SKILL.md has "Next Steps" section - follow it
+   - Update bidirectional dependency links
+   - Run verification scripts
+
+4. **Commit changes**:
+   - Group related documentation updates
+   - Include verification results in commit message
+
+**Anti-pattern**: Completing documentation but not closing the loop. Always check:
+- [ ] ARCHITECTURE.md layer tables current
+- [ ] README.md skill tables current
+- [ ] Dependency links bidirectional
+- [ ] Tests passing
+- [ ] Phase results file updated (if phase work)
+
+---
+
 ## Related Documentation
 
 - **[ARCHITECTURE.md](../../ARCHITECTURE.md)** - System overview, layer tables
 - **[Semantic Similarity Guide](../guides/SEMANTIC_SIMILARITY_GUIDE.md)** - LLM-based matching
 - **[SKILL_TEMPLATE.md](../../agentic/SKILL_TEMPLATE.md)** - New skill template
+- **[Phase Completion](phase-completion.md)** - Phase completion checklist
 - **[Phase 1 Results](../implementation/agentic-phase1-results.md)** - Implementation status
 - **[Tests README](../../tests/README.md)** - Testing documentation
+- **[Closing Loops](/docs/workflows/closing-loops.md)** - Main project loop closure workflow
 
 ---
 
 *Workflow created 2026-02-13 to support standalone skills project documentation.*
+*Updated 2026-02-14: Added Next Steps section and phase-completion reference.*

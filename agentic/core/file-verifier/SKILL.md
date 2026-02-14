@@ -25,10 +25,10 @@ hash or comparing two files directly. Essential for golden master validation.
 | Argument | Required | Description |
 |----------|----------|-------------|
 | file | Yes* | File path to verify (*not required with --packet) |
-| --hash | No | Expected MD5 or SHA256 hash to verify against |
+| --hash | No | Expected hash in `algorithm:hash` format (e.g., `sha256:abc123`) or legacy format |
 | --compare | No | Second file to compare against |
 | --packet | No | Context packet JSON to verify all files |
-| --algorithm | No | Hash algorithm: md5, sha256, auto (default: auto) |
+| --algorithm | No | Hash algorithm: md5, sha256, auto (default: auto, overridden by prefix) |
 
 ## Output
 
@@ -81,11 +81,22 @@ Summary: 2/4 files verified, 1 modified, 1 missing
 
 ## Example
 
+### Preferred: algorithm:hash format (explicit)
+```
+/file-verifier src/main.go --hash sha256:abc123def456789...
+
+MATCH: src/main.go matches expected hash
+  Algorithm: SHA256 (from prefix)
+  Verified at: 2026-02-13T10:30:00Z
+```
+
+### Legacy: length-based auto-detection (deprecated)
 ```
 /file-verifier src/main.go --hash abc123def456789
 
 MATCH: src/main.go matches expected hash
   Algorithm: MD5 (auto-detected from hash length)
+  ⚠️ Deprecation: Use 'md5:abc123...' format for explicit algorithm.
   Verified at: 2026-02-13T10:30:00Z
 ```
 
@@ -100,21 +111,39 @@ MATCH: src/main.go matches expected hash
 | Condition | Behavior |
 |-----------|----------|
 | File not found | Error: "File not found: path/to/file" |
-| Invalid hash format | Error: "Invalid hash format. Expected MD5 (32 chars) or SHA256 (64 chars)" |
+| Invalid hash format | Error: "Invalid hash format. Use 'algorithm:hash' (e.g., sha256:abc123) or 32/64 char legacy format" |
+| Unknown algorithm prefix | Error: "Unknown algorithm 'xxx'. Supported: md5, sha256" |
 | Permission denied | Error: "Permission denied: path/to/file" |
 | Packet file invalid | Error: "Invalid context packet JSON" |
 
-## Hash Auto-Detection
+## Hash Format
 
-The algorithm is auto-detected based on hash length:
+### Preferred: algorithm:hash format
+
+Explicit algorithm prefix is the recommended format:
+
+```
+sha256:abc123def456789...  → SHA256 algorithm
+md5:abc123def456...        → MD5 algorithm
+sha384:xyz789...           → SHA384 algorithm (future)
+sha512:uvw456...           → SHA512 algorithm (future)
+```
+
+**Benefits**:
+- Unambiguous algorithm selection
+- Extensible to new algorithms
+- Self-documenting in logs and packets
+
+### Legacy: length-based auto-detection (deprecated)
+
+For backwards compatibility, hashes without prefix are auto-detected by length:
 - 32 characters → MD5
 - 64 characters → SHA256
 
-Use `--algorithm` to override if needed.
+⚠️ **Deprecation Warning**: Length-based detection will show a warning and may be removed in v2.0.
+Migrate to `algorithm:hash` format.
 
-**Limitation**: Length-based detection prevents supporting other algorithms with the same
-hash length. Future versions may adopt `algorithm:hash` format (e.g., `sha256:abc123...`)
-for explicit algorithm specification.
+Use `--algorithm` flag to override auto-detection (also deprecated in favor of prefix format).
 
 ## Security Considerations
 
@@ -145,10 +174,31 @@ MD5 is NOT suitable for:
 
 ## Acceptance Criteria
 
-- [ ] Correctly identifies matching files
-- [ ] Correctly identifies mismatched files
-- [ ] Supports both MD5 and SHA256
-- [ ] Auto-detects hash algorithm from length
-- [ ] Compare mode works between two files
-- [ ] Packet verification mode processes all files
-- [ ] Clear output distinguishes MATCH/MISMATCH/MISSING
+- [x] Correctly identifies matching files
+- [x] Correctly identifies mismatched files
+- [x] Supports both MD5 and SHA256
+- [x] Auto-detects hash algorithm from length (legacy)
+- [x] Compare mode works between two files
+- [x] Packet verification mode processes all files
+- [x] Clear output distinguishes MATCH/MISMATCH/MISSING
+- [x] Supports `algorithm:hash` prefix format (Phase 2)
+- [x] Shows deprecation warning for length-based detection (Phase 2)
+
+## Next Steps
+
+After creating/modifying this skill:
+
+1. **Update ARCHITECTURE.md** - Add to layer table if new skill
+2. **Update upstream skills** - Add this skill to their "Used by" lists
+3. **Update downstream skills** - Verify "Depends on" lists are current
+4. **Run verification** - `cd tests && npm test`
+5. **Check closing loops** - See `docs/workflows/phase-completion.md`
+
+**If part of a phase implementation**:
+- Mark stage complete in implementation plan
+- Proceed to next stage OR run phase-completion workflow
+- Update `docs/implementation/agentic-phase4-results.md`
+
+**Related workflows**:
+- `docs/workflows/documentation-update.md` - Full documentation update process
+- `docs/workflows/phase-completion.md` - Phase completion checklist

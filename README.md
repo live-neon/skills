@@ -88,6 +88,7 @@ Technical guides for skill implementation:
 | Workflow | Description |
 |----------|-------------|
 | [Documentation Update](docs/workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
+| [Phase Completion](docs/workflows/phase-completion.md) | Checklist for completing implementation phases |
 
 ## Testing
 
