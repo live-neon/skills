@@ -5,6 +5,8 @@ description: Infers topic tags from file paths, content, and context
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, detection, classification, tags]
+layer: detection
+status: active
 ---
 
 # topic-tagger

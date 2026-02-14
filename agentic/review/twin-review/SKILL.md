@@ -5,6 +5,8 @@ description: Spawns twin reviewers (technical + creative) for N=2 review coverag
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, twin, parallel]
+layer: review
+status: active
 ---
 
 # twin-review

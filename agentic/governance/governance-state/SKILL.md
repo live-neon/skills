@@ -5,6 +5,8 @@ description: Central state tracking for constraint lifecycle with event-driven g
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, governance, state-machine, constraints]
+layer: governance
+status: active
 ---
 
 # governance-state

@@ -5,6 +5,8 @@ description: Transform negative rules to positive actionable guidance
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, detection, transformation]
+layer: foundation
+status: active
 ---
 
 # positive-framer

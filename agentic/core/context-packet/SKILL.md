@@ -5,6 +5,8 @@ description: Generate signed, auditable context packets for review workflows
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, audit, signing]
+layer: foundation
+status: active
 ---
 
 # context-packet

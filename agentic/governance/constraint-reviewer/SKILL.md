@@ -5,6 +5,8 @@ description: 90-day review gate for active constraints with event-driven governa
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, governance, review, constraints]
+layer: governance
+status: active
 ---
 
 # constraint-reviewer

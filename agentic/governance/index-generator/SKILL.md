@@ -5,6 +5,8 @@ description: Generate INDEX.md dashboards for constraint and observation visibil
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, governance, dashboard, index]
+layer: governance
+status: active
 ---
 
 # index-generator

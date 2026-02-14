@@ -5,6 +5,8 @@ description: Chooses appropriate review type based on context, file types, and r
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, selection, orchestration]
+layer: review
+status: active
 ---
 
 # review-selector

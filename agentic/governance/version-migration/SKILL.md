@@ -5,6 +5,8 @@ description: Schema versioning and migration for state files
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, governance, versioning, migration]
+layer: governance
+status: active
 ---
 
 # version-migration

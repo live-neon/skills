@@ -5,6 +5,8 @@ description: Classifies evidence strength to prioritize constraint generation
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, detection, evidence, classification]
+layer: detection
+status: active
 ---
 
 # evidence-tier

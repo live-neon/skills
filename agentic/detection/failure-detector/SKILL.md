@@ -5,6 +5,8 @@ description: Multi-signal failure detection to feed failure-tracker
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, detection, failure, attribution]
+layer: detection
+status: active
 rg6_status: provisional
 ---
 

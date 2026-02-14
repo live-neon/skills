@@ -5,6 +5,8 @@ description: Generate constraint candidates from eligible failure observations
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, constraint]
+layer: core
+status: active
 ---
 
 # constraint-generator

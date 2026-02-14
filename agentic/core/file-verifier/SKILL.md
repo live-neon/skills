@@ -5,6 +5,8 @@ description: Verify file identity via checksum comparison
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, verification]
+layer: foundation
+status: active
 ---
 
 # file-verifier

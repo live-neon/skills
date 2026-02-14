@@ -5,6 +5,8 @@ description: Tracks and reports constraint effectiveness metrics
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, detection, metrics, dashboard]
+layer: detection
+status: active
 ---
 
 # effectiveness-metrics

@@ -5,6 +5,8 @@ description: Validate cached responses to prevent stale data
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, safety, cache, validation]
+layer: safety
+status: active
 ---
 
 # cache-validator

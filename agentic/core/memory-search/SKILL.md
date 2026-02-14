@@ -5,6 +5,8 @@ description: Query observations and constraints using semantic similarity
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, search, semantic]
+layer: core
+status: active
 ---
 
 # memory-search

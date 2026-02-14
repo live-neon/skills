@@ -5,6 +5,8 @@ description: Validate struct-markdown synchronization for constraints
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, governance, validation, sync]
+layer: governance
+status: active
 ---
 
 # round-trip-tester

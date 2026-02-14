@@ -5,6 +5,8 @@ description: Verify fallback strategies exist for graceful degradation
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, safety, fallback, degradation]
+layer: safety
+status: active
 ---
 
 # fallback-checker

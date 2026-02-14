@@ -5,6 +5,8 @@ description: Manages failure slug naming conventions for consistent observation 
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, taxonomy, naming]
+layer: review
+status: active
 ---
 
 # slug-taxonomy

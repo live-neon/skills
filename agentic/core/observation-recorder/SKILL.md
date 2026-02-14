@@ -5,6 +5,8 @@ description: Record positive patterns with evidence for knowledge capture
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, observation]
+layer: core
+status: active
 ---
 
 # observation-recorder

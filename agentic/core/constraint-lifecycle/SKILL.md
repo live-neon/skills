@@ -5,6 +5,8 @@ description: Manage constraint state transitions through their lifecycle
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, constraint, lifecycle]
+layer: core
+status: active
 ---
 
 # constraint-lifecycle

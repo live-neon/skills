@@ -5,6 +5,8 @@ description: Detect and record failure observations with R/C/D counter tracking
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, observation]
+layer: core
+status: active
 ---
 
 # failure-tracker

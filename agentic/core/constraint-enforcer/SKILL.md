@@ -5,6 +5,8 @@ description: Check proposed actions against loaded constraints
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, safety]
+layer: foundation
+status: active
 ---
 
 # constraint-enforcer

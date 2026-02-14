@@ -5,6 +5,8 @@ description: Load relevant constraints based on current working context
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, context, injection]
+layer: core
+status: active
 ---
 
 # contextual-injection

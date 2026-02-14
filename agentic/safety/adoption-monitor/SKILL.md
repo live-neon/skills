@@ -5,6 +5,8 @@ description: Monitor system adoption and temporal error patterns
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, safety, adoption, monitoring]
+layer: safety
+status: active
 ---
 
 # adoption-monitor

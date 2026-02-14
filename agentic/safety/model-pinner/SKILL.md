@@ -5,6 +5,8 @@ description: Pin and verify model versions for consistency
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, safety, model, versioning]
+layer: safety
+status: active
 ---
 
 # model-pinner

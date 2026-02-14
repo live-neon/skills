@@ -5,6 +5,8 @@ description: Track constraint violations and trip when threshold exceeded
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, safety, circuit-breaker]
+layer: core
+status: active
 ---
 
 # circuit-breaker

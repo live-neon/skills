@@ -5,6 +5,8 @@ description: Spawns cognitive modes (Opus 4/4.1/Sonnet 4.5) for specialized N=3 
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, cognitive, analysis]
+layer: review
+status: active
 ---
 
 # cognitive-review

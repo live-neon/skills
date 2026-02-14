@@ -5,6 +5,8 @@ description: Temporary bypass of constraints with human approval and audit trail
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, safety, override, emergency]
+layer: core
+status: active
 ---
 
 # emergency-override

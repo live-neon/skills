@@ -5,6 +5,8 @@ description: Ensures identical context across all reviewers in multi-reviewer se
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, context, normalization]
+layer: review
+status: active
 ---
 
 # prompt-normalizer

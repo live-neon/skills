@@ -5,6 +5,8 @@ description: Classify finding severity as critical/important/minor
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, classification]
+layer: foundation
+status: active
 ---
 
 # severity-tagger

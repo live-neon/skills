@@ -5,6 +5,8 @@ description: Incremental quality gates applied per implementation stage
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, review, quality, gates]
+layer: review
+status: active
 ---
 
 # staged-quality-gate

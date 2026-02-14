@@ -5,6 +5,8 @@ description: Defer loading of low-priority documentation to reduce context usage
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, core, context, loading, progressive]
+layer: core
+status: active
 ---
 
 # progressive-loader

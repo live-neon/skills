@@ -5,6 +5,8 @@ description: One-line description
 author: Live Neon
 homepage: https://github.com/live-neon/skills
 tags: [agentic, memory, category]
+layer: core  # foundation | core | review | detection | governance | safety | bridge | extensions
+status: active  # active | deprecated | removed
 ---
 
 # skill-name
