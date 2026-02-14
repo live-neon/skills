@@ -13,6 +13,8 @@ git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
 
 ### PBD (Principle-Based Development)
 
+Skills for extracting and synthesizing invariant principles from text.
+
 | Skill | Description |
 |-------|-------------|
 | [essence-distiller](pbd/essence-distiller/) | User-friendly principle extraction |
@@ -23,6 +25,20 @@ git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
 | [principle-comparator](pbd/principle-comparator/) | Compare principles |
 | [principle-synthesizer](pbd/principle-synthesizer/) | Synthesize principles |
 
+### Agentic (Failure-Anchored Learning)
+
+Skills for failure detection, constraint enforcement, and memory operations. See [agentic/README.md](agentic/README.md) for the full lifecycle.
+
+| Skill | Layer | Description |
+|-------|-------|-------------|
+| [context-packet](agentic/core/context-packet/) | Foundation | Generate auditable context with file hashes |
+| [file-verifier](agentic/core/file-verifier/) | Foundation | Verify file identity via checksum |
+| [constraint-enforcer](agentic/core/constraint-enforcer/) | Foundation | Check actions against constraints |
+| [severity-tagger](agentic/review/severity-tagger/) | Foundation | Classify findings (critical/important/minor) |
+| [positive-framer](agentic/detection/positive-framer/) | Foundation | Transform "Don't X" → "Always Y" |
+
+**Phase 1 complete** — See [docs/implementation/agentic-phase1-results.md](docs/implementation/agentic-phase1-results.md) for details.
+
 ## Usage
 
 After installation, invoke skills in Claude Code:
@@ -32,10 +48,34 @@ After installation, invoke skills in Claude Code:
 /pbe-extractor [content]
 ```
 
+## Architecture
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for how skills work together, including:
+- Skill layer diagram (Foundation → Core → Review/Detection → Governance/Safety → Bridge)
+- Failure → Constraint lifecycle
+- ClawHub integration points
+
+## Testing
+
+Unified test infrastructure for all skills:
+
+```bash
+cd tests && npm install && npm test
+```
+
+| Command | Description |
+|---------|-------------|
+| `npm test` | Run all tests (PBD + Agentic) |
+| `npm run test:pbd` | Run PBD skill tests only |
+| `npm run test:agentic` | Run Agentic skill tests only |
+
+Docker-based testing with OpenClaw: see [docker/README.md](docker/README.md).
+
 ## Philosophy
 
 - **Open methodology** — Give away the "how"
 - **Provenance-first** — Track where ideas come from
+- **Failure-anchored** — Learn from consequences, not instructions
 - **Community-driven** — Accept contributions
 
 ## Publishing Skills

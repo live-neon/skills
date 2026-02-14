@@ -1,5 +1,7 @@
 # Agentic Memory Skills
 
+> Part of [Live Neon Skills](../README.md) — see root README for installation and PBD skills.
+
 Skills for failure-anchored learning and constraint enforcement. These skills implement
 the core insight that **AI systems learn best from consequences, not instructions**.
 
