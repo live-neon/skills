@@ -29,7 +29,7 @@ with no dependencies on other agentic skills.
 agentic/
 ├── README.md                           ✅ Created
 ├── SKILL_TEMPLATE.md                   ✅ Created
-├── PHASE1_RESULTS.md                   ✅ Created (this file)
+├── (results moved to docs/implementation/)
 ├── core/
 │   ├── context-packet/
 │   │   └── SKILL.md                    ✅ Created
@@ -167,15 +167,33 @@ docker compose up -d
 docker compose --profile test up
 
 # Test specific categories
-npm test -- --grep "Agentic"
-npm test -- --grep "PBD"
+npm run test:agentic
+npm run test:pbd
+```
+
+### Test Output (2026-02-13)
+
+```
+$ npm test
+
+ RUN  v1.6.1 /projects/live-neon/skills/tests
+
+Discovered 12 skills:
+  PBD: 7
+  Agentic: 5
+
+ ✓ e2e/skill-loading.test.ts  (8 tests) 10ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Duration  164ms
 ```
 
 ### Test Coverage
 
 | Test | Purpose | Skills Tested |
 |------|---------|---------------|
-| skill-loading.test.ts | SKILL.md format validation | ALL (PBD + Agentic) |
+| skill-loading.test.ts | SKILL.md format validation | ALL (12: 7 PBD + 5 Agentic) |
 
 ## Next Steps
 
@@ -202,4 +220,5 @@ npm test -- --grep "PBD"
 
 *Phase 1 implementation completed 2026-02-13.*
 *Testing infrastructure added 2026-02-13.*
+*Test suite verified 2026-02-13: 8/8 tests pass (12 skills validated).*
 *Verification gate passed - ready for Phase 2.*
