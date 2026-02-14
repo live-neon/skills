@@ -105,8 +105,24 @@ These skills integrate with existing ClawHub skills:
 ## Documentation
 
 - **Architecture**: See `ARCHITECTURE.md` in parent directory for system overview
-- **Specification**: See `docs/proposals/2026-02-13-agentic-skills-specification.md`
-- **Guides**: See `artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_*.md`
+- **Phase 1 Results**: See `docs/implementation/agentic-phase1-results.md` for implementation status
+- **Specification**: See `docs/proposals/2026-02-13-agentic-skills-specification.md` (multiverse)
+- **Guides**: See `artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_*.md` (multiverse)
+
+## Testing
+
+Unified test infrastructure at skills repo root:
+
+```bash
+# Run all skill tests (PBD + Agentic)
+cd tests && npm install && npm test
+
+# Docker-based testing with OpenClaw
+cd docker && docker compose up -d
+docker compose --profile test up
+```
+
+See `docker/README.md` and `tests/e2e/skill-loading.test.ts` for details.
 
 ## License
 
