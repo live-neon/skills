@@ -1,5 +1,6 @@
 ---
 name: Core Refinery
+version: 1.0.0
 description: Find the core that runs through everything — the ideas that survive across all your sources.
 homepage: https://obviouslynot.ai
 user-invocable: true

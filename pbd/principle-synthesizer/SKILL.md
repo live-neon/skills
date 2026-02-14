@@ -1,5 +1,6 @@
 ---
 name: Principle Synthesizer
+version: 1.0.0
 description: Synthesize invariant principles from 3+ sources — find the core that survives across all expressions.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/principle-synthesizer
 user-invocable: true

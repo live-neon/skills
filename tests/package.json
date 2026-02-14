@@ -7,8 +7,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "vitest run tests/e2e/",
-    "test:pbd": "vitest run --grep 'PBD'",
-    "test:agentic": "vitest run --grep 'Agentic'",
+    "test:pbd": "vitest run -t 'PBD'",
+    "test:agentic": "vitest run -t 'Agentic'",
     "test:real-llm": "USE_REAL_LLM=true vitest run"
   },
   "dependencies": {

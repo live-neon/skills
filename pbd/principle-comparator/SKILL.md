@@ -1,5 +1,6 @@
 ---
 name: Principle Comparator
+version: 1.0.0
 description: Compare two sources to find shared and divergent principles — discover what survives independent observation.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/principle-comparator
 user-invocable: true
