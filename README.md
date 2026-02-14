@@ -48,6 +48,11 @@ For optional ClawHub publishing, copy [.env.example](.env.example) to `.env` and
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
+## Related Projects
+
+- **[NEON-SOUL](https://github.com/live-neon/neon-soul)** - Soul synthesis using these PBD skills for principle extraction and compression.
+- **[Obviously-Not/patent-skills](https://github.com/Obviously-Not/patent-skills)** - Proprietary patent-specific skills (code-patent-scanner, patent-validator). PBD skills were migrated from there to this open-source repo.
+
 ## License
 
 MIT License - see [LICENSE](LICENSE)
