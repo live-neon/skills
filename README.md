@@ -2,6 +2,26 @@
 
 OpenClaw/Claude Code skills for AI-assisted development.
 
+## The Problem
+
+AI assistants make the same mistakes repeatedly because they don't learn from failures.
+They can be told "don't do X" but have no memory to enforce it. Instructions alone
+aren't enough—they're forgotten between sessions, ignored under pressure, and easily
+bypassed through rephrasing.
+
+## The Solution
+
+Live Neon Skills provide **failure-anchored learning**—a system where AI mistakes
+become constraints that prevent recurrence. When a failure happens enough times (R≥3)
+and is verified by humans (C≥2), it automatically becomes an enforced rule.
+
+```
+Failure detected → Observation created → Human verified → Constraint generated → Runtime enforced
+```
+
+These skills make AI assistants self-correcting. See [agentic/README.md](agentic/README.md)
+for the full failure-to-constraint lifecycle.
+
 ## Installation
 
 ```bash
@@ -54,6 +74,20 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for how skills work together, including:
 - Skill layer diagram (Foundation → Core → Review/Detection → Governance/Safety → Bridge)
 - Failure → Constraint lifecycle
 - ClawHub integration points
+
+## Guides
+
+Technical guides for skill implementation:
+
+| Guide | Description |
+|-------|-------------|
+| [Semantic Similarity](docs/guides/SEMANTIC_SIMILARITY_GUIDE.md) | LLM-based action classification (required for safety-critical skills) |
+
+## Workflows
+
+| Workflow | Description |
+|----------|-------------|
+| [Documentation Update](docs/workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
 
 ## Testing
 

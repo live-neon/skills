@@ -42,9 +42,20 @@ Description of what the skill outputs. Include format details.
 
 ## Integration
 
-- **Layer**: Foundation | Core | Review | Detection | Governance | Safety | Bridge | Extensions
+- **Layer**: (Choose based on dependencies—see guidance below)
 - **Depends on**: [list of skills this depends on, or "None (foundational)"]
 - **Used by**: [list of skills that use this]
+
+**Layer Selection Guide**:
+
+| Layer | Dependency Rule | When to Use |
+|-------|-----------------|-------------|
+| Foundation | No dependencies on other agentic skills | Low-level primitives |
+| Core | Depends only on Foundation | Memory operations |
+| Review/Detection | Depends on Foundation or Core | Analysis and recognition |
+| Governance/Safety | May depend on any lower layer | Lifecycle and protection |
+| Bridge | May depend on any layer | External integrations |
+| Extensions | May depend on any layer | Observation-backed skills |
 
 ## Failure Modes
 

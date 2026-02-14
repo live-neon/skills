@@ -9,15 +9,25 @@ tags: [agentic, memory, core, safety]
 
 # constraint-enforcer
 
-Check proposed actions against active constraints. Returns violations if any
-constraints would be breached. This is the runtime enforcement layer of the
-agentic memory system.
+Check proposed actions against active constraints using LLM-based semantic classification.
+Returns violations if any constraints would be breached. This is the runtime enforcement
+layer of the agentic memory system.
 
-> **Current Limitation**: This skill uses pattern matching (string/glob) for action
-> classification. Pattern matching can be evaded through aliases (`git push --force`
-> vs `git push -f`) or rephrasing. Phase 2+ will implement semantic action classification
-> using LLM-based analysis. See NEON-SOUL (`projects/live-neon/neon-soul/skills/neon-soul/SKILL.md`)
-> for the reference semantic matching implementation.
+## Semantic Classification
+
+This skill uses **LLM-based semantic similarity** for action classification, NOT pattern
+matching. Pattern matching (string/glob/regex) is prohibited as it can be trivially evaded
+through aliases, synonyms, or rephrasing.
+
+**Guide**: See `docs/guides/SEMANTIC_SIMILARITY_GUIDE.md` for the complete semantic
+matching approach, implementation patterns, and testing strategies.
+
+**How it works**:
+1. Parse the proposed action description
+2. For each active constraint, use LLM to assess semantic similarity
+3. Classify action intent (destructive, modifying, read-only, etc.)
+4. Match intent against constraint scope (what actions the constraint covers)
+5. Return violations with confidence scores
 
 ## Usage
 
@@ -54,20 +64,23 @@ Relevant constraints: 3 (git-safety, plan-approve-implement, code-review-require
 ```
 VIOLATIONS FOUND: 2
 
-1. [CRITICAL] git-safety-protocol
+1. [CRITICAL] git-safety-protocol (confidence: 0.95)
    Action: "git reset --hard origin/main"
+   Intent: destructive (resets working directory, discards uncommitted changes)
    Constraint: "Never execute destructive git operations without explicit confirmation"
    Source: docs/observations/2025-11-11-git-destructive-operations.md (N=5)
    Resolution: Present alternatives to user, request explicit approval
 
-2. [IMPORTANT] plan-approve-implement
+2. [IMPORTANT] plan-approve-implement (confidence: 0.87)
    Action: "implement the changes from the review"
+   Intent: modifying (will change code based on review findings)
    Constraint: "Wait for explicit human approval before implementing review findings"
    Source: docs/observations/plan-approve-implement-violation.md (N=4)
    Resolution: Present findings, ask "Ready to proceed?", wait for "yes"
 
 ---
 Summary: 2 violations (1 critical, 1 important)
+Semantic analysis: LLM classified action intents, matched against constraint scopes
 Recommendation: BLOCK - resolve critical violations before proceeding
 ```
 
@@ -96,12 +109,18 @@ Total: 2 constraints apply to this file
 
 VIOLATIONS FOUND: 1
 
-1. [CRITICAL] git-safety-protocol
+1. [CRITICAL] git-safety-protocol (confidence: 0.92)
    Action: "delete the feature branch without asking user"
+   Intent: destructive (branch deletion cannot be easily undone)
+   Semantic match: "delete branch" → constraint scope "destroy git branches"
    Constraint: "Never execute destructive git operations without explicit confirmation"
    Source: docs/observations/2025-11-11-git-destructive-operations.md (N=5)
    Resolution: Ask user for confirmation before deleting branch
 ```
+
+Note: The LLM understands that "delete the feature branch" semantically matches the
+constraint's scope of "actions that destroy git branches," regardless of whether
+the exact command (`git branch -D`) appears in the action description.
 
 ## Integration
 
@@ -118,7 +137,8 @@ Constraints are stored in `docs/constraints/active/` as markdown:
 id: git-safety-protocol
 severity: critical
 status: active
-patterns: ["*.git*", "git *"]
+scope: "Actions that modify or destroy git history, branches, or working directory state"
+intent: destructive
 created: 2025-11-11
 source: docs/observations/2025-11-11-git-destructive-operations.md
 r_count: 5
@@ -129,12 +149,18 @@ c_count: 3
 
 Never execute destructive git operations without explicit confirmation.
 
-## Trigger Patterns
+## Semantic Scope
 
-- `git reset`
-- `git push --force`
-- `git branch -D`
-- `git clean`
+Actions that match this constraint include (but are not limited to):
+- Resetting commits or HEAD position
+- Force pushing (overwrites remote history)
+- Deleting branches
+- Cleaning untracked files
+- Any action that cannot be easily undone
+
+The LLM evaluates action INTENT, not surface commands. "git push -f" and
+"git push --force" are semantically identical. "rm -rf .git" and "git init"
+both destroy git state.
 
 ## Required Actions
 
@@ -143,6 +169,14 @@ Never execute destructive git operations without explicit confirmation.
 3. Request explicit "yes" confirmation
 4. Log the decision
 ```
+
+**Key fields**:
+- `scope`: Natural language description of what actions the constraint covers
+- `intent`: Action classification (destructive, modifying, read-only, external, etc.)
+
+**NOT supported** (pattern matching is prohibited):
+- `patterns`: ["*.git*", "git *"] — DO NOT USE
+- Regex or glob matching on action strings
 
 ## Failure Modes
 
@@ -157,18 +191,32 @@ Never execute destructive git operations without explicit confirmation.
 silent safety bypass from misconfiguration. Use `--allow-missing-constraints` only when
 intentionally running without constraints (e.g., initial setup).
 
-## Pattern Matching Limitations
+## Semantic Classification Details
 
-Current implementation uses string/glob matching:
+The LLM evaluates action semantics, not surface patterns:
 
-| Pattern | Matches | Does NOT Match |
-|---------|---------|----------------|
-| `git push --force` | "git push --force" | "git push -f" (same action!) |
-| `git reset` | "git reset --hard" | "git checkout ." (similar effect) |
-| `rm -rf` | "rm -rf /path" | "find . -delete" (same effect) |
+| Action A | Action B | Semantic Match? |
+|----------|----------|-----------------|
+| "git push --force" | "git push -f" | YES (identical intent) |
+| "git reset --hard" | "reset to last commit" | YES (same effect) |
+| "rm -rf /path" | "delete everything in path" | YES (same effect) |
+| "git push origin main" | "git push --force" | NO (different intent) |
 
-**Mitigation**: Document known aliases in constraint files. Phase 2+ will implement
-semantic action classification to understand intent, not just surface patterns.
+**Intent Classification**:
+
+| Intent | Description | Example Actions |
+|--------|-------------|-----------------|
+| destructive | Cannot be easily undone | force push, reset --hard, rm -rf |
+| modifying | Changes state but recoverable | edit file, create branch |
+| read-only | No side effects | git status, cat file |
+| external | Affects systems outside repo | push, deploy, publish |
+
+**Confidence Scoring**:
+
+Each violation includes a confidence score (0.0-1.0):
+- `>= 0.9`: High confidence match
+- `0.7-0.9`: Likely match, may need review
+- `< 0.7`: Low confidence, reported as potential match
 
 ## Severity Levels
 
@@ -181,9 +229,11 @@ semantic action classification to understand intent, not just surface patterns.
 ## Acceptance Criteria
 
 - [ ] Loads constraints from specified path
-- [ ] Correctly identifies matching violations
+- [ ] Uses LLM semantic similarity for action-constraint matching (NOT patterns)
+- [ ] Correctly identifies semantically equivalent actions (e.g., "git push -f" = "force push")
 - [ ] Returns CLEAR result when no violations
 - [ ] Severity classification (critical/important/minor) works
-- [ ] File pattern matching works for --check-file
+- [ ] Confidence scores included with each violation
+- [ ] Intent classification (destructive/modifying/read-only/external) accurate
 - [ ] JSON output format valid
 - [ ] Multiple violations properly aggregated

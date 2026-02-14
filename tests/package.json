@@ -9,7 +9,8 @@
     "test:e2e": "vitest run tests/e2e/",
     "test:pbd": "vitest run -t 'PBD'",
     "test:agentic": "vitest run -t 'Agentic'",
-    "test:real-llm": "USE_REAL_LLM=true vitest run"
+    "test:real-llm": "USE_REAL_LLM=true vitest run",
+    "test:behavior": "vitest run tests/e2e/skill-behavior.test.ts"
   },
   "dependencies": {
     "vitest": "^1.2.0",

@@ -57,6 +57,17 @@ This architecture focuses on the agentic skills, which implement the core insigh
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+## Category vs Layer
+
+**Important distinction**:
+
+- **Directory** (e.g., `core/`, `review/`, `detection/`) reflects skill **category**—what the skill does
+- **Layer** (Foundation, Core, Review, etc.) reflects skill **dependency**—what it depends on
+
+A skill can be in `detection/` category but still be Foundation layer if it has no dependencies
+on other agentic skills. For example, `positive-framer` is in `detection/` (it detects and
+transforms negative patterns) but is Foundation layer (no dependencies).
+
 ## Foundation Layer (Phase 1)
 
 The foundation layer provides low-level primitives used by all other layers.
@@ -179,6 +190,31 @@ The circuit breaker protects against repeated constraint violations:
 | `CIRCUIT_BREAKER_WINDOW_DAYS` | `30` | Rolling window for counting |
 | `CIRCUIT_BREAKER_COOLDOWN_HOURS` | `24` | Cooldown before HALF-OPEN |
 
+### Threat Model
+
+**What we protect against**:
+
+| Threat | Mitigation |
+|--------|------------|
+| Accidental file corruption | Hash verification (SHA-256/MD5) |
+| Context drift between sessions | Context packets with file hashes |
+| Repeated AI mistakes | Failure-to-constraint lifecycle |
+| Constraint violation storms | Circuit breaker (5 violations → OPEN) |
+
+**What we do NOT protect against**:
+
+| Threat | Why Not | Future Mitigation |
+|--------|---------|-------------------|
+| Adversarial tampering | Packets are unsigned JSON | Signing (Phase 3 governance) |
+| Malicious packet injection | No authentication | Signed packets + chain of custody |
+| Compromised constraint source | Trust model assumes honest input | Constraint provenance tracking |
+| AI intentionally evading constraints | Pattern matching is gameable | Semantic classification (Phase 2+) |
+
+**Trust assumptions**:
+- Constraint sources are honest (human-verified)
+- File system is not adversarially manipulated
+- AI is confused, not malicious (errors are mistakes, not attacks)
+
 ### Context Loading
 
 ```
@@ -261,7 +297,35 @@ project/
 
 ---
 
+## Guides
+
+Technical guides for skill implementation:
+
+| Guide | Purpose |
+|-------|---------|
+| [Semantic Similarity](docs/guides/SEMANTIC_SIMILARITY_GUIDE.md) | LLM-based action classification (REQUIRED for safety-critical skills) |
+
+## Workflows
+
+| Workflow | Purpose |
+|----------|---------|
+| [Documentation Update](docs/workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
+
+---
+
 ## Extending the System
+
+### Acceptance Criteria Convention
+
+SKILL.md files contain `## Acceptance Criteria` sections with unchecked checkboxes (`- [ ]`).
+These document the expected behavior but are NOT updated when verified.
+
+**Verification tracking**:
+- Results file (`docs/implementation/agentic-phase1-results.md`) documents what was verified
+- Behavioral tests (`tests/e2e/skill-behavior.test.ts`) provide automated verification
+- Checkboxes remain as documentation of expected behavior
+
+This separation keeps SKILL.md files as immutable specifications.
 
 ### Adding a New Skill
 

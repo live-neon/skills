@@ -195,11 +195,15 @@ Discovered 12 skills:
 |------|---------|---------------|
 | skill-loading.test.ts | SKILL.md format validation | ALL (12: 7 PBD + 5 Agentic) |
 
-**Coverage Gap** (from N=2 code review):
+**Coverage Gap** (from N=2 code review + N=2 twin review):
 
 The current test suite validates SKILL.md *structure* (metadata, sections) but not
 *behavior* (hash generation, constraint matching, transformations). Behavioral tests
-are planned for Phase 2. See `docs/issues/2026-02-13-agentic-phase1-code-review-remediation.md`.
+are planned for Phase 2.
+
+See:
+- `docs/issues/2026-02-13-agentic-phase1-code-review-remediation.md`
+- `docs/issues/2026-02-13-agentic-phase1-twin-review-remediation.md`
 
 ## Next Steps
 
@@ -221,6 +225,19 @@ are planned for Phase 2. See `docs/issues/2026-02-13-agentic-phase1-code-review-
 - Each skill includes: Usage, Arguments, Output examples, Integration section, Failure modes, Acceptance criteria
 - Skills follow the SKILL_TEMPLATE.md format
 - ARCHITECTURE.md updated to reflect implemented skills
+
+---
+
+## Cross-References
+
+- **Plan**: `docs/plans/2026-02-13-agentic-skills-phase1-implementation.md`
+- **Specification**: `docs/proposals/2026-02-13-agentic-skills-specification.md`
+- **Code Review Remediation**: `docs/issues/2026-02-13-agentic-phase1-code-review-remediation.md`
+- **Twin Review Remediation**: `docs/issues/2026-02-13-agentic-phase1-twin-review-remediation.md`
+- **Technical Review**: `docs/reviews/2026-02-13-agentic-phase1-twin-technical.md`
+- **Creative Review**: `docs/reviews/2026-02-13-agentic-phase1-twin-creative.md`
+- **Codex Review**: `docs/reviews/2026-02-13-agentic-phase1-implementation-codex.md`
+- **Gemini Review**: `docs/reviews/2026-02-13-agentic-phase1-implementation-gemini.md`
 
 ---
 
