@@ -57,7 +57,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for how skills work together, including:
 
 ## Testing
 
-Unified test infrastructure for all skills:
+Unified test infrastructure for all skills. See [tests/README.md](tests/README.md) for full documentation.
 
 ```bash
 cd tests && npm install && npm test
