@@ -3,3 +3,6 @@
 
 # OS files
 .DS_Store
+
+# Generated output (ephemeral)
+output/
