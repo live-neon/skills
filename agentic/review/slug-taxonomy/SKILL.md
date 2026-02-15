@@ -51,9 +51,16 @@ observations for one pattern.
 | Documentation | `docs-` | `docs-not-updated`, `docs-stale-reference` |
 | Code quality | `quality-` | `quality-error-swallowed`, `quality-magic-number` |
 
-**Known Limitation**: Category prefixes are currently hardcoded. Custom categories
-(e.g., `infra-`, `api-`, `performance-`) require skill modification. Extension
-mechanism planned for Phase 6.
+**Design Decision (Phase 7)**: Category prefixes are intentionally limited to 6 standard
+categories. Custom categories (e.g., `infra-`, `api-`, `performance-`) were considered
+but not implemented because:
+1. No custom prefix requests during 6 phases of implementation
+2. Existing categories cover all observed failure patterns
+3. Adding extensibility adds complexity without demonstrated need (YAGNI)
+
+If custom prefixes become necessary, the extension mechanism options are documented in
+the Phase 7 plan. For now, observations that don't fit existing categories should use
+`quality-` (general code issues) or `workflow-` (process issues).
 
 ## Semantic Matching
 

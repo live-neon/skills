@@ -25,9 +25,11 @@ This architecture focuses on the agentic skills, which implement the core insigh
 ├─────────────────────────────────────────────────────────────────┤
 │                    EXTENSIONS LAYER                              │
 │  Observation-backed skills derived from high N-count patterns   │
-│  Skills: constraint-versioning, pbd-strength-classifier,        │
-│          cross-session-safety-check, pattern-convergence-       │
-│          detector                                                │
+│  Skills: loop-closer, parallel-decision, threshold-delegator,   │
+│          mce-refactorer, hub-subworkflow, pbd-strength-         │
+│          classifier, observation-refactoring, constraint-       │
+│          versioning, cross-session-safety-check, pattern-       │
+│          convergence-detector                                    │
 ├─────────────────────────────────────────────────────────────────┤
 │               GOVERNANCE & SAFETY LAYER                          │
 │  Constraint lifecycle management and runtime protection         │
@@ -160,6 +162,11 @@ capabilities that feed the Core Memory layer.
 | cognitive-review | Spawn cognitive modes (Opus 4/4.1/Sonnet 4.5) | ✅ Implemented | `agentic/review/cognitive-review/` |
 | review-selector | Choose review type based on context/risk | ✅ Implemented | `agentic/review/review-selector/` |
 | staged-quality-gate | Incremental quality gates per stage | ✅ Implemented | `agentic/review/staged-quality-gate/` |
+
+**slug-taxonomy Categories** (Phase 7 decision): 6 standard prefixes are hardcoded:
+`git-`, `test-`, `workflow-`, `security-`, `docs-`, `quality-`. Custom categories were
+evaluated in Phase 7 but not implemented (no demonstrated need in Phases 1-6). If custom
+prefixes become necessary, see Phase 7 plan for extension mechanism options.
 
 ### Detection Skills
 
@@ -364,11 +371,147 @@ All governance state files include schema versioning:
 
 ## Bridge Layer (Phase 5)
 
-*Section to be populated after Phase 5 implementation.*
+The Bridge layer connects the constraint/observation system to external ClawHub components.
+These skills translate internal data formats into interfaces that self-improving-agent,
+proactive-agent, and VFM system can consume.
+
+**Architectural Decision**: Mock adapter pattern enables development and testing without
+ClawHub dependencies. Skills use interface-first design with dependency injection.
+
+### Bridge Skills
+
+| Skill | Purpose | Status | Location |
+|-------|---------|--------|----------|
+| learnings-n-counter | Convert N-count progression to learnings for self-improving-agent | ✅ Implemented | `agentic/bridge/learnings-n-counter/` |
+| feature-request-tracker | Track feature requests from constraint gaps for proactive-agent | ✅ Implemented | `agentic/bridge/feature-request-tracker/` |
+| wal-failure-detector | Detect failure patterns in proactive-agent's WAL | ✅ Implemented | `agentic/bridge/wal-failure-detector/` |
+| heartbeat-constraint-check | Periodic constraint health for proactive-agent heartbeat | ✅ Implemented | `agentic/bridge/heartbeat-constraint-check/` |
+| vfm-constraint-scorer | Score constraints using VFM methodology | ✅ Implemented | `agentic/bridge/vfm-constraint-scorer/` |
+
+**Dependencies**: Core Memory layer, Review & Detection layer, Governance & Safety layer
+**Used by**: ClawHub components (self-improving-agent, proactive-agent, VFM system)
+**Implemented**: 2026-02-14 (Phase 5)
+
+### Integration Points
+
+| ClawHub Component | Bridge Skill | Data Flow |
+|-------------------|--------------|-----------|
+| self-improving-agent | learnings-n-counter | Observations (N≥3) → LearningsExport → Agent learns |
+| proactive-agent | feature-request-tracker | Constraint gaps → FeatureRequest → Agent prioritizes |
+| proactive-agent | wal-failure-detector | WAL entries → WALFailure → failure-detector |
+| proactive-agent | heartbeat-constraint-check | Constraints → HealthCheckSummary → Agent monitors |
+| VFM system | vfm-constraint-scorer | Constraints → VFMScore → VFM prioritizes |
+
+### Adapter Pattern
+
+Skills use dependency injection for external component integration:
+
+```typescript
+import { getAdapter } from '../adapters';
+
+// Returns MockSelfImprovingAgent (mock) or real adapter (when ClawHub exists)
+const agent = getAdapter('self-improving-agent');
+await agent.consumeLearnings(learningsExport);
+```
+
+**Environment Variable**: `BRIDGE_ADAPTER_MODE`
+- `mock` (default): Use mock adapters for testing
+- `real`: Use real adapters when ClawHub exists
+
+### Interface Definitions
+
+Located in `agentic/bridge/interfaces/`:
+
+| Interface File | Key Types | Purpose |
+|----------------|-----------|---------|
+| `self-improving-agent.ts` | `LearningsExport`, `Learning` | Export format for N≥3 learnings |
+| `proactive-agent.ts` | `WALEntry`, `HealthAlert`, `HealthCheckSummary` | WAL parsing and health monitoring |
+| `vfm-system.ts` | `VFMScore`, `VFMRanking`, `VFMWeights` | Value scoring and ranking |
+
+### Bridge Data Flow
+
+```
+observation-recorder ──► learnings-n-counter ──► self-improving-agent
+       │
+       ▼
+constraint-generator ──► feature-request-tracker ──► proactive-agent
+                                                          │
+proactive-agent WAL ──► wal-failure-detector ─────────────┘
+                                                          │
+constraint-enforcer ──► heartbeat-constraint-check ───────┘
+
+effectiveness-metrics ──► vfm-constraint-scorer ──► VFM system
+```
 
 ## Extensions Layer (Phase 6)
 
-*Section to be populated after Phase 6 implementation.*
+The Extensions layer implements observation-backed skills derived from high N-count patterns
+and validated workflows. Unlike architecture-driven skills (Phases 1-5), these skills encode
+proven workflows and patterns into reusable automation.
+
+**Architectural Decision**: Skills encode battle-tested patterns (N≥3) into CLI tools.
+Proactive integration (hooks, watchers) deferred to Phase 7+.
+
+**Implementation Note**: Phase 6 is **specification + contract testing** only. Each skill has:
+- SKILL.md specification defining behavior and CLI interface
+- Contract tests with mock implementations verifying data contracts
+- No runtime CLI wrapper code (deferred to Phase 7+)
+
+The "✅ Implemented" status indicates spec + tests complete. CLI execution requires Phase 7 work.
+
+### Workflow Encoding Skills
+
+| Skill | Purpose | Status | Location |
+|-------|---------|--------|----------|
+| loop-closer | Detect DEFERRED/PLACEHOLDER/TODO before completion | ✅ Implemented | `agentic/extensions/loop-closer/` |
+| parallel-decision | 5-factor framework for parallel vs serial decisions | ✅ Implemented | `agentic/extensions/parallel-decision/` |
+| threshold-delegator | Auto-suggest delegation when counts exceed thresholds | ✅ Implemented | `agentic/extensions/threshold-delegator/` |
+
+### MCE Compliance Skills
+
+| Skill | Purpose | Status | Location |
+|-------|---------|--------|----------|
+| mce-refactorer | Analyze files for MCE compliance, suggest splits | ✅ Implemented | `agentic/extensions/mce-refactorer/` |
+| hub-subworkflow | Split large docs into hub + sub-document structure | ✅ Implemented | `agentic/extensions/hub-subworkflow/` |
+
+### Observation Management Skills
+
+| Skill | Purpose | Status | Location |
+|-------|---------|--------|----------|
+| pbd-strength-classifier | Classify observation strength (weak/medium/strong) | ✅ Implemented | `agentic/extensions/pbd-strength-classifier/` |
+| observation-refactoring | Rename/consolidate/promote/archive observations | ✅ Implemented | `agentic/extensions/observation-refactoring/` |
+
+### Constraint Evolution Skills
+
+| Skill | Purpose | Status | Location |
+|-------|---------|--------|----------|
+| constraint-versioning | Track constraint evolution and N-count progression | ✅ Implemented | `agentic/extensions/constraint-versioning/` |
+| cross-session-safety-check | Detect cross-session state interference | ✅ Implemented | `agentic/extensions/cross-session-safety-check/` |
+
+### Pattern Detection Skills
+
+| Skill | Purpose | Status | Location |
+|-------|---------|--------|----------|
+| pattern-convergence-detector | Monitor N=2 patterns for convergence signals | ✅ Implemented | `agentic/extensions/pattern-convergence-detector/` |
+
+**Dependencies**: May depend on any lower layer; observation data from Core Memory
+**Used by**: Human developers via CLI invocation
+**Implemented**: 2026-02-15 (Phase 6)
+
+### Source Evidence
+
+| Skill | Source Document | N-Count |
+|-------|-----------------|---------|
+| loop-closer | docs/workflows/closing-loops.md | N=3 |
+| parallel-decision | docs/workflows/parallel-vs-serial-decision.md | N=5 |
+| threshold-delegator | docs/patterns/auto-delegate-on-threshold.md | N=3 |
+| mce-refactorer | docs/patterns/mce-refactoring.md | N=7 |
+| hub-subworkflow | docs/patterns/hub-subworkflow.md | N=5 |
+| pbd-strength-classifier | docs/observations/resist-file-proliferation.md | N=11 |
+| observation-refactoring | docs/workflows/observation-refactoring.md | N=5 |
+| constraint-versioning | docs/observations/configuration-as-code.md | N=9 |
+| cross-session-safety-check | docs/observations/plan-approve-implement.md | N=4 |
+| pattern-convergence-detector | Multiple N=2→N=3 progressions | N=2+ |
 
 ---
 
@@ -600,15 +743,36 @@ See specification Performance Requirements for latency targets by skill category
 
 ### Acceptance Criteria Convention
 
-SKILL.md files contain `## Acceptance Criteria` sections with unchecked checkboxes (`- [ ]`).
-These document the expected behavior but are NOT updated when verified.
+SKILL.md files contain `## Acceptance Criteria` sections with checkboxes.
+
+**Convention by phase**:
+- **Phase 1-2 (Foundation, Core)**: Unchecked (`- [ ]`) - specs as immutable documentation
+- **Phase 3+ (Review, Governance, Extensions)**: Checked (`- [x]`) - contract-tested skills
 
 **Verification tracking**:
-- Results file (`docs/implementation/agentic-phase1-results.md`) documents what was verified
-- Behavioral tests (`tests/e2e/skill-behavior.test.ts`) provide automated verification
-- Checkboxes remain as documentation of expected behavior
+- Results files (`docs/implementation/agentic-phase*-results.md`) document what was verified
+- Behavioral tests (`tests/e2e/*.test.ts`) provide automated verification
+- For Phase 3+, checked boxes indicate contract tests exist and pass
 
-This separation keeps SKILL.md files as immutable specifications.
+This reflects the evolution from pure specification (Phase 1-2) to verified implementation (Phase 3+).
+
+### Command Syntax Convention
+
+SKILL.md files use angle-bracket placeholders for command arguments. Use consistent terminology:
+
+| Placeholder | Meaning | Example |
+|-------------|---------|---------|
+| `<file>` | Code file path | `/mce-refactorer analyze <file>` |
+| `<doc>` | Documentation file path | `/hub-subworkflow analyze <doc>` |
+| `<observation>` | Observation file path | `/pbd-strength-classifier assess <observation>` |
+| `<path>` | Directory or file path | `/loop-closer check <path>` |
+| `<constraint>` | Constraint name/identifier | `/constraint-versioning history <constraint>` |
+| `<task>` | Task description | `/parallel-decision evaluate <task>` |
+
+**Guidelines**:
+- Use the most specific term applicable (`<observation>` over `<file>` for observation skills)
+- Directory-accepting arguments should use `<path>`
+- Document the placeholder in the Arguments table
 
 ### Adding a New Skill
 
@@ -648,7 +812,10 @@ This is by design—the failure-anchored learning system requires this pipeline.
 | 0.4.0 | 2026-02-14 | Phase 3 complete: 10 Review & Detection layer skills implemented |
 | 0.5.0 | 2026-02-14 | Phase 4 complete: 9 Governance & Safety layer skills implemented |
 | 0.5.1 | 2026-02-14 | Added severity-tiered circuit breaker defaults, two-stage matching |
+| 0.6.0 | 2026-02-14 | Phase 5 complete: 5 Bridge layer skills implemented |
+| 0.7.0 | 2026-02-15 | Phase 6 complete: 10 Extensions layer skills implemented |
+| 0.8.0 | 2026-02-15 | Phase 7 complete: Architecture finalization, dependency verification, all 47 skills operational |
 
 ---
 
-*Architecture maintained as skills are implemented. Each phase updates relevant sections.*
+*Architecture complete. 47 skills across 6 layers. See Extending the System for adding new skills.*
