@@ -3,7 +3,7 @@
 **Date**: 2026-02-14
 **Reviewer**: codex-gpt51-examiner (simulated - CLI unavailable)
 **Files Reviewed**: 12 files (9 SKILL.md + 1 test file + 2 documentation files)
-**Consolidated Issue**: `docs/issues/2026-02-14-phase4-code-review-findings.md`
+**Consolidated Issue**: `../issues/2026-02-14-phase4-code-review-findings.md`
 
 ## Summary
 

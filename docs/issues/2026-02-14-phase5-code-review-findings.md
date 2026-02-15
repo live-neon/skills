@@ -24,12 +24,12 @@ code changes, 4 documented as intentional design decisions or deferred to Phase 
 ## Cross-References
 
 ### Review Sources
-- Codex Review: `docs/reviews/2026-02-14-phase5-impl-codex.md`
-- Gemini Review: `docs/reviews/2026-02-14-phase5-impl-gemini.md`
+- Codex Review: `../reviews/2026-02-14-phase5-impl-codex.md`
+- Gemini Review: `../reviews/2026-02-14-phase5-impl-gemini.md`
 
 ### Related Plans
-- `docs/plans/2026-02-14-agentic-skills-phase5-implementation.md` (implemented plan)
-- `docs/proposals/2026-02-13-agentic-skills-specification.md` (specification)
+- `../plans/2026-02-14-agentic-skills-phase5-implementation.md` (implemented plan)
+- `../proposals/2026-02-13-agentic-skills-specification.md` (specification)
 
 ### Related Results
 - `docs/implementation/agentic-phase5-results.md`

@@ -51,7 +51,7 @@ and provide pattern recognition capabilities feeding the Core Memory layer.
 - [ ] Calibrated thresholds based on research
 - [ ] Integration test for multi-causal attribution
 
-**Follow-up Issue**: `docs/issues/2026-02-14-rg6-failure-attribution-research.md`
+**Follow-up Issue**: `../issues/2026-02-14-rg6-failure-attribution-research.md`
 
 ## Key Features Implemented
 
@@ -191,7 +191,7 @@ real skill implementations. See test file header for details.
 
 **Review Date**: 2026-02-14
 **Reviewers**: Codex GPT-5.1 + Gemini 2.5 Pro
-**Issue**: `docs/issues/2026-02-14-phase3-code-review-findings.md`
+**Issue**: `../issues/2026-02-14-phase3-code-review-findings.md`
 
 ### Findings Addressed
 
@@ -215,7 +215,7 @@ real skill implementations. See test file header for details.
 
 **Review Date**: 2026-02-14
 **Reviewers**: Twin Technical + Twin Creative
-**Issue**: `docs/issues/2026-02-14-phase3-twin-review-findings.md`
+**Issue**: `../issues/2026-02-14-phase3-twin-review-findings.md`
 
 ### Findings Addressed
 
@@ -244,9 +244,9 @@ real skill implementations. See test file header for details.
 2. ~~Verify Phase 2 event schema exists~~ Addressed inline in effectiveness-metrics
 3. ~~Create integration test file `tests/e2e/phase3-integration.test.ts`~~ Complete (renamed to contracts)
 4. ~~Run 7 integration scenarios~~ Complete (21 tests pass)
-5. ~~Create RG-6 follow-up issue~~ Complete: `docs/issues/2026-02-14-rg6-failure-attribution-research.md`
-6. ~~N=2 code review~~ Complete: `docs/issues/2026-02-14-phase3-code-review-findings.md`
-7. ~~N=2 twin review~~ Complete: `docs/issues/2026-02-14-phase3-twin-review-findings.md`
+5. ~~Create RG-6 follow-up issue~~ Complete: `../issues/2026-02-14-rg6-failure-attribution-research.md`
+6. ~~N=2 code review~~ Complete: `../issues/2026-02-14-phase3-code-review-findings.md`
+7. ~~N=2 twin review~~ Complete: `../issues/2026-02-14-phase3-twin-review-findings.md`
 8. Proceed to Phase 4 (Governance & Safety)
 
 ---

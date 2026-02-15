@@ -202,10 +202,10 @@ External code review completed 2026-02-14.
 **Status**: All 20 findings addressed
 
 **Review Files**:
-- `docs/reviews/2026-02-14-phase4-implementation-codex.md`
-- `docs/reviews/2026-02-14-phase4-implementation-gemini.md`
+- `../reviews/2026-02-14-phase4-implementation-codex.md`
+- `../reviews/2026-02-14-phase4-implementation-gemini.md`
 
-**Consolidated Issue**: `docs/issues/2026-02-14-phase4-code-review-findings.md` (CLOSED)
+**Consolidated Issue**: `../issues/2026-02-14-phase4-code-review-findings.md` (CLOSED)
 
 ## Twin Review (N=2)
 
@@ -227,7 +227,7 @@ Internal twin review completed 2026-02-14.
 **Philosophy Assessment**: Event-driven governance strongly aligned with project values.
 Fail-closed defaults appropriately cautious. Adoption phases realistic.
 
-**Consolidated Issue**: `docs/issues/2026-02-14-phase4-twin-review-findings.md` (CLOSED)
+**Consolidated Issue**: `../issues/2026-02-14-phase4-twin-review-findings.md` (CLOSED)
 
 ## External Review Mock Findings
 
@@ -248,7 +248,7 @@ implementation fidelity in contract tests (not specification issues).
 
 **Tests Added**: 17 new tests (50 total now passing)
 
-**Consolidated Issue**: `docs/issues/2026-02-14-phase4-external-review-findings.md` (CLOSED)
+**Consolidated Issue**: `../issues/2026-02-14-phase4-external-review-findings.md` (CLOSED)
 
 ## Lessons Learned
 

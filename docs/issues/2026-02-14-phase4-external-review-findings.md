@@ -25,16 +25,16 @@ expected behavior; the mocks have been updated to match.
 ## Cross-References
 
 ### Review Sources
-- Codex Review: `docs/reviews/2026-02-14-phase4-implementation-codex.md`
-- Gemini Review: `docs/reviews/2026-02-14-phase4-implementation-gemini.md`
+- Codex Review: `../reviews/2026-02-14-phase4-implementation-codex.md`
+- Gemini Review: `../reviews/2026-02-14-phase4-implementation-gemini.md`
 
 ### Related Issues
-- `docs/issues/2026-02-14-phase4-code-review-findings.md` (N=2 code review - CLOSED)
-- `docs/issues/2026-02-14-phase4-twin-review-findings.md` (twin review - CLOSED)
+- `../issues/2026-02-14-phase4-code-review-findings.md` (N=2 code review - CLOSED)
+- `../issues/2026-02-14-phase4-twin-review-findings.md` (twin review - CLOSED)
 
 ### Related Plans
-- `docs/plans/2026-02-14-agentic-skills-phase4-implementation.md` (implemented plan)
-- `docs/proposals/2026-02-13-agentic-skills-specification.md` (specification)
+- `../plans/2026-02-14-agentic-skills-phase4-implementation.md` (implemented plan)
+- `../proposals/2026-02-13-agentic-skills-specification.md` (specification)
 
 ### Related Results
 - `docs/implementation/agentic-phase4-results.md`

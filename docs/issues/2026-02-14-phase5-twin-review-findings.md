@@ -27,10 +27,10 @@ addressed - 11 resolved with changes, 4 documented as intentional design or defe
 - Twin Creative Review: Inline in conversation (agent a2a6b98)
 
 ### Related Issues
-- `docs/issues/2026-02-14-phase5-code-review-findings.md` (external code review - CLOSED)
+- `../issues/2026-02-14-phase5-code-review-findings.md` (external code review - CLOSED)
 
 ### Related Plans
-- `docs/plans/2026-02-14-agentic-skills-phase5-implementation.md` (implemented plan)
+- `../plans/2026-02-14-agentic-skills-phase5-implementation.md` (implemented plan)
 
 ### Related Results
 - `docs/implementation/agentic-phase5-results.md`

@@ -3,7 +3,7 @@ status: Pilot
 observation_file: null
 observation_count: 1
 last_updated: 2026-02-14
-source_plan: docs/plans/2026-02-14-skill-frontmatter-audit.md
+source_plan: ../plans/2026-02-14-skill-frontmatter-audit.md
 ---
 
 # Workflow: Batch File Modification
@@ -221,7 +221,7 @@ When creating a batch modification plan, include:
 
 **Result**: All 33 files updated, template compliant, tests passing.
 
-**Source plan**: `docs/plans/2026-02-14-skill-frontmatter-audit.md` (multiverse repo)
+**Source plan**: `../plans/2026-02-14-skill-frontmatter-audit.md` (multiverse repo)
 
 ---
 

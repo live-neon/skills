@@ -46,6 +46,10 @@ agentic/*/SKILL.md                    # Skill definitions (authoritative for eac
         ↓
 ARCHITECTURE.md                        # System overview (layers, data flow, circuit breaker)
         ↓
+docs/proposals/                        # Specifications and architectural proposals
+        ↓
+docs/plans/                            # Implementation plans for each phase
+        ↓
 docs/guides/                           # Technical guides (semantic similarity, etc.)
         ↓
 agentic/SKILL_TEMPLATE.md             # Template for new skills
@@ -57,6 +61,10 @@ README.md                              # Problem/solution, installation, skill t
 tests/README.md                        # Testing philosophy, commands
         ↓
 docs/implementation/                   # Phase results, acceptance verification
+        ↓
+docs/issues/                           # Review findings and remediation tracking
+        ↓
+docs/reviews/                          # Code review and twin review outputs
 ```
 
 **Document purposes**:
@@ -427,7 +435,7 @@ After completing documentation updates, **close the loop**:
 - **[Phase Completion](phase-completion.md)** - Phase completion checklist
 - **[Phase 1 Results](../implementation/agentic-phase1-results.md)** - Implementation status
 - **[Tests README](../../tests/README.md)** - Testing documentation
-- **[Closing Loops](/docs/workflows/closing-loops.md)** - Main project loop closure workflow
+- **Closing Loops** - See multiverse `docs/workflows/closing-loops.md` (external to skills submodule)
 
 ---
 

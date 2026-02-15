@@ -9,11 +9,11 @@
 
 | File | Lines | MD5 (8 char) | Status |
 |------|-------|--------------|--------|
-| docs/plans/2026-02-14-agentic-skills-phase5-implementation.md | 1001 | 961007b2 | Verified |
-| projects/live-neon/skills/docs/reviews/2026-02-14-phase5-plan-codex.md | 177 | N/A | Verified (read) |
-| docs/reviews/2026-02-14-phase5-plan-gemini.md | 131 | N/A | Verified (read) |
+| ../plans/2026-02-14-agentic-skills-phase5-implementation.md | 1001 | 961007b2 | Verified |
+| ../reviews/2026-02-14-phase5-plan-codex.md | 177 | N/A | Verified (read) |
+| ../reviews/2026-02-14-phase5-plan-gemini.md | 131 | N/A | Verified (read) |
 | projects/live-neon/skills/ARCHITECTURE.md | 655 | N/A | Verified (read) |
-| docs/proposals/2026-02-13-agentic-skills-specification.md | Partial | N/A | Lines 800-899 verified |
+| ../proposals/2026-02-13-agentic-skills-specification.md | Partial | N/A | Lines 800-899 verified |
 
 ---
 

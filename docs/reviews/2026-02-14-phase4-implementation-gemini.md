@@ -2,7 +2,7 @@
 
 **Date**: 2026-02-14
 **Reviewer**: gemini-25pro-validator
-**Consolidated Issue**: `docs/issues/2026-02-14-phase4-code-review-findings.md`
+**Consolidated Issue**: `../issues/2026-02-14-phase4-code-review-findings.md`
 **Files Reviewed**:
 - `tests/e2e/phase4-contracts.test.ts` (1023 lines)
 - `agentic/governance/governance-state/SKILL.md` (229 lines)

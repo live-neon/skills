@@ -1,8 +1,8 @@
 # Phase 2 Implementation Results
 
 **Date**: 2026-02-13
-**Plan**: `docs/plans/2026-02-13-agentic-skills-phase2-implementation.md`
-**Specification**: `docs/proposals/2026-02-13-agentic-skills-specification.md`
+**Plan**: `../plans/2026-02-13-agentic-skills-phase2-implementation.md`
+**Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
 **Previous Phase**: `docs/implementation/agentic-phase1-results.md`
 
 ## Summary
@@ -259,13 +259,13 @@ $ npm test tests/e2e/skill-behavior.test.ts
 
 ## Cross-References
 
-- **Plan**: `docs/plans/2026-02-13-agentic-skills-phase2-implementation.md`
-- **Specification**: `docs/proposals/2026-02-13-agentic-skills-specification.md`
+- **Plan**: `../plans/2026-02-13-agentic-skills-phase2-implementation.md`
+- **Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
 - **Phase 1 Results**: `docs/implementation/agentic-phase1-results.md`
-- **Codex Review**: `docs/reviews/2026-02-13-phase2-plan-codex.md`
-- **Gemini Review**: `docs/reviews/2026-02-13-phase2-plan-gemini.md`
-- **Twin Technical Review**: `docs/reviews/2026-02-13-phase2-plan-twin-technical.md`
-- **Twin Creative Review**: `docs/reviews/2026-02-13-phase2-plan-twin-creative.md`
+- **Codex Review**: `../reviews/2026-02-13-phase2-plan-codex.md`
+- **Gemini Review**: `../reviews/2026-02-13-phase2-plan-gemini.md`
+- **Twin Technical Review**: `../reviews/2026-02-13-phase2-plan-twin-technical.md`
+- **Twin Creative Review**: `../reviews/2026-02-13-phase2-plan-twin-creative.md`
 - **Semantic Similarity Guide**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 ---

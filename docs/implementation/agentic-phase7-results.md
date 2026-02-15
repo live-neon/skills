@@ -3,8 +3,8 @@ created: 2026-02-15
 type: results
 status: complete
 phase: 7
-related_plan: docs/plans/2026-02-15-agentic-skills-phase7-implementation.md
-related_spec: docs/proposals/2026-02-13-agentic-skills-specification.md
+related_plan: ../plans/2026-02-15-agentic-skills-phase7-implementation.md
+related_spec: ../proposals/2026-02-13-agentic-skills-specification.md
 ---
 
 # Phase 7: Architecture Finalization Results
@@ -122,8 +122,8 @@ Duration: 353ms
 
 ## Files Modified
 
-- `docs/plans/2026-02-15-agentic-skills-phase7-implementation.md` (status updates)
-- `docs/proposals/2026-02-13-agentic-skills-specification.md` (success criteria)
+- `../plans/2026-02-15-agentic-skills-phase7-implementation.md` (status updates)
+- `../proposals/2026-02-13-agentic-skills-specification.md` (success criteria)
 - `projects/live-neon/skills/ARCHITECTURE.md` (version, slug-taxonomy note)
 - `projects/live-neon/skills/agentic/review/slug-taxonomy/SKILL.md` (design decision)
 - `projects/live-neon/skills/agentic/extensions/parallel-decision/SKILL.md` ("When NOT to use")

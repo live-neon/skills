@@ -1,8 +1,8 @@
 # Phase 1 Implementation Results
 
 **Date**: 2026-02-13
-**Plan**: `docs/plans/2026-02-13-agentic-skills-phase1-implementation.md`
-**Specification**: `docs/proposals/2026-02-13-agentic-skills-specification.md`
+**Plan**: `../plans/2026-02-13-agentic-skills-phase1-implementation.md`
+**Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
 
 ## Summary
 
@@ -202,8 +202,8 @@ The current test suite validates SKILL.md *structure* (metadata, sections) but n
 are planned for Phase 2.
 
 See:
-- `docs/issues/2026-02-13-agentic-phase1-code-review-remediation.md`
-- `docs/issues/2026-02-13-agentic-phase1-twin-review-remediation.md`
+- `../issues/2026-02-13-agentic-phase1-code-review-remediation.md`
+- `../issues/2026-02-13-agentic-phase1-twin-review-remediation.md`
 
 ## Next Steps
 
@@ -230,14 +230,14 @@ See:
 
 ## Cross-References
 
-- **Plan**: `docs/plans/2026-02-13-agentic-skills-phase1-implementation.md`
-- **Specification**: `docs/proposals/2026-02-13-agentic-skills-specification.md`
-- **Code Review Remediation**: `docs/issues/2026-02-13-agentic-phase1-code-review-remediation.md`
-- **Twin Review Remediation**: `docs/issues/2026-02-13-agentic-phase1-twin-review-remediation.md`
-- **Technical Review**: `docs/reviews/2026-02-13-agentic-phase1-twin-technical.md`
-- **Creative Review**: `docs/reviews/2026-02-13-agentic-phase1-twin-creative.md`
-- **Codex Review**: `docs/reviews/2026-02-13-agentic-phase1-implementation-codex.md`
-- **Gemini Review**: `docs/reviews/2026-02-13-agentic-phase1-implementation-gemini.md`
+- **Plan**: `../plans/2026-02-13-agentic-skills-phase1-implementation.md`
+- **Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
+- **Code Review Remediation**: `../issues/2026-02-13-agentic-phase1-code-review-remediation.md`
+- **Twin Review Remediation**: `../issues/2026-02-13-agentic-phase1-twin-review-remediation.md`
+- **Technical Review**: `../reviews/2026-02-13-agentic-phase1-twin-technical.md`
+- **Creative Review**: `../reviews/2026-02-13-agentic-phase1-twin-creative.md`
+- **Codex Review**: `../reviews/2026-02-13-agentic-phase1-implementation-codex.md`
+- **Gemini Review**: `../reviews/2026-02-13-agentic-phase1-implementation-gemini.md`
 
 ---
 

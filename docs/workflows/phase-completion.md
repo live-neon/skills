@@ -212,7 +212,7 @@ Phase 4 complete. 8 core skills + 4 additions implemented.
 - **[Documentation Update](documentation-update.md)** - File-level documentation updates
 - **[SKILL_TEMPLATE.md](../../agentic/SKILL_TEMPLATE.md)** - Skill template with Next Steps
 - **[ARCHITECTURE.md](../../ARCHITECTURE.md)** - System overview, phase tracking
-- **[Closing Loops](/docs/workflows/closing-loops.md)** - Main project loop closure
+- **Closing Loops** - See multiverse `docs/workflows/closing-loops.md` (external to skills submodule)
 
 ---
 

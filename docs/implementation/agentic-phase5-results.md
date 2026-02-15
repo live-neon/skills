@@ -229,7 +229,7 @@ value_score = (prevention_rate × 0.4) + (precision × 0.3) + (usage × 0.2) + (
 
 **Review Date**: 2026-02-14
 **Reviewers**: Codex GPT-5.1 + Gemini 2.5 Pro
-**Plan File**: `docs/plans/2026-02-14-agentic-skills-phase5-implementation.md`
+**Plan File**: `../plans/2026-02-14-agentic-skills-phase5-implementation.md`
 
 All critical findings addressed in plan v2:
 - Strategic Framing section added (Option A/B/C decision)
@@ -242,12 +242,12 @@ All critical findings addressed in plan v2:
 **Review Date**: 2026-02-14
 **Reviewers**: Codex GPT-5.1 + Gemini 2.5 Pro (N=2)
 **Review Files**:
-- `docs/reviews/2026-02-14-phase5-impl-codex.md`
-- `docs/reviews/2026-02-14-phase5-impl-gemini.md`
+- `../reviews/2026-02-14-phase5-impl-codex.md`
+- `../reviews/2026-02-14-phase5-impl-gemini.md`
 
 **Findings**: 17 total (3 Critical, 8 Important, 6 Minor)
 **N=2 Verified**: 7 findings (both reviewers identified)
-**Issue File**: `docs/issues/2026-02-14-phase5-code-review-findings.md`
+**Issue File**: `../issues/2026-02-14-phase5-code-review-findings.md`
 
 Key findings requiring resolution before ClawHub integration:
 - Interface/test field name mismatches (timestamp, min_n)
@@ -260,7 +260,7 @@ Key findings requiring resolution before ClawHub integration:
 
 **Review Date**: 2026-02-14
 **Reviewers**: Twin Technical + Twin Creative
-**Plan File**: `docs/plans/2026-02-14-agentic-skills-phase5-implementation.md`
+**Plan File**: `../plans/2026-02-14-agentic-skills-phase5-implementation.md`
 
 All findings addressed in plan v3:
 - Code blocks removed (no-code plan principle)
@@ -275,7 +275,7 @@ All findings addressed in plan v3:
 
 **Findings**: 15 total (6 Important, 9 Minor)
 **N=2 Verified**: 2 findings (both twins identified)
-**Issue File**: `docs/issues/2026-02-14-phase5-twin-review-findings.md`
+**Issue File**: `../issues/2026-02-14-phase5-twin-review-findings.md`
 
 Key findings for documentation improvement:
 - SKILL.md files exceed MCE limits (vfm-constraint-scorer: 325 lines)

@@ -10,9 +10,9 @@ related_observations:
 related_reviews:
   - Twin Technical Review (session 2026-02-15)
   - Twin Creative Review (session 2026-02-15)
-related_plan: /Users/twin2/Desktop/projects/multiverse/docs/plans/2026-02-15-agentic-skills-phase6-implementation.md
+related_plan: ../plans/2026-02-15-agentic-skills-phase6-implementation.md
 related_issues:
-  - docs/issues/2026-02-15-phase6-code-review-findings.md (resolved)
+  - ../issues/2026-02-15-phase6-code-review-findings.md (resolved)
 ---
 
 # Issue: Phase 6 Twin Review Findings (Consolidated)
@@ -160,7 +160,7 @@ Twin review (Technical + Creative) of Phase 6 Agentic Skills implementation iden
 ## Related Documents
 
 - **Prior Issue**: [Phase 6 Code Review Findings](2026-02-15-phase6-code-review-findings.md) (resolved)
-- **Plan**: [Phase 6 Implementation Plan](/Users/twin2/Desktop/projects/multiverse/docs/plans/2026-02-15-agentic-skills-phase6-implementation.md)
+- **Plan**: [Phase 6 Implementation Plan](../plans/2026-02-15-agentic-skills-phase6-implementation.md)
 - **Test Files**:
   - tests/e2e/phase6-workflow-skills.test.ts (512 lines)
   - tests/e2e/phase6-observation-skills.test.ts (608 lines)

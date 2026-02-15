@@ -57,7 +57,7 @@ Skills for failure detection, constraint enforcement, and memory operations. See
 | [severity-tagger](agentic/review/severity-tagger/) | Foundation | Classify findings (critical/important/minor) |
 | [positive-framer](agentic/detection/positive-framer/) | Foundation | Transform "Don't X" → "Always Y" |
 
-**Phase 1 complete** — See [docs/implementation/agentic-phase1-results.md](docs/implementation/agentic-phase1-results.md) for details.
+**All phases complete** — 48 skills across 6 layers. See [ARCHITECTURE.md](ARCHITECTURE.md) for full skill inventory.
 
 ## Usage
 
@@ -82,6 +82,7 @@ Technical guides for skill implementation:
 | Guide | Description |
 |-------|-------------|
 | [Semantic Similarity](docs/guides/SEMANTIC_SIMILARITY_GUIDE.md) | LLM-based action classification (required for safety-critical skills) |
+| [Core Memory Walkthrough](docs/guides/CORE_MEMORY_WALKTHROUGH.md) | Core memory layer implementation guide |
 
 ## Workflows
 
@@ -89,6 +90,20 @@ Technical guides for skill implementation:
 |----------|-------------|
 | [Documentation Update](docs/workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
 | [Phase Completion](docs/workflows/phase-completion.md) | Checklist for completing implementation phases |
+| [Batch File Modification](docs/workflows/batch-file-modification.md) | Bulk file changes with verification |
+
+## Documentation
+
+Implementation history and specifications:
+
+| Directory | Description |
+|-----------|-------------|
+| [docs/](docs/README.md) | Documentation index |
+| [docs/proposals/](docs/proposals/) | Specifications and proposals |
+| [docs/plans/](docs/plans/) | Implementation plans (phases 1-7) |
+| [docs/issues/](docs/issues/) | Review findings and issues |
+| [docs/reviews/](docs/reviews/) | Code and twin reviews |
+| [docs/implementation/](docs/implementation/) | Phase results |
 
 ## Testing
 

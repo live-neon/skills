@@ -8,11 +8,11 @@ priority: medium
 related_observations:
   - docs/observations/code-review-feedback.md
 related_reviews:
-  - docs/reviews/2026-02-15-phase6-implementation-codex.md
-  - docs/reviews/2026-02-15-phase6-implementation-gemini.md
-related_plan: docs/plans/2026-02-15-agentic-skills-phase6-implementation.md
+  - ../reviews/2026-02-15-phase6-implementation-codex.md
+  - ../reviews/2026-02-15-phase6-implementation-gemini.md
+related_plan: ../plans/2026-02-15-agentic-skills-phase6-implementation.md
 related_issues:
-  - docs/issues/2026-02-15-phase6-twin-review-findings.md
+  - ../issues/2026-02-15-phase6-twin-review-findings.md
 ---
 
 # Issue: Phase 6 Code Review Findings (Consolidated)
