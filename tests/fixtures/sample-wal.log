@@ -1,0 +1,16 @@
+# Mock WAL Format v1.0
+# Line format: TIMESTAMP|STATUS|RETRY_COUNT|ACTION|METADATA
+# This fixture contains 12 entries covering all status types for testing
+
+2026-02-14T09:00:00Z|SUCCESS|0|git add README.md|{}
+2026-02-14T09:01:00Z|SUCCESS|0|git commit -m "docs: update readme"|{"branch":"main"}
+2026-02-14T09:02:00Z|ROLLBACK|0|git push --force|{"branch":"main","constraint":"git-force-push"}
+2026-02-14T09:03:00Z|SUCCESS|0|git push|{"branch":"feature/test"}
+2026-02-14T09:04:00Z|TIMEOUT|0|curl -X POST https://slow-api.example.com/webhook|{"endpoint":"/webhook","timeout_ms":30000}
+2026-02-14T09:05:00Z|SUCCESS|1|npm install lodash|{"package":"lodash","retry_reason":"network_error"}
+2026-02-14T09:06:00Z|PENDING|0|npm run build|{"script":"build"}
+2026-02-14T09:07:00Z|SUCCESS|0|npm run build|{"script":"build","duration_ms":4500}
+2026-02-14T09:08:00Z|CONFLICT|0|echo "content" > shared-state.json|{"path":"shared-state.json","reason":"concurrent_modification"}
+2026-02-14T09:09:00Z|SUCCESS|4|fetch https://flaky-service.example.com/data|{"endpoint":"/data","retry_reason":"503_service_unavailable"}
+2026-02-14T09:10:00Z|ROLLBACK|0|rm -rf important-files/|{"path":"important-files/","constraint":"destructive-operation"}
+2026-02-14T09:11:00Z|TIMEOUT|2|python process_large_file.py data.csv|{"file":"data.csv","size_mb":500}
