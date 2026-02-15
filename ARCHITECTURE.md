@@ -13,6 +13,52 @@ Live Neon skills are organized into two main categories:
 This architecture focuses on the agentic skills, which implement the core insight:
 **AI systems learn best from consequences, not instructions**.
 
+> **Note**: This is a specification-first implementation. Skills are documented with
+> contract tests, but runtime code is Phase 8+. See [Implementation Status](#implementation-status).
+
+## Implementation Status
+
+**Current State**: Specification + Contract Tests (No Runtime)
+
+This architecture is currently a **specification-first implementation**:
+
+| Component | Status | Description |
+|-----------|--------|-------------|
+| SKILL.md files | Complete | 48 skill specifications with CLI interfaces |
+| Contract tests | Complete | 534 tests validating data contracts |
+| Runtime code | Not started | No executable CLI wrappers exist |
+| Semantic classification | Scaffolded | Tier 3 LLM tests exist but are skipped by default |
+
+**What "Implemented" means**:
+- ✅ SKILL.md specification exists
+- ✅ Contract tests pass against mock implementations
+- ✅ Entry in ARCHITECTURE.md with layer placement
+- ❌ No runtime CLI wrapper (deferred to Phase 8+)
+
+**Why specification-first**:
+1. **Contract-first development**: Define interfaces before implementation
+2. **Parallel enablement**: Specs allow parallel implementation work
+3. **Architecture validation**: Comprehensive design before code investment
+4. **Test scaffolding**: Contract tests become integration tests when runtime exists
+
+**Next Phase**: Phase 8 implements runtime for priority skills, starting with `constraint-enforcer`.
+
+## Getting Started
+
+**New to agentic skills?** Follow this path:
+
+1. **Understand the core insight**: Read [Overview](#overview) - AI learns from consequences, not instructions
+2. **Learn the lifecycle**: See [Data Flow](#data-flow) - the 6-step Failure → Constraint process
+3. **Explore Foundation**: Review [Foundation Layer](#foundation-layer-phase-1) - the 5 primitive skills
+4. **Run tests**: `cd tests && npm test -- -t "context-packet"` - see a skill in action
+
+**Adding a new skill?** See [Extending the System](#extending-the-system) for templates and guidelines.
+
+**Quick reference**:
+- 48 skills across 6 layers
+- 534 contract tests (all passing)
+- Specification at `docs/proposals/2026-02-13-agentic-skills-specification.md`
+
 ## Skill Layers
 
 ```

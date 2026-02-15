@@ -160,6 +160,16 @@ Near-ready (missing 1 criterion):
 | Missing frontmatter | Warning: "No frontmatter, cannot classify" |
 | Invalid N-count | Error: "Invalid n_count value" |
 
+## When NOT to Use
+
+- **New observations**: N=1 observations are definitionally weak; no assessment needed
+- **Manual reviews**: Human judgment needed for context-dependent decisions
+- **Constraint promotion**: Use constraint-generator for actual promotion logic
+- **Cross-project patterns**: Strength varies by context; not transferable
+- **Archived observations**: Historical context more important than current strength
+
+Use pbd-strength-classifier for periodic observation triage and candidate identification.
+
 ## Acceptance Criteria
 
 - [x] Correctly classifies weak/medium/strong

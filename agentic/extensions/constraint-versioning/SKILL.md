@@ -176,6 +176,16 @@ breaking_changes: true
 | No version history | Info: "No version history recorded" |
 | Observation not linked | Warning: "Observation has no constraint link" |
 
+## When NOT to Use
+
+- **Draft constraints**: Version only active/stable constraints
+- **Minor wording changes**: Not every edit needs a version bump
+- **Rollback scenarios**: Use git history for emergency rollbacks
+- **Cross-project constraints**: Version independently per project
+- **Retired constraints**: Archive instead of continuing to version
+
+Use constraint-versioning for significant constraint evolution, not minor edits.
+
 ## Acceptance Criteria
 
 - [x] Records version history with timestamps

@@ -191,6 +191,16 @@ Need to work with observations?
 | Under threshold | Info: "Document is within threshold (X/300 lines)" |
 | No clear sections | Warning: "Could not detect distinct sections" |
 
+## When NOT to Use
+
+- **Documents <200 lines**: Splitting overhead exceeds benefit
+- **Tightly coupled content**: Sections that must be read together
+- **Single-topic references**: Quick references, cheatsheets
+- **Auto-generated docs**: API docs, schema docs (regenerate instead)
+- **ARCHITECTURE.md**: Accepted exception (completeness over MCE)
+
+Use hub-subworkflow for documents with distinct modes/phases/audiences.
+
 ## Acceptance Criteria
 
 - [x] Identifies documents needing hub structure

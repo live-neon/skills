@@ -165,6 +165,16 @@ This requires explicit confirmation.
 | Consolidate same file | Error: "Cannot consolidate with self" |
 | Promote N<5 | Warning: "N-count below threshold" |
 
+## When NOT to Use
+
+- **Active observations**: Only refactor stable patterns, not evolving ones
+- **Recent N-count bumps**: Wait for patterns to stabilize
+- **Cross-team patterns**: Different teams may have different naming conventions
+- **Constraint-linked observations**: Changes may break constraint references
+- **During incidents**: Refactoring during active issues adds confusion
+
+Use observation-refactoring for periodic maintenance, not reactive cleanup.
+
 ## Acceptance Criteria
 
 - [x] Identifies rename/consolidate/promote/archive candidates

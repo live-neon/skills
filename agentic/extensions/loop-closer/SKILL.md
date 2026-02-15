@@ -155,6 +155,16 @@ Default scan includes:
 | No open loops | Info: "No open loops detected" |
 | Permission denied | Error: "Cannot read: <path>" |
 
+## When NOT to Use
+
+- **Quick commits**: Minor fixes that don't warrant loop scanning overhead
+- **Code spikes/prototypes**: Exploratory code where TODOs are expected
+- **Intentional placeholders**: When markers are deliberate design patterns
+- **CI/CD pipelines**: Use dedicated linting rules instead of CLI scans
+- **External dependencies**: Third-party code with its own TODO conventions
+
+Use loop-closer for milestone completions, PR reviews, and phase transitions.
+
 ## Acceptance Criteria
 
 - [x] Detects DEFERRED observations

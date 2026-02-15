@@ -199,6 +199,16 @@ Recommendation:
 | No session history | Info: "No prior sessions recorded" |
 | Remote unreachable | Warning: "Cannot check remote state" |
 
+## When NOT to Use
+
+- **Solo development**: No cross-session conflicts when working alone
+- **Fresh branches**: New branches have no session history to check
+- **Read-only sessions**: Research/exploration doesn't create conflicts
+- **Automated pipelines**: CI/CD has its own conflict resolution
+- **Post-merge**: After successful merge, history check is redundant
+
+Use cross-session-safety-check at session start when resuming collaborative work.
+
 ## Acceptance Criteria
 
 - [x] Detects stale session state

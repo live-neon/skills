@@ -184,6 +184,16 @@ Status: Now within threshold
 | Invalid threshold | Error: "Threshold must be positive integer" |
 | Unknown category | Error: "Unknown category: <name>" |
 
+## When NOT to Use
+
+- **Small sessions**: <5 items don't warrant threshold tracking
+- **Solo work**: No delegation targets available
+- **Blocking issues**: Critical items must be resolved, not delegated
+- **Learning sessions**: Delegate defeats the learning purpose
+- **Final reviews**: Last pass should complete, not delegate
+
+Use threshold-delegator when item counts accumulate beyond manageable scope.
+
 ## Acceptance Criteria
 
 - [x] Tracks counts across categories

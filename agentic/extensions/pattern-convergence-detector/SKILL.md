@@ -175,6 +175,16 @@ Summary:
 | Missing root_cause | Warning: "Pattern missing root_cause" |
 | Invalid observation | Error: "Observation not found" |
 
+## When NOT to Use
+
+- **N=1 observations**: Too early for convergence analysis
+- **N>=3 observations**: Already strong enough for individual tracking
+- **Different domains**: Cross-domain patterns rarely converge meaningfully
+- **Actively evolving patterns**: Wait for pattern stability
+- **Small observation sets**: <10 observations unlikely to have clusters
+
+Use pattern-convergence-detector for periodic (monthly) pattern ecosystem health checks.
+
 ## Acceptance Criteria
 
 - [x] Scans for converging N=2 patterns
