@@ -23,6 +23,16 @@ system components have defined fallback paths when primary options fail.
 /fallback-checker verify <component>
 ```
 
+## Example
+
+```bash
+# Check fallback coverage for all components
+/fallback-checker coverage
+
+# Verify a specific component's fallback chain
+/fallback-checker verify memory-search
+```
+
 ## Arguments
 
 | Argument | Required | Description |

@@ -23,6 +23,16 @@ distinguish adoption friction (temporary) from systemic issues (permanent).
 /adoption-monitor trend <metric>
 ```
 
+## Example
+
+```bash
+# Check overall adoption status
+/adoption-monitor status
+
+# Analyze a specific constraint's adoption
+/adoption-monitor constraint plan-approve-implement
+```
+
 ## Arguments
 
 | Argument | Required | Description |

@@ -32,6 +32,16 @@ like technical debt.
 /constraint-reviewer decide <id> <keep|modify|retire>
 ```
 
+## Example
+
+```bash
+# Check if a constraint is due for review
+/constraint-reviewer check git-force-push-safety
+
+# Keep a constraint and reset its 90-day timer
+/constraint-reviewer keep git-force-push-safety
+```
+
 ## Arguments
 
 | Argument | Required | Description |

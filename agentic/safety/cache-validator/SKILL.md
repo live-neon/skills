@@ -23,6 +23,16 @@ packets, memory search results, and constraint lookups.
 /cache-validator configure --ttl <duration>
 ```
 
+## Example
+
+```bash
+# Check cache status overview
+/cache-validator status
+
+# Invalidate stale context packets
+/cache-validator invalidate "ctx-*"
+```
+
 ## Arguments
 
 | Argument | Required | Description |

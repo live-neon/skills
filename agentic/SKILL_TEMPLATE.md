@@ -9,6 +9,10 @@ layer: core  # foundation | core | review | detection | governance | safety | br
 status: active  # active | deprecated | removed
 ---
 
+<!-- NOTE: The inline comments on `layer` and `status` fields above (e.g., "# foundation | core | ...")
+     are for template guidance only. When creating actual SKILL.md files, omit these comments
+     for cleaner frontmatter. Example: use `layer: core` not `layer: core  # foundation | core | ...` -->
+
 # skill-name
 
 Brief description of what this skill does and why it exists in the agentic system.

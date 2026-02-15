@@ -23,6 +23,16 @@ sessions and across reproducible runs. Prevents behavior drift when model update
 /model-pinner unpin --level <level>
 ```
 
+## Example
+
+```bash
+# Pin model for current project
+/model-pinner pin claude-4-opus --level project
+
+# Verify current session's model version
+/model-pinner verify
+```
+
 ## Arguments
 
 | Argument | Required | Description |

@@ -29,6 +29,16 @@ and can auto-fix simple cases.
 /round-trip-tester fix <constraint> --apply
 ```
 
+## Example
+
+```bash
+# Check all constraints for struct/markdown sync drift
+/round-trip-tester check-all
+
+# Fix a specific constraint (preview, then apply)
+/round-trip-tester fix plan-approve-implement --apply
+```
+
 ## Arguments
 
 | Argument | Required | Description |

@@ -32,6 +32,16 @@ and migration with fail-closed safety.
 /version-migration status
 ```
 
+## Example
+
+```bash
+# Check for version mismatches
+/version-migration check
+
+# Migrate a state file to a new version
+/version-migration migrate .circuit-state.json --to 1.1.0 --dry-run
+```
+
 ## Arguments
 
 | Argument | Required | Description |

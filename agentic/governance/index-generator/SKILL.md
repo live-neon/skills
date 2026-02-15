@@ -27,6 +27,16 @@ provide navigable overviews of the system state with health alerts and quick lin
 /index-generator schedule --cron "<expression>"
 ```
 
+## Example
+
+```bash
+# Generate index for constraints directory
+/index-generator generate constraints/
+
+# Refresh all indexes
+/index-generator refresh
+```
+
 ## Arguments
 
 | Argument | Required | Description |
