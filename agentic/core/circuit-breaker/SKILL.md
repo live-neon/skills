@@ -244,7 +244,7 @@ When implementing state transitions, ensure atomicity to prevent race conditions
    - Simulate concurrent violations
    - Verify circuit trips at correct threshold
 
-**Reference**: `docs/issues/2026-02-13-phase2-code-review-remediation.md` Finding 6
+**Reference**: `../../../docs/issues/2026-02-13-phase2-code-review-remediation.md` Finding 6
 
 ## Integration
 

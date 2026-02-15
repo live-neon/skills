@@ -4,7 +4,7 @@ type: proposal
 status: approved
 priority: medium
 depends_on:
-  - ../plans/2026-02-13-plan-a-brand-restructure-pbd-migration.md
+  - "[multiverse]/docs/plans/2026-02-13-plan-a-brand-restructure-pbd-migration.md"
 implementation_plans:
   - ../plans/2026-02-13-agentic-skills-phase1-implementation.md
   - ../plans/2026-02-13-agentic-skills-phase2-implementation.md
@@ -27,9 +27,9 @@ related_issues:
   - ../issues/2026-02-13-phase2-twin-review-remediation.md
   - ../issues/2026-02-14-phase3-code-review-findings.md
   - ../issues/2026-02-14-phase3-twin-review-findings.md
-  - ../issues/2026-02-14-rg6-failure-attribution-research.md
-  - ../issues/2026-02-14-frontmatter-audit-impl-review-findings.md
-  - ../issues/2026-02-14-frontmatter-audit-twin-review-findings.md
+  - "[multiverse]/docs/issues/2026-02-14-rg6-failure-attribution-research.md"
+  - "[multiverse]/docs/issues/2026-02-14-frontmatter-audit-impl-review-findings.md"
+  - "[multiverse]/docs/issues/2026-02-14-frontmatter-audit-twin-review-findings.md"
   - ../issues/2026-02-14-phase5-code-review-findings.md
   - ../issues/2026-02-14-phase5-twin-review-findings.md
   - ../issues/2026-02-15-phase6-code-review-findings.md
@@ -39,11 +39,11 @@ related_issues:
   - ../issues/2026-02-15-agentic-skills-implementation-review-findings.md
   - ../issues/2026-02-15-agentic-skills-impl-twin-review-findings.md
 related_observations:
-  - docs/observations/golden-master-cross-project-knowledge.md
-  - docs/observations/configuration-as-code-type-safety.md
-  - docs/observations/2025-11-11-git-destructive-operations-without-confirmation.md
-  - docs/observations/plan-approve-implement-workflow-violation.md
-  - docs/observations/2025-11-09-resist-file-proliferation.md
+  - "[multiverse]/docs/observations/golden-master-cross-project-knowledge.md"
+  - "[multiverse]/docs/observations/configuration-as-code-type-safety.md"
+  - "[multiverse]/docs/observations/2025-11-11-git-destructive-operations-without-confirmation.md"
+  - "[multiverse]/docs/observations/plan-approve-implement-workflow-violation.md"
+  - "[multiverse]/docs/observations/2025-11-09-resist-file-proliferation.md"
 brands:
   live-neon: liveneon.ai (open source, AI identity/skills)
 ---
