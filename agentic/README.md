@@ -108,8 +108,8 @@ These skills integrate with existing ClawHub skills:
 
 - **Architecture**: See `ARCHITECTURE.md` in parent directory for system overview
 - **Phase 1 Results**: See `docs/implementation/agentic-phase1-results.md` for implementation status
-- **Specification**: See `docs/proposals/2026-02-13-agentic-skills-specification.md` (multiverse)
-- **Guides**: See `artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_*.md` (multiverse)
+- **Specification**: See `[multiverse]/docs/proposals/2026-02-13-agentic-skills-specification.md`
+- **Guides**: See `[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_*.md`
 
 ## Testing
 
@@ -128,4 +128,4 @@ See `docker/README.md` and `tests/e2e/skill-loading.test.ts` for details.
 
 ## License
 
-Apache 2.0 - See LICENSE in repository root.
+MIT License - See [LICENSE](../LICENSE) in repository root.

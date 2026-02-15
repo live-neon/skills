@@ -11,8 +11,8 @@ previous_phase: ../plans/2026-02-14-agentic-skills-phase5-implementation.md
 depends_on:
   - ../plans/2026-02-13-agentic-skills-phase2-implementation.md
 related_guides:
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
-  - projects/live-neon/skills/ARCHITECTURE.md
+  - [multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
+  - ../../ARCHITECTURE.md
 source_workflows:
   - docs/workflows/observation-refactoring.md
   - docs/workflows/closing-loops.md
@@ -710,7 +710,7 @@ based on Phase 5 velocity (0.4-0.6 days per skill) plus infrastructure work.
 
 ### Results Documentation
 
-Create `projects/live-neon/skills/docs/implementation/agentic-phase6-results.md` with:
+Create `../implementation/agentic-phase6-results.md` with:
 - Skills implemented (10)
 - Test counts and coverage
 - Deferred items addressed
@@ -738,7 +738,7 @@ Update `../proposals/2026-02-13-agentic-skills-specification.md`:
 ### Next Phase
 
 **Phase 7: Architecture Documentation**
-- Create ARCHITECTURE.md at `projects/live-neon/skills/ARCHITECTURE.md`
+- Create ARCHITECTURE.md at `../../ARCHITECTURE.md`
 - Document all 6 skill layers
 - Dependency graph
 - Data flow diagrams

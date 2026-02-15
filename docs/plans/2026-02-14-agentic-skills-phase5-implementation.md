@@ -8,8 +8,8 @@ previous_phase: ../plans/2026-02-14-agentic-skills-phase4-implementation.md
 depends_on:
   - ../plans/2026-02-14-agentic-skills-phase4-implementation.md
 related_guides:
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
-  - projects/live-neon/skills/ARCHITECTURE.md
+  - [multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
+  - ../../ARCHITECTURE.md
 reviews:
   - type: code-review
     date: 2026-02-14
@@ -123,7 +123,7 @@ Implement 5 Bridge layer skills:
 
 **Specification**: See `../proposals/2026-02-13-agentic-skills-specification.md#phase-5-bridge-skills-5-skills`
 
-**Phase 4 Results**: See `projects/live-neon/skills/docs/implementation/agentic-phase4-results.md`
+**Phase 4 Results**: See `../implementation/agentic-phase4-results.md`
 
 ### How Users Will Interact
 

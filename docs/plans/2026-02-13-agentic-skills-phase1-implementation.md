@@ -5,7 +5,7 @@ type: plan
 status: complete
 priority: high
 specification: ../proposals/2026-02-13-agentic-skills-specification.md
-results: projects/live-neon/skills/docs/implementation/agentic-phase1-results.md
+results: ../implementation/agentic-phase1-results.md
 next_phase: ../plans/2026-02-13-agentic-skills-phase2-implementation.md
 reviews:
   - ../reviews/2026-02-13-agentic-phase1-implementation-codex.md
@@ -13,10 +13,10 @@ reviews:
 issues:
   - ../issues/2026-02-13-agentic-phase1-code-review-remediation.md
 depends_on:
-  - ../plans/2026-02-13-plan-a-brand-restructure-pbd-migration.md
+  - "[multiverse]/docs/plans/2026-02-13-plan-a-brand-restructure-pbd-migration.md"
 related_guides:
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_GUIDE.md
+  - "[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md"
+  - "[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_GUIDE.md"
 ---
 
 # Agentic Skills Phase 1: Quick Wins Implementation
@@ -40,7 +40,7 @@ without the full memory system.
 
 **All 7 stages completed on 2026-02-13.**
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase1-results.md` for full results.
+See `../implementation/agentic-phase1-results.md` for full results.
 
 ---
 
@@ -263,7 +263,7 @@ See: `projects/live-neon/skills/agentic/detection/positive-framer/SKILL.md` (185
    - Tag severity of a sample finding
    - Transform a negative rule to positive
 
-3. Document results in `projects/live-neon/skills/docs/implementation/agentic-phase1-results.md`
+3. Document results in `../implementation/agentic-phase1-results.md`
 
 4. Update ARCHITECTURE.md Foundation Layer:
    - Add all 5 skills to Foundation layer section

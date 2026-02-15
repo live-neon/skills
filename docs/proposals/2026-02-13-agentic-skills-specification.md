@@ -1035,7 +1035,7 @@ These skills address gaps discovered through observation analysis:
 
 ### Purpose
 
-Document how all 47 skills work together as a coherent system. This is the
+Document how all 48 skills work together as a coherent system. This is the
 "owner's manual" for the agentic skills infrastructure.
 
 ### ARCHITECTURE.md Contents
@@ -1132,7 +1132,7 @@ becoming stale documentation written once and forgotten.
 
 ## Skill Lifecycle Management
 
-Skills, like constraints, have a lifecycle. With 47 skills, some may not work out as designed.
+Skills, like constraints, have a lifecycle. With 48 skills, some may not work out as designed.
 
 ### Skill States
 
@@ -1338,7 +1338,7 @@ See `projects/live-neon/skills/docs/implementation/agentic-phase5-results.md` fo
 - [x] threshold-delegator triggers at configured thresholds
 - [x] mce-refactorer suggests split strategies for code files
 - [x] hub-subworkflow suggests hub + sub-document structure for docs
-- [x] All 47 skills operational
+- [x] All 48 skills operational
 
 See `projects/live-neon/skills/docs/implementation/agentic-phase6-results.md` for details.
 

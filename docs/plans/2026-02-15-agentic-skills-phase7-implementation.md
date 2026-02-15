@@ -25,10 +25,10 @@ Phase 7 is the verification gate - the moment we confirm that what we built matc
 ## Summary
 
 Phase 7 completes the agentic skills implementation by finalizing ARCHITECTURE.md,
-addressing deferred items from Phase 6 reviews, and marking all 47 skills operational.
+addressing deferred items from Phase 6 reviews, and marking all 48 skills operational.
 
 **Duration**: 1-1.5 days
-**Prerequisites**: Phase 6 complete (all 47 skills implemented with contract tests)
+**Prerequisites**: Phase 6 complete (all 48 skills implemented with contract tests)
 **Output**: Finalized ARCHITECTURE.md, cleaned up test infrastructure, Phase 6 marked complete
 
 **Terminology**: "Operational" in this plan means a skill has:
@@ -289,7 +289,7 @@ From `../proposals/2026-02-13-agentic-skills-specification.md` Phase 7 Verificat
    - Document test count in results
 
 5. **Create completion summary**:
-   - File: `projects/live-neon/skills/docs/implementation/agentic-phase7-results.md`
+   - File: `../implementation/agentic-phase7-results.md`
    - Document what was completed, deferred, and learned
    - Include deferral rationales from Stages 3-4 if applicable
 
@@ -304,7 +304,7 @@ From `../proposals/2026-02-13-agentic-skills-specification.md` Phase 7 Verificat
 - [x] Results file created
 
 **Exit Criteria**:
-- [x] All 47 skills operational
+- [x] All 48 skills operational
 - [x] ARCHITECTURE.md finalized
 - [x] Specification updated
 - [x] All success criteria explicitly verified
@@ -351,7 +351,7 @@ From `../proposals/2026-02-13-agentic-skills-specification.md` Phase 7 Verificat
 
 - [x] Phase 6 complete (534 tests passing)
 - [x] ARCHITECTURE.md exists (815+ lines)
-- [x] All 47 skills have SKILL.md files
+- [x] All 48 skills have SKILL.md files
 
 ## Exit Criteria
 
@@ -377,7 +377,7 @@ From `../proposals/2026-02-13-agentic-skills-specification.md` Phase 7 Verificat
 - [x] threshold-delegator triggers at configured thresholds
 - [x] mce-refactorer suggests split strategies for code files
 - [x] hub-subworkflow suggests hub + sub-document structure for docs
-- [x] All 47 skills operational
+- [x] All 48 skills operational
 
 ### Phase 7 (this plan)
 - [x] ARCHITECTURE.md complete at `projects/live-neon/skills/ARCHITECTURE.md`
@@ -408,4 +408,4 @@ From `../proposals/2026-02-13-agentic-skills-specification.md` Phase 7 Verificat
 
 ---
 
-*Plan created 2026-02-15. Completed 2026-02-15. All 47 skills operational, ARCHITECTURE.md finalized (v0.8.0).*
+*Plan created 2026-02-15. Completed 2026-02-15. All 48 skills operational, ARCHITECTURE.md finalized (v0.8.0).*

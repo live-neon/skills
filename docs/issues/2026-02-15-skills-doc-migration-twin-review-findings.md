@@ -2,7 +2,7 @@
 created: 2026-02-15
 type: issue
 scope: internal
-status: open
+status: resolved
 priority: medium
 related_plan: "[multiverse]/docs/plans/2026-02-15-skills-documentation-migration.md"
 related_reviews:
@@ -28,7 +28,7 @@ proper submodule handling, but several documentation standardization items remai
 
 | # | Finding | Source | N-Count | Status |
 |---|---------|--------|---------|--------|
-| C-1 | Skill count inconsistency (47 vs 48) | Creative | N=2 | Open |
+| C-1 | Skill count inconsistency (47 vs 48) | Creative | N=2 | Resolved |
 
 **Details**: Documentation uses both "47 skills" and "48 skills" inconsistently:
 - "48 skills": README.md:60, ARCHITECTURE.md:58
@@ -45,10 +45,10 @@ proper submodule handling, but several documentation standardization items remai
 
 | # | Finding | Source | N-Count | Status |
 |---|---------|--------|---------|--------|
-| I-1 | 25 full-path references in plan files | Technical | N=2 | Open |
-| I-2 | Mixed path conventions in Phase 1 plan frontmatter | Technical | N=2 | Open |
-| I-3 | `(multiverse)` parenthetical instead of `[multiverse]` prefix | Creative | N=2 | Open |
-| I-4 | "Operational" term ambiguity | Creative | N=2 | Open |
+| I-1 | 25 full-path references in plan files | Technical | N=2 | Resolved |
+| I-2 | Mixed path conventions in Phase 1 plan frontmatter | Technical | N=2 | Resolved |
+| I-3 | `(multiverse)` parenthetical instead of `[multiverse]` prefix | Creative | N=2 | Resolved |
+| I-4 | "Operational" term ambiguity | Creative | N=2 | Resolved |
 
 **I-1 Details**: Plan files contain `projects/live-neon/skills/docs/...` paths that should be relative:
 ```
@@ -88,9 +88,9 @@ The `depends_on` file does not exist in skills (verified via glob search).
 
 | # | Finding | Source | N-Count | Status |
 |---|---------|--------|---------|--------|
-| M-1 | License inconsistency (MIT vs Apache 2.0) | Creative | N=2 | Open |
-| M-2 | Missing "New here?" callout in docs/README.md | Creative | N=2 | Open |
-| M-3 | `related_guides` paths unmarked as external | Technical | N=2 | Open |
+| M-1 | License inconsistency (MIT vs Apache 2.0) | Creative | N=2 | Resolved |
+| M-2 | Missing "New here?" callout in docs/README.md | Creative | N=2 | Deferred |
+| M-3 | `related_guides` paths unmarked as external | Technical | N=2 | Resolved |
 
 **M-1 Details**: LICENSE file is MIT, but agentic/README.md:131 says "Apache 2.0".
 

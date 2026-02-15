@@ -59,6 +59,12 @@ This architecture is currently a **specification-first implementation**:
 - 534 contract tests (all passing)
 - Specification at `docs/proposals/2026-02-13-agentic-skills-specification.md`
 
+**What "Operational" means**:
+- SKILL.md specification complete
+- Contract tests passing against mocks
+- Entry in ARCHITECTURE.md with layer placement and dependencies
+- Does NOT imply runtime CLI wrapper exists (deferred to Phase 8+)
+
 ## Skill Layers
 
 ```
@@ -860,8 +866,8 @@ This is by design—the failure-anchored learning system requires this pipeline.
 | 0.5.1 | 2026-02-14 | Added severity-tiered circuit breaker defaults, two-stage matching |
 | 0.6.0 | 2026-02-14 | Phase 5 complete: 5 Bridge layer skills implemented |
 | 0.7.0 | 2026-02-15 | Phase 6 complete: 10 Extensions layer skills implemented |
-| 0.8.0 | 2026-02-15 | Phase 7 complete: Architecture finalization, dependency verification, all 47 skills operational |
+| 0.8.0 | 2026-02-15 | Phase 7 complete: Architecture finalization, dependency verification, all 48 skills operational |
 
 ---
 
-*Architecture complete. 47 skills across 6 layers. See Extending the System for adding new skills.*
+*Architecture complete. 48 skills across 6 layers. See Extending the System for adding new skills.*

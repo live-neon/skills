@@ -9,8 +9,8 @@ previous_phase: ../plans/2026-02-13-agentic-skills-phase2-implementation.md
 depends_on:
   - ../plans/2026-02-13-agentic-skills-phase2-implementation.md
 related_guides:
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
-  - projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md
+  - [multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
+  - ../guides/SEMANTIC_SIMILARITY_GUIDE.md
 related_workflows:
   - docs/workflows/twin-review.md
   - docs/workflows/cognitive-review.md
@@ -59,7 +59,7 @@ failure-anchored learning system to be self-improving.
 
 **Specification**: See `../proposals/2026-02-13-agentic-skills-specification.md#phase-3-review--detection-10-skills`
 
-**Phase 2 Results**: See `projects/live-neon/skills/docs/implementation/agentic-phase2-results.md`
+**Phase 2 Results**: See `../implementation/agentic-phase2-results.md`
 
 ### How Users Will Interact
 
@@ -377,7 +377,7 @@ observations for one pattern.
 **Semantic Matching**:
 Uses LLM semantic similarity to suggest existing slugs when new failure is recorded.
 "Force pushed to main" should match existing `git-force-push-without-confirmation`.
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 **Integration**:
 - **Layer**: Review
@@ -701,7 +701,7 @@ Fix MCE violations before proceeding to Stage 4.
 Infer topic tags from file paths, content, and context.
 
 **Classification Method**: LLM-based semantic classification (NOT keyword matching)
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 **Problem Being Solved**:
 Constraints and observations need topic tags for filtering. Manual tagging is
@@ -821,7 +821,7 @@ This skill may need provisional status if research incomplete.
 Detect failures from multiple signals: test failures, user corrections, review findings.
 
 **Classification Method**: LLM-based semantic classification (NOT pattern matching)
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 **Problem Being Solved**:
 failure-tracker records failures, but something needs to detect them first.
@@ -1173,7 +1173,7 @@ exist yet. This is a known limitation for Phase 3.
 - **Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
 - **Phase 1 Plan**: `../plans/2026-02-13-agentic-skills-phase1-implementation.md`
 - **Phase 2 Plan**: `../plans/2026-02-13-agentic-skills-phase2-implementation.md`
-- **Phase 2 Results**: `projects/live-neon/skills/docs/implementation/agentic-phase2-results.md`
+- **Phase 2 Results**: `../implementation/agentic-phase2-results.md`
 
 ### Existing Workflows (to be automated)
 - **Twin Review**: `docs/workflows/twin-review.md`
@@ -1183,8 +1183,8 @@ exist yet. This is a known limitation for Phase 3.
 - **Review Hub**: `docs/workflows/review.md`
 
 ### Guides
-- **Architecture Guide**: `artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md` (v5.2)
-- **Semantic Similarity Guide**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+- **Architecture Guide**: `[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md` (v5.2)
+- **Semantic Similarity Guide**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 ### Research
 - **RG-6 Partial**: `projects/live-neon/neon-soul/docs/research/wisdom-synthesis-patterns.md`

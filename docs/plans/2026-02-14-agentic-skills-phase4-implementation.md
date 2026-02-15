@@ -8,10 +8,10 @@ previous_phase: ../plans/2026-02-13-agentic-skills-phase3-implementation.md
 depends_on:
   - ../plans/2026-02-13-agentic-skills-phase3-implementation.md
 related_guides:
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
-  - projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md
+  - [multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
+  - [multiverse]/projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md
 related_research:
-  - projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md
+  - [multiverse]/projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md
 reviews:
   - type: code-review
     date: 2026-02-14
@@ -79,7 +79,7 @@ Implement 8 Governance & Safety layer skills plus 4 review-identified additions:
 
 **Specification**: See `../proposals/2026-02-13-agentic-skills-specification.md#phase-4-governance--safety-8-skills`
 
-**Phase 3 Results**: See `projects/live-neon/skills/docs/implementation/agentic-phase3-results.md`
+**Phase 3 Results**: See `../implementation/agentic-phase3-results.md`
 
 ### How Users Will Interact
 
@@ -205,7 +205,7 @@ Phase 4 has 3 research gates:
 
 ### RG-7: Cryptographic Audit Chains (COMPLETE)
 
-**Research**: `projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md`
+**Research**: `[multiverse]/projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md`
 
 **Application**: Packet signing for context-packet authenticity (deferred from Phase 1).
 
@@ -915,7 +915,7 @@ Recommendation: Continue monitoring, no intervention needed
 
 Add cryptographic signing to context packets.
 
-**Research Reference**: `projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md`
+**Research Reference**: `[multiverse]/projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md`
 
 **Problem Being Solved**:
 Context packets are currently unsigned JSON. A malicious actor could rewrite
@@ -1437,10 +1437,10 @@ After creating/modifying this skill:
 - **Phase 1 Plan**: `../plans/2026-02-13-agentic-skills-phase1-implementation.md`
 - **Phase 2 Plan**: `../plans/2026-02-13-agentic-skills-phase2-implementation.md`
 - **Phase 3 Plan**: `../plans/2026-02-13-agentic-skills-phase3-implementation.md`
-- **Phase 3 Results**: `projects/live-neon/skills/docs/implementation/agentic-phase3-results.md`
+- **Phase 3 Results**: `../implementation/agentic-phase3-results.md`
 
 ### Research
-- **RG-7 Complete**: `projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md`
+- **RG-7 Complete**: `[multiverse]/projects/live-neon/neon-soul/docs/research/cryptographic-audit-chains.md`
 - **RG-2 Output**: `projects/live-neon/neon-soul/docs/research/multi-agent-coordination.md` (to be created)
 - **RG-4 Output**: `projects/live-neon/neon-soul/docs/research/constraint-decay-patterns.md` (to be created)
 

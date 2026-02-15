@@ -6,12 +6,12 @@ status: complete
 priority: high
 specification: ../proposals/2026-02-13-agentic-skills-specification.md
 previous_phase: ../plans/2026-02-13-agentic-skills-phase1-implementation.md
-results: projects/live-neon/skills/docs/implementation/agentic-phase2-results.md
+results: ../implementation/agentic-phase2-results.md
 depends_on:
   - ../plans/2026-02-13-agentic-skills-phase1-implementation.md
 related_guides:
-  - artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
-  - projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md
+  - [multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md
+  - ../guides/SEMANTIC_SIMILARITY_GUIDE.md
 reviews:
   - ../reviews/2026-02-13-phase2-plan-codex.md
   - ../reviews/2026-02-13-phase2-plan-gemini.md
@@ -51,7 +51,7 @@ constraints, and managing the observation→constraint lifecycle.
 
 **Specification**: See `../proposals/2026-02-13-agentic-skills-specification.md#phase-2-core-memory-9-remaining-core-skills`
 
-**Phase 1 Results**: See `projects/live-neon/skills/docs/implementation/agentic-phase1-results.md`
+**Phase 1 Results**: See `../implementation/agentic-phase1-results.md`
 
 ---
 
@@ -283,7 +283,7 @@ Before implementing, consider researching:
 Detect and record failure observations with R/C/D counter tracking.
 
 **Classification Method**: LLM-based semantic similarity (NOT pattern matching)
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 **Research Gate RG-3**: Semantic similarity thresholds are a research gap. Confidence scoring
 (0.0-1.0) is mentioned but threshold calibration is not validated. See
@@ -441,7 +441,7 @@ Pattern observations MUST NOT be promoted to constraints. Enforce via single fie
 Generate constraint candidates from observations meeting eligibility criteria.
 
 **Classification Method**: LLM-based semantic similarity (NOT pattern matching)
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 When comparing observations for similarity (to detect related failures), use semantic
 classification, not string matching. Two failures with different wording but same root
@@ -888,7 +888,7 @@ Same atomic write-and-rename pattern as circuit-state.json.
 Search across observations and constraints using semantic similarity.
 
 **Classification Method**: LLM-based semantic similarity (NOT pattern matching)
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 Semantic search means "force push safety" finds constraints about `git push --force`
 even if those exact words don't appear. The LLM understands semantic equivalence.
@@ -957,7 +957,7 @@ packet schema used in search result validation.
 Load relevant constraints based on current working context.
 
 **Classification Method**: LLM-based semantic similarity for tag/domain matching
-**Reference**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
+**Reference**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
 
 File patterns use glob matching (acceptable for file selection), but tag and domain
 matching use semantic similarity. A constraint tagged "version-control" should match
@@ -1208,7 +1208,7 @@ emergency-override approval). Buffer included for debugging integration issues.
 ### Specification & Plans
 - **Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
 - **Phase 1 Plan**: `../plans/2026-02-13-agentic-skills-phase1-implementation.md`
-- **Phase 1 Results**: `projects/live-neon/skills/docs/implementation/agentic-phase1-results.md`
+- **Phase 1 Results**: `../implementation/agentic-phase1-results.md`
 
 ### Code Reviews (N=2 External)
 - **Codex Review**: `../reviews/2026-02-13-phase2-plan-codex.md`
@@ -1219,9 +1219,9 @@ emergency-override approval). Buffer included for debugging integration issues.
 - **Creative Review**: `../reviews/2026-02-13-phase2-plan-twin-creative.md`
 
 ### Guides
-- **Architecture Guide**: `artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md` (v5.2)
-- **Semantic Similarity Guide**: `projects/live-neon/skills/docs/guides/SEMANTIC_SIMILARITY_GUIDE.md`
-- **Documentation Update Workflow**: `projects/live-neon/skills/docs/workflows/documentation-update.md`
+- **Architecture Guide**: `[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md` (v5.2)
+- **Semantic Similarity Guide**: `../guides/SEMANTIC_SIMILARITY_GUIDE.md`
+- **Documentation Update Workflow**: `../workflows/documentation-update.md`
 
 ### Research (Existing - Human Approval Patterns)
 - **Chat Interaction Patterns**: `projects/live-neon/neon-soul/docs/research/chat-interaction-patterns.md`
