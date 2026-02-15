@@ -1,0 +1,32 @@
+{
+  "session_id": "session-2026-02-14-002",
+  "started_at": "2026-02-14T13:00:00Z",
+  "user": "twin2",
+  "domain": "backend",
+  "files_modified": ["src/api/handlers.ts"],
+  "conflict_detected": true,
+  "conflict_type": "concurrent_modification",
+  "conflict_details": {
+    "file": "src/api/handlers.ts",
+    "session_a": {
+      "id": "session-2026-02-14-001",
+      "user": "twin1",
+      "last_modified": "2026-02-14T12:00:00Z"
+    },
+    "session_b": {
+      "id": "session-2026-02-14-002",
+      "user": "twin2",
+      "attempted_modify": "2026-02-14T13:15:00Z"
+    },
+    "resolution_required": true
+  },
+  "stale_state_warning": {
+    "message": "File modified since last sync",
+    "recommendation": "Pull latest changes before editing",
+    "severity": "warning"
+  },
+  "prior_session_reference": {
+    "session_id": "session-2026-02-14-001",
+    "summary": "Added user API endpoints"
+  }
+}

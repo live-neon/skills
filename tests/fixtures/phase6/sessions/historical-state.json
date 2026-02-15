@@ -1,0 +1,35 @@
+{
+  "session_id": "session-2026-02-14-001",
+  "started_at": "2026-02-14T09:00:00Z",
+  "ended_at": "2026-02-14T12:30:00Z",
+  "user": "twin1",
+  "domain": "backend",
+  "files_modified": [
+    "src/api/handlers.ts",
+    "src/api/routes.ts",
+    "tests/api.test.ts"
+  ],
+  "commits": [
+    {
+      "hash": "abc123",
+      "message": "feat: add user endpoint",
+      "timestamp": "2026-02-14T10:15:00Z"
+    },
+    {
+      "hash": "def456",
+      "message": "test: add user endpoint tests",
+      "timestamp": "2026-02-14T11:30:00Z"
+    }
+  ],
+  "observations_created": [
+    "api-error-handling-pattern"
+  ],
+  "constraints_triggered": [
+    "git-commit-message-format"
+  ],
+  "state_snapshot": {
+    "branch": "feature/user-api",
+    "uncommitted_changes": false,
+    "test_status": "passing"
+  }
+}
