@@ -40,6 +40,7 @@ interface SkillFrontmatter {
   status?: string;
   alias?: string;
   'user-invocable'?: boolean;
+  emoji?: string;
 }
 
 interface SkillInfo {
@@ -132,23 +133,10 @@ describe('E2E: All Skills Loading', () => {
       expect(allSkills.length).toBeGreaterThan(0);
     });
 
-    it('should discover exactly 7 consolidated agentic skills', () => {
-      expect(agenticSkills.length).toBe(7);
-    });
-  });
-
-  describe('PBD Skills', () => {
-    it('should have valid SKILL.md format', () => {
-      for (const skill of pbdSkills) {
-        expect(skill.frontmatter.name).toBeDefined();
-        expect(skill.frontmatter.version).toBeDefined();
-        expect(skill.frontmatter.description).toBeDefined();
-      }
-    });
-  });
-
-  describe('Agentic Skills (Consolidated)', () => {
-    it('should have all 7 consolidated skills', () => {
+    it('should discover agentic skills', () => {
+      // Discovery-based: at least one skill found
+      expect(agenticSkills.length).toBeGreaterThan(0);
+      // Verify known consolidated skills exist (but don't enforce exact count)
       for (const expectedName of CONSOLIDATED_AGENTIC_SKILLS) {
         const found = agenticSkills.some(s =>
           s.name === expectedName || s.frontmatter.name === expectedName
@@ -156,6 +144,37 @@ describe('E2E: All Skills Loading', () => {
         expect(found, `Missing consolidated skill: ${expectedName}`).toBe(true);
       }
     });
+  });
+
+  describe('PBD Skills', () => {
+    it('should have valid SKILL.md format', () => {
+      for (const skill of pbdSkills) {
+        expect(skill.frontmatter.name, `${skill.name} missing name`).toBeDefined();
+        expect(skill.frontmatter.version, `${skill.name} missing version`).toBeDefined();
+        expect(skill.frontmatter.description, `${skill.name} missing description`).toBeDefined();
+        // PBD-specific required fields (C-2 fix)
+        expect(skill.frontmatter['user-invocable'], `${skill.name} missing user-invocable`).toBe(true);
+        expect(skill.frontmatter.emoji, `${skill.name} missing emoji`).toBeDefined();
+      }
+    });
+
+    it('should have required documentation sections', () => {
+      // Sections validated against actual skills (audited 2026-02-15)
+      const requiredSections = [
+        '## Agent Identity',
+        '## When to Use',
+        '## Related Skills',
+      ];
+      for (const skill of pbdSkills) {
+        for (const section of requiredSections) {
+          expect(skill.body, `${skill.name} missing ${section}`).toContain(section);
+        }
+      }
+    });
+  });
+
+  describe('Agentic Skills (Consolidated)', () => {
+    // Note: consolidated skill verification is now in 'should discover agentic skills' test
 
     it('should have valid SKILL.md format', () => {
       for (const skill of agenticSkills) {
@@ -169,17 +188,26 @@ describe('E2E: All Skills Loading', () => {
     });
 
     it('should have required documentation sections', () => {
+      // Sections validated against actual skills (audited 2026-02-15)
+      const requiredSections = [
+        '## Usage',
+        '## Sub-Commands',
+        '## Arguments',
+        '## Integration',
+        '## Failure Modes',
+        '## Next Steps',
+        '## Acceptance Criteria',
+      ];
       for (const skill of agenticSkills) {
-        expect(skill.body, `${skill.name} missing Usage`).toContain('## Usage');
-        expect(skill.body, `${skill.name} missing Sub-Commands`).toContain('## Sub-Commands');
-        expect(skill.body, `${skill.name} missing Integration`).toContain('## Integration');
-        expect(skill.body, `${skill.name} missing Next Steps`).toContain('## Next Steps');
-        expect(skill.body, `${skill.name} missing Acceptance Criteria`).toContain('## Acceptance Criteria');
+        for (const section of requiredSections) {
+          expect(skill.body, `${skill.name} missing ${section}`).toContain(section);
+        }
       }
     });
 
     it('should have layer assignments', () => {
-      const expectedLayers = ['core', 'foundation', 'review', 'governance', 'safety', 'extensions'];
+      // Layers from agentic/SKILL_TEMPLATE.md (T-3 fix: added bridge, detection)
+      const expectedLayers = ['foundation', 'core', 'review', 'detection', 'governance', 'safety', 'bridge', 'extensions'];
       for (const skill of agenticSkills) {
         expect(
           expectedLayers.includes(skill.frontmatter.layer!),
