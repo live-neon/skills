@@ -12,6 +12,7 @@ Future work deferred from completed phases. All items have explicit triggers.
 
 | Plan | Priority | Trigger | Deferred From |
 |------|----------|---------|---------------|
+| [Skill Category Alignment](./2026-02-15-skill-category-alignment.md) | Medium | Immediate (foundational) | New |
 | [VFM Weight Tuning](./2026-02-15-vfm-weight-tuning.md) | Low | N≥10 constraint usage | Phase 5, 5B |
 | [ClawHub CLI Automation](./2026-02-15-clawhub-cli-automation.md) | Low | Rate limit cleared | Phase 5B |
 | [Test Mock DRY Refactoring](./2026-02-15-test-mock-dry-refactoring.md) | Low | >10 test files | Phase 7 |
@@ -23,6 +24,9 @@ Future work deferred from completed phases. All items have explicit triggers.
 Check these conditions to determine when to start backlog items:
 
 ```bash
+# Skill Category Alignment: Immediate (no trigger)
+# Ready to implement now
+
 # VFM Weight Tuning: N≥10 constraint usage
 grep -c "^\[LRN-" .learnings/LEARNINGS.md
 

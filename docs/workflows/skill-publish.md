@@ -19,6 +19,16 @@
 
 ## Installation (Users)
 
+**ClawHub (recommended)**:
+```bash
+# Install individual skills via OpenClaw
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+# See agentic/README.md for full installation order
+```
+
+**Manual (Claude Code users)**:
 ```bash
 # Clone to Claude Code skills directory
 git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon

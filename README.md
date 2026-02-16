@@ -24,6 +24,16 @@ for the full failure-to-constraint lifecycle.
 
 ## Installation
 
+**ClawHub (recommended)**:
+```bash
+# Install individual skills via OpenClaw
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+# See agentic/README.md for full installation order
+```
+
+**Manual (Claude Code users)**:
 ```bash
 # Clone to your Claude Code skills directory
 git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
@@ -126,6 +136,7 @@ Implementation history and specifications:
 | Directory | Description |
 |-----------|-------------|
 | [docs/](docs/README.md) | Documentation index |
+| [docs/patterns/](docs/patterns/) | Validated patterns (N≥3 evidence) |
 | [docs/proposals/](docs/proposals/) | Specifications and proposals |
 | [docs/plans/](docs/plans/) | Implementation plans (phases 1-7) |
 | [docs/issues/](docs/issues/) | Review findings and issues |

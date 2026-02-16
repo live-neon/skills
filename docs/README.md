@@ -12,6 +12,7 @@ Documentation for the Live Neon Skills project.
 | `guides/` | Technical deep-dives (semantic similarity, core memory walkthrough) |
 | `implementation/` | Phase results and acceptance verification |
 | `issues/` | Review findings and remediation tracking |
+| `patterns/` | Validated patterns (N≥3 evidence) |
 | `plans/` | Implementation plans for each phase |
 | `proposals/` | Specifications and architectural proposals |
 | `reviews/` | Code review and twin review outputs |
@@ -23,6 +24,7 @@ Documentation for the Live Neon Skills project.
 - **[Specification](proposals/2026-02-13-agentic-skills-specification.md)** - Main agentic skills specification
 - **[ARCHITECTURE.md](../ARCHITECTURE.md)** - System architecture (layers, data flow, skills inventory)
 - **[Phase Results](implementation/)** - Implementation status by phase
+- **[Skill Format Pattern](patterns/skill-format.md)** - Why Agentic and PBD use different formats
 
 ## Quick Navigation
 
@@ -48,6 +50,7 @@ Future work with explicit triggers: [BACKLOG.md](plans/BACKLOG.md)
 
 - **[Skills README](../README.md)** - Project overview and quick start
 - **[Agentic README](../agentic/README.md)** - Agentic skills layer overview
+- **[PBD README](../pbd/README.md)** - PBD skills layer overview
 - **[Tests README](../tests/README.md)** - Testing documentation
 
 ---
