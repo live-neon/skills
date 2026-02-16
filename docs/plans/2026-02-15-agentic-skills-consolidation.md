@@ -339,6 +339,84 @@ mv agentic/bridge/interfaces agentic/clawhub-bridge/interfaces
 
 ---
 
+## Stage 7: Project Documentation Update
+
+**Duration**: 0.5 day
+**Goal**: Systematic documentation update following `docs/workflows/documentation-update.md`
+**Workflow**: [Documentation Update Workflow](../workflows/documentation-update.md)
+
+### 7.1 Follow Documentation Hierarchy
+
+Per the workflow, updates flow from authoritative sources down:
+
+1. **SKILL.md files** (8 new consolidated skills)
+   - Frontmatter, usage, arguments, integration sections
+   - Dependency documentation (Depends on / Used by)
+   - Failure modes for each consolidated skill
+
+2. **ARCHITECTURE.md**
+   - Replace 6-layer diagram with consolidated 4-tier model (from Stage 6.1)
+   - Update skill inventory tables (8 skills, not 48)
+   - Document hook integration points
+   - Update Guides section if needed
+
+3. **README.md** (root)
+   - Update skill tables (8 consolidated skills)
+   - Update "The Problem / The Solution" if consolidation changes messaging
+
+4. **agentic/README.md**
+   - Update lifecycle diagram for consolidated skills
+   - Update ClawHub Integration section
+
+5. **tests/README.md**
+   - Update test commands for consolidated test suite
+   - Update coverage section
+
+### 7.2 Verify Bidirectional Dependencies
+
+For each consolidated skill, ensure:
+- "Depends on" lists all upstream skills
+- Upstream skills' "Used by" lists this skill
+- No layer violations (dependencies flow upward only)
+
+### 7.3 Run Verification Checks
+
+```bash
+# Skill count consistency
+echo "README skill count:"
+grep -c "agentic/" README.md
+echo "ARCHITECTURE skill count:"
+grep -c "Implemented" ARCHITECTURE.md
+echo "Actual skills:"
+find agentic -name "SKILL.md" | wc -l
+# Expected: All show 8
+
+# No stale external references
+grep -r "neon-soul/skills/neon-soul" . 2>/dev/null
+# Expected: No results
+
+# Dependency bidirectionality spot check
+for f in $(find agentic -name "SKILL.md" -not -path "*/_archive/*"); do
+  skill=$(basename $(dirname $f))
+  echo "=== $skill ==="
+  grep -A1 "Depends on" "$f" 2>/dev/null | head -2
+  grep -A1 "Used by" "$f" 2>/dev/null | head -2
+done
+
+# All tests pass
+cd tests && npm test
+```
+
+### 7.4 Close the Loop
+
+- [ ] ARCHITECTURE.md layer tables current (8 skills)
+- [ ] README.md skill tables current (8 skills)
+- [ ] Dependency links bidirectional
+- [ ] Tests passing
+- [ ] Phase results file created: `docs/implementation/agentic-consolidation-results.md`
+
+---
+
 ## Timeline
 
 | Stage | Duration | Description |
@@ -348,9 +426,10 @@ mv agentic/bridge/interfaces agentic/clawhub-bridge/interfaces
 | Stage 3 | 0.5 day | Bridge: clawhub-bridge |
 | Stage 4 | 0.5 day | Extensions: workflow-tools |
 | Stage 5 | 1 day | Hooks and automation |
-| Stage 6 | 0.5 day | Documentation and cleanup |
+| Stage 6 | 0.5 day | Archive old skills, update test suite |
+| Stage 7 | 0.5 day | Project documentation update (per workflow) |
 
-**Total**: 4-5.5 days
+**Total**: 4.5-6 days
 
 ---
 
@@ -362,6 +441,8 @@ mv agentic/bridge/interfaces agentic/clawhub-bridge/interfaces
 - [ ] Core lifecycle works: failure → record → eligible → constraint → enforce
 - [ ] ClawHub bridge exports to self-improving-agent
 - [ ] Tests pass (consolidated from 534 to ~100)
+- [ ] Documentation updated per workflow (ARCHITECTURE, READMEs, dependency links)
+- [ ] Results file created: `docs/implementation/agentic-consolidation-results.md`
 
 ---
 
@@ -402,6 +483,7 @@ The adapter code stays the same - only the SKILL.md organization changes.
 - **Phase 5B plan** (blocked by this): `2026-02-15-agentic-skills-phase5b-implementation.md`
 - **Phase 5 results**: `../implementation/agentic-phase5-results.md`
 - **Twin review findings**: `../issues/2026-02-15-skills-doc-migration-twin-review-findings.md`
+- **Documentation update workflow**: `../workflows/documentation-update.md`
 - **Feedback source**: Internal review (over-engineering concerns)
 
 ---
