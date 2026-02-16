@@ -10,6 +10,7 @@
 # Skills Mounted:
 #   - /skills/pbd/      - PBD methodology skills
 #   - /skills/agentic/  - Agentic memory skills
+#   - /skills/clawhub/  - ClawHub ecosystem skills (self-improving-agent, proactive-agent)
 
 services:
   # OpenClaw runtime for skill execution
@@ -30,6 +31,7 @@ services:
       # All skills (read-only)
       - ../pbd:/skills/pbd:ro
       - ../agentic:/skills/agentic:ro
+      - ../clawhub-skills:/skills/clawhub:ro
       # Test workspace
       - ../tests/fixtures/mock-workspace:/workspace
     networks:

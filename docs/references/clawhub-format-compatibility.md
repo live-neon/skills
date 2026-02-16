@@ -15,8 +15,8 @@ Comparison of Live Neon Skills workspace formats against ClawHub skill specifica
 
 | Skill | Version | Status | Notes |
 |-------|---------|--------|-------|
-| self-improving-agent | 1.0.2 | ⚠️ Partial | ID scheme matches; field differences |
-| proactive-agent | 3.1.0 | ⏳ Pending | Rate limited during inspection |
+| self-improving-agent | 1.0.5 | ⚠️ Partial | ID scheme matches; field differences |
+| proactive-agent | 3.1.0 | ✅ Compatible | HEARTBEAT.md matches; complementary scope |
 
 ## self-improving-agent Comparison
 
@@ -114,23 +114,62 @@ The ID scheme and file structure are fully compatible. Entry format differences 
 
 ## proactive-agent Comparison
 
-**Slug**: `proactive-agent`
+**Installed from**: Manual copy (rate limited during `clawhub install`)
 **Version**: 3.1.0
-**Owner**: halthelobster
+**Owner**: halthelobster (Hal Labs)
 
-**Status**: ⏳ Rate limited - need to retry inspection
+### Workspace Structure (proactive-agent expected)
 
-**Expected workspace files** (from description):
-- WAL Protocol files
-- Working Buffer
-- HEARTBEAT pattern
-
-### Pending Verification
-
-```bash
-# Retry when rate limit clears
-clawhub install proactive-agent --workdir . --dir clawhub-skills --force
 ```
+workspace/
+├── ONBOARDING.md      # First-run setup
+├── AGENTS.md          # Operating rules, workflows
+├── SOUL.md            # Identity, principles
+├── USER.md            # Human context, preferences
+├── MEMORY.md          # Long-term memory
+├── SESSION-STATE.md   # WAL target (active task)
+├── HEARTBEAT.md       # Periodic self-improvement ✅ We have this
+├── TOOLS.md           # Tool configs
+└── memory/
+    ├── YYYY-MM-DD.md  # Daily raw capture
+    └── working-buffer.md  # Danger zone log
+```
+
+### Compatibility Assessment
+
+| Aspect | proactive-agent | Live Neon | Status |
+|--------|-----------------|-----------|--------|
+| HEARTBEAT.md | ✅ Required | ✅ Present | ✅ Match |
+| `.learnings/` | Not specified | ✅ Present | ➕ Compatible |
+| SESSION-STATE.md | Required | Not present | ⚠️ Different scope |
+| Working Buffer | Required | Not present | ⚠️ Different scope |
+| VFM Protocol | Documented | Similar to R/C/D | ✅ Conceptually aligned |
+
+### Key Differences
+
+**Scope**: proactive-agent focuses on **session persistence** (surviving context loss), while self-improving-agent focuses on **learning capture** (recording corrections/errors).
+
+**Architecture**:
+- proactive-agent: WAL Protocol → SESSION-STATE.md → Working Buffer
+- self-improving-agent: Detection triggers → `.learnings/` files → Skill extraction
+
+**Compatibility**: These skills are **complementary**, not overlapping:
+- Use proactive-agent patterns for session management
+- Use self-improving-agent patterns for learning capture
+- Both can coexist in same workspace
+
+### VFM Protocol Alignment
+
+proactive-agent VFM scoring (Value-First Modification):
+
+| Dimension | Weight | Equivalent in Live Neon |
+|-----------|--------|------------------------|
+| High Frequency | 3x | R (Recurrence) in R/C/D |
+| Failure Reduction | 3x | Constraint effectiveness |
+| User Burden | 2x | (implicit in priority) |
+| Self Cost | 2x | (implicit in priority) |
+
+**Conclusion**: R/C/D counters serve similar purpose to VFM scoring but with different granularity.
 
 ---
 
@@ -138,35 +177,41 @@ clawhub install proactive-agent --workdir . --dir clawhub-skills --force
 
 Location: `clawhub-skills/`
 
-| Skill | Version | Installed |
-|-------|---------|-----------|
-| self-improving-agent-1-0-2 | 1.0.0 | ✅ Yes |
-| proactive-agent | 3.1.0 | ⏳ Pending |
+| Skill | Version | Installed | Method |
+|-------|---------|-----------|--------|
+| self-improving-agent-1.0.5 | 1.0.5 | ✅ Yes | Manual copy |
+| proactive-agent-3.1.0 | 3.1.0 | ✅ Yes | Manual copy |
+
+**Note**: Manual installation due to ClawHub rate limiting. Skills copied from user Downloads.
 
 ---
 
 ## Action Items
 
-- [ ] Retry proactive-agent installation when rate limit clears
-- [ ] Review proactive-agent SKILL.md for WAL/HEARTBEAT format
+- [x] ~~Retry proactive-agent installation~~ → Manual copy (rate limit workaround)
+- [x] Review proactive-agent SKILL.md for WAL/HEARTBEAT format → Complementary scope documented
 - [x] Decide on format alignment → **Keep ours** (functional, R/C/D is valuable extension)
 - [ ] Update VERSION.md with verification status
 - [x] Add compatibility notes to workspace files (already present: "compatible with self-improving-agent@1.0.5")
+- [x] Add skills to docker-compose.yml
 
 ---
 
 ## Stage 2 Verification Status
 
-**self-improving-agent**: ✅ Verified (2026-02-15)
+**self-improving-agent@1.0.5**: ✅ Verified (2026-02-15)
 - `.learnings/LEARNINGS.md`: Present, ID scheme compatible
 - `.learnings/ERRORS.md`: Present, ID scheme compatible
 - `.learnings/FEATURE_REQUESTS.md`: Present, ID scheme compatible
 - Entry format: Partial compatibility (cosmetic differences only)
 
-**proactive-agent**: ⏳ Blocked (rate limit)
+**proactive-agent@3.1.0**: ✅ Verified (2026-02-15)
+- `HEARTBEAT.md`: Present, compatible
+- Scope: Complementary (session persistence vs learning capture)
+- VFM Protocol: Conceptually aligned with R/C/D counters
 
 **Tests**: 10 passing (consolidated skills loading)
 
 ---
 
-*Verification started 2026-02-15 as part of Phase 5B.*
+*Verification completed 2026-02-15 as part of Phase 5B.*
