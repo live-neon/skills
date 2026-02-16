@@ -6,6 +6,25 @@ All notable changes to the agentic skills are documented here.
 > SKILL.md frontmatter shows `version: 1.0.0` which is the ClawHub publication version.
 > The first ClawHub release (1.0.0) corresponds to internal version 2.0.1 (post-consolidation + decoupling).
 
+## [2.0.2] - 2026-02-16
+
+### Security Improvements (context-verifier 1.0.1)
+
+Addresses ClawHub security scan findings for context-verifier.
+
+#### context-verifier
+
+- Added `config_paths` and `workspace_paths` to frontmatter metadata
+- Added Security Considerations section with:
+  - Sensitive file detection vs. reading clarification
+  - `--include-content` flag warnings and risks
+  - Required `.gitignore` entry documentation
+  - Storage and retention policy guidance
+- Updated examples to avoid showing `.env` in packet output
+- Version bumped to 1.0.1
+
+---
+
 ## [2.0.1] - 2026-02-16
 
 ### ClawHub Publication Prep
