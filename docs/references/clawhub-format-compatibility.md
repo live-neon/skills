@@ -1,8 +1,10 @@
 ---
 created: 2026-02-15
+updated: 2026-02-15
 type: reference
 status: partial
 phase5b: ../plans/2026-02-15-agentic-skills-phase5b-implementation.md
+verification_date: 2026-02-15
 ---
 
 # ClawHub Format Compatibility
@@ -147,9 +149,23 @@ Location: `clawhub-skills/`
 
 - [ ] Retry proactive-agent installation when rate limit clears
 - [ ] Review proactive-agent SKILL.md for WAL/HEARTBEAT format
-- [ ] Decide on format alignment (keep ours vs adopt spec fully)
+- [x] Decide on format alignment → **Keep ours** (functional, R/C/D is valuable extension)
 - [ ] Update VERSION.md with verification status
-- [ ] Add compatibility notes to workspace files
+- [x] Add compatibility notes to workspace files (already present: "compatible with self-improving-agent@1.0.5")
+
+---
+
+## Stage 2 Verification Status
+
+**self-improving-agent**: ✅ Verified (2026-02-15)
+- `.learnings/LEARNINGS.md`: Present, ID scheme compatible
+- `.learnings/ERRORS.md`: Present, ID scheme compatible
+- `.learnings/FEATURE_REQUESTS.md`: Present, ID scheme compatible
+- Entry format: Partial compatibility (cosmetic differences only)
+
+**proactive-agent**: ⏳ Blocked (rate limit)
+
+**Tests**: 10 passing (consolidated skills loading)
 
 ---
 
