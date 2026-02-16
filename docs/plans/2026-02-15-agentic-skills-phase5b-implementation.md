@@ -72,11 +72,18 @@ Before starting verification:
 
 ```bash
 # Verify ClawHub CLI is available
-openclaw --version
+clawhub --cli-version
 
-# Verify skill documentation accessible
-openclaw skill info self-improving-agent
-openclaw skill info proactive-agent
+# Verify authentication
+clawhub whoami
+
+# Search for target skills
+clawhub search self-improving-agent
+clawhub search proactive-agent
+
+# Inspect skill metadata
+clawhub inspect self-improving-agent
+clawhub inspect proactive-agent
 ```
 
 ---
@@ -149,13 +156,17 @@ openclaw skill info proactive-agent
    ls -la output/constraints/
    ```
 
-3. **Run ClawHub validation (if available)**
+3. **Run ClawHub inspection**
    ```bash
-   # Validate against self-improving-agent
-   openclaw validate .learnings/ --skill self-improving-agent
+   # Inspect self-improving-agent format expectations
+   clawhub inspect self-improving-agent
 
-   # Validate against proactive-agent
-   openclaw validate output/ --skill proactive-agent
+   # Inspect proactive-agent format expectations
+   clawhub inspect proactive-agent
+
+   # Install skills locally for detailed review
+   clawhub install self-improving-agent
+   clawhub install proactive-agent
    ```
 
 4. **Document any mismatches**
@@ -184,22 +195,23 @@ openclaw skill info proactive-agent
 
 ### Tasks
 
-1. **Test self-improving-agent consumption**
+1. **Review installed skill SKILL.md files**
    ```bash
-   # Export learnings in ClawHub format
-   openclaw skill run self-improving-agent consume --path .learnings/
+   # Check self-improving-agent format requirements
+   cat skills/self-improving-agent/SKILL.md
 
-   # Verify learnings are readable
-   openclaw skill run self-improving-agent query --query "deployment"
+   # Check proactive-agent format requirements
+   cat skills/proactive-agent/SKILL.md
    ```
 
-2. **Test proactive-agent integration**
+2. **Compare our workspace files against specs**
    ```bash
-   # Check constraint recognition
-   openclaw skill run proactive-agent scan --path output/constraints/
+   # Verify .learnings/ matches expected format
+   diff -u <(grep -A20 "## Format" skills/self-improving-agent/SKILL.md) \
+           <(head -30 .learnings/LEARNINGS.md)
 
-   # Verify HEARTBEAT recognition
-   openclaw skill run proactive-agent heartbeat --path HEARTBEAT.md
+   # Verify output/ matches expected structure
+   ls -la output/constraints/
    ```
 
 3. **Test round-trip**
