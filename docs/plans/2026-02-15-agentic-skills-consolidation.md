@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 type: plan
-status: draft
+status: complete
 priority: high
 specification: ../proposals/2026-02-13-agentic-skills-specification.md
 architecture: ../../ARCHITECTURE.md
