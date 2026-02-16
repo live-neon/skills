@@ -6,6 +6,45 @@ All notable changes to the agentic skills are documented here.
 > SKILL.md frontmatter shows `version: 1.0.0` which is the ClawHub publication version.
 > The first ClawHub release (1.0.0) corresponds to internal version 2.0.1 (post-consolidation + decoupling).
 
+## [2.0.3] - 2026-02-16
+
+### Security Compliance (All 14 Skills)
+
+Comprehensive security scan compliance update for ClawHub publication.
+Based on lessons from NEON-SOUL's 7-phase security scan remediation.
+
+#### Documentation
+
+- Added `docs/workflows/creating-new-skill.md` workflow (comprehensive skill creation guide)
+
+#### All Skills
+
+- Added `disable-model-invocation: true` to all 14 skills (prevents "autonomous execution" flags)
+- Added data handling statement to all 14 skills (accurate LLM usage disclosure)
+
+#### Agentic Skills (7)
+
+- Added `config_paths` declarations to all skills (`.openclaw/` + `.claude/` paths)
+- Added `workspace_paths` declarations to all skills (output directories)
+
+| Skill | Config Paths | Workspace Paths |
+|-------|--------------|-----------------|
+| context-verifier | context-verifier.yaml | output/context-packets/ |
+| failure-memory | failure-memory.yaml | .learnings/, .learnings/observations/ |
+| constraint-engine | constraint-engine.yaml | output/constraints/, output/hooks/ |
+| safety-checks | safety-checks.yaml, settings.json | .openclaw/cache/, output/safety/ |
+| review-orchestrator | review-orchestrator.yaml | docs/reviews/ |
+| governance | governance.yaml | output/governance/, output/constraints/, agentic/INDEX.md |
+| workflow-tools | workflow-tools.yaml | output/loops/, output/parallel-decisions/, output/mce-analysis/, output/subworkflows/ |
+
+#### PBD Skills (7)
+
+- Fixed `core-refinery` homepage from young domain (`obviouslynot.ai`) to GitHub URL
+
+**Reference**: `../neon-soul/docs/issues/2026-02-10-skillmd-llm-wording-false-positive.md`
+
+---
+
 ## [2.0.2] - 2026-02-16
 
 ### Security Improvements (context-verifier 1.0.1)

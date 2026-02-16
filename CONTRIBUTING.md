@@ -23,13 +23,18 @@ Copy the appropriate template for your category:
 
 ## Adding a New Skill
 
+**Full workflow**: See [docs/workflows/creating-new-skill.md](docs/workflows/creating-new-skill.md) for the complete process including validation, design, security compliance, and publication.
+
+**Quick start**:
+
 1. **Choose category** using the table above
 2. **Copy template** to new directory:
    - Agentic: `agentic/your-skill-name/SKILL.md`
    - PBD: `pbd/your-skill-name/SKILL.md`
 3. **Fill in all required sections** (see template)
-4. **Run validation**: `cd tests && npm test`
-5. **Update README** in the appropriate category directory
+4. **Add security compliance** (see [skill-publish.md](docs/workflows/skill-publish.md#security-scan-compliance))
+5. **Run validation**: `cd tests && npm test`
+6. **Update README** in the appropriate category directory
 
 ## Validation
 
