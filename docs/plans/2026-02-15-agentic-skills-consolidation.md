@@ -51,6 +51,24 @@ The design decisions are solid - they just don't need 48 separate skills:
 - Golden master pattern
 - Bridge layer for ClawHub integration
 
+### Alternatives Considered
+
+Before consolidation, we evaluated these alternatives:
+
+| Alternative | Description | Why Not Chosen |
+|-------------|-------------|----------------|
+| **Dynamic skill loading** | Meta-skill loads 3-5 relevant skills per task via semantic routing | Adds routing complexity; current skills lack semantic metadata for effective routing; requires new infrastructure |
+| **Tier-based loading** | Foundation always loaded, others context-dependent | Still ~3,000 chars for Foundation+Core; doesn't solve "paper architecture" (no hooks) |
+| **Add hooks without consolidation** | Keep 48 skills, add hooks to critical ones | 48 SKILL.md files still too granular; doesn't address artificial separation (e.g., `positive-framer` as standalone) |
+| **Prioritize runtime for critical skills only** | Implement runtime for 5-10 most-used skills | Leaves 38+ skills as "paper"; doesn't reduce prompt overhead |
+
+**Why consolidation wins**: It addresses all three problems simultaneously:
+1. Token overhead (7,000 → 1,600 chars)
+2. No automation (adding hooks is easier with 8 skills)
+3. Paper architecture (fewer skills to implement runtime for)
+
+**Trade-off acknowledged**: Consolidation loses per-skill versioning flexibility. See "Versioning Strategy" below.
+
 ---
 
 ## Consolidation Map
@@ -74,6 +92,61 @@ Safety (4)      ─┴─► safety-checks
 Bridge (5)      ───► clawhub-bridge
 
 Extensions (10) ───► workflow-tools (3 kept, 7 deferred)
+```
+
+---
+
+## Merge Strategy
+
+Consolidation is NOT file concatenation. Each consolidated skill requires:
+
+### Logic Reconciliation
+
+For each consolidated skill:
+
+1. **Identify shared concepts** - e.g., R/C/D counters used by multiple source skills
+2. **Resolve conflicts** - e.g., if two skills define "eligibility" differently, choose one or create unified definition
+3. **Define sub-command boundaries** - each sub-command owns distinct functionality
+4. **Preserve execution order** - if skill A must run before skill B, encode this in sub-command flow
+
+### Unified Eligibility Criteria
+
+Where source skills have different eligibility criteria:
+
+| Source Skill | Original Criteria | Consolidated Location |
+|--------------|-------------------|----------------------|
+| constraint-generator | R≥3, C≥2, D/(C+D)<0.2, sources≥2 | `/constraint-engine generate` |
+| evidence-tier | N=1/2/3+ thresholds | `/failure-memory classify` |
+| circuit-breaker | CRITICAL 3/30d, IMPORTANT 5/30d | `/constraint-engine status` |
+
+**Rule**: Each sub-command inherits criteria from its primary source skill. Cross-cutting criteria (like R/C/D) are defined once in the consolidated SKILL.md and referenced by sub-commands.
+
+### Sub-Command Independence
+
+Each sub-command must be:
+- **Independently testable** - can run in isolation with mock inputs
+- **Independently documentable** - has its own usage, arguments, output in SKILL.md
+- **Loosely coupled** - calls other sub-commands via explicit interface, not shared state
+
+### Versioning Strategy
+
+Loss of per-skill versioning is a trade-off. Mitigation:
+
+1. **Sub-command versioning**: Track version per sub-command in SKILL.md frontmatter
+2. **Feature flags**: Critical sub-commands can have enable/disable flags
+3. **Deprecation path**: Sub-commands follow draft→active→retiring→retired lifecycle
+4. **Rollback scope**: If sub-command breaks, disable it via flag rather than rolling back entire skill
+
+Example frontmatter:
+```yaml
+name: failure-memory
+version: 1.0.0
+sub_commands:
+  detect: { version: 1.0.0, status: active }
+  record: { version: 1.0.0, status: active }
+  search: { version: 1.0.0, status: active }
+  classify: { version: 1.0.0, status: active }
+  status: { version: 1.0.0, status: active }
 ```
 
 ---
@@ -251,25 +324,49 @@ Extensions (10) ───► workflow-tools (3 kept, 7 deferred)
 ```
 
 **Deferred** (no proven need yet):
-- hub-subworkflow
-- pbd-strength-classifier (redundant with evidence-tier)
-- observation-refactoring (manual is fine)
-- constraint-versioning (premature)
-- threshold-delegator
-- cross-session-safety-check (merged into safety-checks)
-- pattern-convergence-detector
+
+| Skill | Reason Deferred | Capability Lost | Manual Workaround | Sunset Criteria |
+|-------|-----------------|-----------------|-------------------|-----------------|
+| hub-subworkflow | No ClawHub integration yet | Automated subworkflow spawning | Manual subagent invocation | Reconsider when ClawHub live |
+| pbd-strength-classifier | Redundant with evidence-tier | N/A (covered by `/failure-memory classify`) | N/A | Permanent removal OK |
+| observation-refactoring | Manual is fine | Auto-refactoring of observations | Manual editing | Reconsider if N≥10 requests |
+| constraint-versioning | Premature | Per-constraint versioning | Use sub-command versioning | Reconsider after 6 months |
+| threshold-delegator | No multi-user yet | User-specific thresholds | Single threshold for all | Reconsider when multi-user |
+| pattern-convergence-detector | Low N-count | Auto-detect converging patterns | Manual pattern review | Reconsider if N≥5 requests |
+
+**Note**: `cross-session-safety-check` is merged into `safety-checks` (Stage 2.3), not deferred.
 
 ---
 
 ## Stage 5: Hooks and Automation
 
-**Duration**: 1 day
+**Duration**: 1.5-2 days
 **Goal**: Wire skills into OpenClaw's hook system
+**Prerequisite**: Create `HOOKS.md` specification before implementation
+
+### 5.0 Hook Specification (REQUIRED FIRST)
+
+Before implementing hooks, create `agentic/HOOKS.md` specifying:
+
+| Aspect | Requirement |
+|--------|-------------|
+| **Error handling** | Hook failure → log error, continue (non-blocking) OR block operation (blocking) |
+| **Timeout** | Max 500ms for `post-tool-use`, 200ms for `pre-action`, 5s for `heartbeat` |
+| **Execution order** | `pre-action` runs before file write; `post-tool-use` runs after tool completes |
+| **State sharing** | Hooks communicate via files in `output/hooks/`, not shared memory |
+| **Failure surfacing** | Hook errors logged to `output/hooks/errors.log`, surfaced in next `heartbeat` |
+| **Atomicity** | Hooks must be idempotent; partial execution → retry safe |
+
+**Blocking vs Non-blocking**:
+- `pre-action.sh` (constraint check): **Blocking** - can prevent file write if circuit OPEN
+- `post-tool-use.sh` (failure detect): **Non-blocking** - failure detection doesn't block next tool
+- `heartbeat.sh` (health export): **Non-blocking** - runs on schedule, doesn't block operations
 
 ### 5.1 Create Hook Scripts
 
 ```
 agentic/
+├── HOOKS.md                     # Hook specification (create first!)
 ├── failure-memory/
 │   ├── SKILL.md
 │   └── scripts/
@@ -287,11 +384,19 @@ agentic/
 ### 5.2 Hook Integration
 
 OpenClaw hook points:
-- `PostToolUse` → failure-memory detect
-- `PreFileWrite` → constraint-engine check
-- `Heartbeat` → clawhub-bridge heartbeat
+- `PostToolUse` → failure-memory detect (non-blocking, 500ms timeout)
+- `PreFileWrite` → constraint-engine check (blocking, 200ms timeout)
+- `Heartbeat` → clawhub-bridge heartbeat (non-blocking, 5s timeout)
 
-### 5.3 HEARTBEAT.md Integration
+### 5.3 Hook Testing
+
+Each hook requires:
+- Unit test with mock inputs
+- Integration test with OpenClaw hook runner
+- Timeout verification test
+- Error handling test (what happens on failure?)
+
+### 5.4 HEARTBEAT.md Integration
 
 Add to workspace HEARTBEAT.md:
 ```markdown
@@ -299,43 +404,123 @@ Add to workspace HEARTBEAT.md:
 - [ ] Any constraints approaching 90-day review?
 - [ ] Any circuit breakers tripped?
 - [ ] Any N≥3 patterns needing constraint generation?
+- [ ] Any hook errors in last 24h? (check output/hooks/errors.log)
 ```
 
 ---
 
-## Stage 6: Documentation and Cleanup
+## Stage 6: Archive and Test Migration
 
-**Duration**: 0.5 day
-**Goal**: Update all references, archive old skills
+**Duration**: 1-1.5 days
+**Goal**: Archive old skills, migrate tests with coverage preservation
 
-### 6.1 Update ARCHITECTURE.md
+### 6.1 Archive Strategy
 
-- Replace 6-layer diagram with 4-tier model
-- Update skill inventory tables
-- Document hook integration
+**Goal**: Preserve for reference and rollback, not active use.
 
-### 6.2 Archive Old Skills
+**Before archiving**:
+1. Generate reference update checklist:
+   ```bash
+   # Find all imports/references to skills being archived
+   grep -r "agentic/core/" . --include="*.md" --include="*.ts" > refs-to-update.txt
+   grep -r "agentic/review/" . --include="*.md" --include="*.ts" >> refs-to-update.txt
+   # ... etc for each directory
+   ```
+2. Update each reference to point to consolidated skill OR archived location
+3. Verify no broken references remain
 
+**Archive execution**:
 ```bash
-# Move granular skills to archive
-mkdir -p agentic/_archive
-mv agentic/core/* agentic/_archive/
-mv agentic/review/* agentic/_archive/
-mv agentic/detection/* agentic/_archive/
-mv agentic/governance/* agentic/_archive/
-mv agentic/safety/* agentic/_archive/
-mv agentic/extensions/* agentic/_archive/
+# Create archive with clear dating
+mkdir -p agentic/_archive/2026-02-consolidation
 
-# Keep bridge adapters (code, not SKILL.md)
-mv agentic/bridge/adapters agentic/clawhub-bridge/adapters
-mv agentic/bridge/interfaces agentic/clawhub-bridge/interfaces
+# Move with git history preservation (use git mv)
+git mv agentic/core/* agentic/_archive/2026-02-consolidation/
+git mv agentic/review/* agentic/_archive/2026-02-consolidation/
+git mv agentic/detection/* agentic/_archive/2026-02-consolidation/
+git mv agentic/governance/* agentic/_archive/2026-02-consolidation/
+git mv agentic/safety/* agentic/_archive/2026-02-consolidation/
+git mv agentic/extensions/* agentic/_archive/2026-02-consolidation/
+
+# Keep bridge adapters (code, not SKILL.md) - move to new location
+git mv agentic/bridge/adapters agentic/clawhub-bridge/adapters
+git mv agentic/bridge/interfaces agentic/clawhub-bridge/interfaces
 ```
 
-### 6.3 Update Test Suite
+**Archive README**:
+Create `agentic/_archive/2026-02-consolidation/README.md`:
+```markdown
+# Archived Skills (2026-02-15)
 
-- Consolidate 534 contract tests into ~100 focused tests
-- Add integration tests for hooks
-- Add E2E test for failure→constraint lifecycle
+These 48 granular skills were consolidated into 8 skills.
+See ../ARCHITECTURE.md for current skill structure.
+
+**Purpose**: Reference and rollback only. Do not load these skills.
+**Rollback**: If consolidation fails, restore from this archive.
+```
+
+### 6.2 Test Migration Strategy
+
+**Goal**: Maintain coverage while reducing test count (534 → ~100).
+
+**Step 1: Coverage baseline**
+```bash
+# Before any test changes, capture coverage
+npm run test:coverage > coverage-before.txt
+# Record: lines covered, branches covered, functions covered
+```
+
+**Step 2: Test categorization**
+
+| Category | Action | Example |
+|----------|--------|---------|
+| **Core logic tests** | Keep, adapt to consolidated skill | R/C/D counter tests |
+| **Sub-command boundary tests** | Keep, one per sub-command | `/failure-memory detect` input/output |
+| **Integration tests** | Keep, update paths | Failure→constraint lifecycle |
+| **Redundant tests** | Remove | Tests for same logic in multiple skills |
+| **Granular edge cases** | Consolidate | 5 tests for same edge case → 1 test |
+
+**Step 3: Test migration map**
+
+Create `tests/MIGRATION.md` documenting:
+```markdown
+| Old Test File | Old Test Count | New Location | New Test Count | Coverage Delta |
+|---------------|----------------|--------------|----------------|----------------|
+| failure-tracker.test.ts | 45 | failure-memory.test.ts | 12 | 0% (same coverage) |
+| failure-detector.test.ts | 38 | failure-memory.test.ts | 8 | 0% |
+| ... | ... | ... | ... | ... |
+```
+
+**Step 4: Coverage verification**
+```bash
+# After migration, verify coverage maintained
+npm run test:coverage > coverage-after.txt
+diff coverage-before.txt coverage-after.txt
+# Delta should be <5% (acceptable loss from removed redundancy)
+```
+
+### 6.3 New Test Structure
+
+```
+tests/
+├── MIGRATION.md              # Test migration map (created in 6.2)
+├── failure-memory.test.ts    # 20-25 tests (from 8 source skills)
+├── constraint-engine.test.ts # 15-20 tests (from 7 source skills)
+├── context-verifier.test.ts  # 8-10 tests (from 3 source skills)
+├── review-orchestrator.test.ts # 10-12 tests
+├── governance.test.ts        # 12-15 tests
+├── safety-checks.test.ts     # 8-10 tests
+├── clawhub-bridge.test.ts    # 10-12 tests
+├── workflow-tools.test.ts    # 6-8 tests
+├── hooks/                    # New hook tests
+│   ├── post-tool-use.test.ts
+│   ├── pre-action.test.ts
+│   └── heartbeat.test.ts
+└── e2e/
+    └── failure-to-constraint.e2e.ts  # Full lifecycle test
+```
+
+**Target**: ~100 tests total, same or better coverage
 
 ---
 
@@ -421,15 +606,19 @@ cd tests && npm test
 
 | Stage | Duration | Description |
 |-------|----------|-------------|
-| Stage 1 | 1-2 days | Core skills: failure-memory, constraint-engine, context-verifier |
-| Stage 2 | 0.5-1 day | Support skills: review-orchestrator, governance, safety-checks |
-| Stage 3 | 0.5 day | Bridge: clawhub-bridge |
+| Stage 1 | 2-3 days | Core skills: failure-memory, constraint-engine, context-verifier |
+| Stage 2 | 1-1.5 days | Support skills: review-orchestrator, governance, safety-checks |
+| Stage 3 | 0.5-1 day | Bridge: clawhub-bridge |
 | Stage 4 | 0.5 day | Extensions: workflow-tools |
-| Stage 5 | 1 day | Hooks and automation |
-| Stage 6 | 0.5 day | Archive old skills, update test suite |
-| Stage 7 | 0.5 day | Project documentation update (per workflow) |
+| Stage 5 | 1.5-2 days | HOOKS.md spec + hook implementation + testing |
+| Stage 6 | 1-1.5 days | Archive migration + test migration with coverage verification |
+| Stage 7 | 0.5-1 day | Project documentation update (per workflow) |
 
-**Total**: 4.5-6 days
+**Total**: 7.5-10.5 days (realistic estimate)
+
+**Buffer**: Add 2-3 days for unexpected issues (hook debugging, coverage gaps, path breakage).
+
+**Adjusted total with buffer**: 10-14 days
 
 ---
 
@@ -437,10 +626,13 @@ cd tests && npm test
 
 - [ ] 8 consolidated SKILL.md files (down from 48)
 - [ ] Prompt overhead reduced to ~1,600 chars (from ~7,000)
-- [ ] 3 hook scripts wired into OpenClaw
+- [ ] `agentic/HOOKS.md` specification created and approved
+- [ ] 3 hook scripts wired into OpenClaw with tests
 - [ ] Core lifecycle works: failure → record → eligible → constraint → enforce
 - [ ] ClawHub bridge exports to self-improving-agent
-- [ ] Tests pass (consolidated from 534 to ~100)
+- [ ] Test coverage maintained (<5% delta from baseline)
+- [ ] `tests/MIGRATION.md` documents 534→~100 test mapping
+- [ ] No broken import references (verified via grep)
 - [ ] Documentation updated per workflow (ARCHITECTURE, READMEs, dependency links)
 - [ ] Results file created: `docs/implementation/agentic-consolidation-results.md`
 
@@ -450,9 +642,15 @@ cd tests && npm test
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| Lost functionality in merge | Medium | Medium | Archive old skills, incremental consolidation |
-| Hook integration issues | Medium | Medium | Test hooks individually before full integration |
+| Lost functionality in merge | Medium | High | Merge strategy (above), sub-command independence testing |
+| Hook integration issues | High | Medium | HOOKS.md spec required first, individual hook testing, timeout verification |
+| Import path breakage | High | Medium | Reference update checklist (Stage 6.1), verify before archive |
+| Test coverage loss | Medium | High | Coverage baseline before, coverage map, <5% delta target |
+| Sub-command versioning gaps | Medium | Medium | Feature flags, sub-command versioning in frontmatter |
+| Hook timing/ordering issues | Medium | Medium | Explicit execution order in HOOKS.md, integration tests |
 | ClawHub API mismatch | Low | Medium | Validate interfaces in Stage 3 |
+| Deferred feature regression | Low | Medium | Document capabilities lost, sunset criteria, manual workarounds |
+| Phase 5B coordination failure | Low | Medium | Explicit handoff checklist in Phase 5B plan |
 
 ---
 
@@ -484,8 +682,12 @@ The adapter code stays the same - only the SKILL.md organization changes.
 - **Phase 5 results**: `../implementation/agentic-phase5-results.md`
 - **Twin review findings**: `../issues/2026-02-15-skills-doc-migration-twin-review-findings.md`
 - **Documentation update workflow**: `../workflows/documentation-update.md`
+- **Code reviews** (N=2):
+  - `../reviews/2026-02-15-agentic-skills-consolidation-plan-codex.md`
+  - `../reviews/2026-02-15-agentic-skills-consolidation-plan-gemini.md`
 - **Feedback source**: Internal review (over-engineering concerns)
 
 ---
 
 *Plan created 2026-02-15. Consolidation addresses over-engineering while preserving ClawHub integration.*
+*Updated 2026-02-15: Addressed N=2 code review findings (Codex + Gemini) - added merge strategy, hook specification, test migration, realistic timeline, expanded risk assessment.*
