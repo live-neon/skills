@@ -226,6 +226,21 @@ clawhub search essence
 
 ---
 
+### Batch Publishing (Multiple Skills)
+
+ClawHub's publish API is rate-limited by GitHub API quotas (~60 req/hour unauthenticated).
+When publishing multiple skills, use the batch script:
+
+```bash
+# Waits 1 hour for rate limit reset, then publishes 1 skill every 15 minutes
+nohup ./scripts/publish-to-clawhub.sh > publish.log 2>&1 &
+tail -f publish.log
+```
+
+See `scripts/publish-to-clawhub.sh` for the agentic skills batch publisher.
+
+---
+
 ## Troubleshooting
 
 | Issue | Solution |
@@ -234,6 +249,7 @@ clawhub search essence
 | Push rejected | Pull first: `git pull --rebase origin main` |
 | SKILL.md not loading | Check frontmatter syntax (valid YAML) |
 | Wrong homepage URL | Update to `https://github.com/live-neon/skills/tree/main/...` |
+| Rate limit exceeded | Wait 1 hour or use `scripts/publish-to-clawhub.sh` for batch publishing |
 
 ---
 
@@ -244,6 +260,8 @@ clawhub search essence
 - **SECURITY.md**: Vulnerability reporting
 - **.env.example**: ClawHub token template (for optional publishing)
 - **[CJK Vocabulary](../standards/CJK_VOCABULARY.md)**: Skill aliases, sub-commands, math notation (agent-facing)
+- **[scripts/publish-to-clawhub.sh](../../scripts/publish-to-clawhub.sh)**: Batch publisher with rate limit handling
+- **[Publication Plan](../plans/2026-02-16-agentic-clawhub-publication.md)**: Agentic skills publication tracking
 
 ---
 

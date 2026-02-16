@@ -10,6 +10,9 @@
 # Already published: context-verifier
 # To publish: failure-memory, constraint-engine, safety-checks,
 #             review-orchestrator, governance, workflow-tools
+#
+# Reference: docs/workflows/skill-publish.md (ClawHub publishing workflow)
+# Plan: docs/plans/2026-02-16-agentic-clawhub-publication.md
 
 set -e
 
