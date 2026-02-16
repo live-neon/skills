@@ -1,14 +1,13 @@
 ---
 created: 2026-02-15
+updated: 2026-02-15
 type: plan
-status: draft
-priority: medium
+status: ready
+priority: low
 specification: ../proposals/2026-02-13-agentic-skills-specification.md
 previous_phase: ../plans/2026-02-14-agentic-skills-phase5-implementation.md
 depends_on:
-  - ../plans/2026-02-14-agentic-skills-phase5-implementation.md
-blocked_by:
-  - 2026-02-15-agentic-skills-consolidation.md
+  - ../plans/2026-02-15-agentic-skills-consolidation.md (complete)
 related_guides:
   - "[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md"
 external_dependencies:
@@ -16,42 +15,58 @@ external_dependencies:
   - https://github.com/openclaw/clawhub
 ---
 
-# Phase 5B: ClawHub Integration Implementation
+# Phase 5B: ClawHub Workspace Compatibility Verification
 
 ## Summary
 
-Replace mock adapters with real ClawHub API integration for the Bridge layer.
-This enables the constraint/observation system to communicate with ClawHub's
-`self-improving-agent`, `proactive-agent`, and VFM system.
+Verify that Live Neon Skills workspace files are compatible with ClawHub ecosystem skills.
+This ensures the constraint/observation system can interoperate with ClawHub's
+`self-improving-agent`, `proactive-agent`, and VFM system through shared file formats.
 
-**Duration**: 2-3 days
-**Prerequisites**: Consolidation plan complete, ClawHub API access
-**Blocked by**: `2026-02-15-agentic-skills-consolidation.md`
-**Output**: Real adapters in `agentic/clawhub-bridge/adapters/`, integration tests passing
+**Duration**: 0.5-1 day
+**Prerequisites**: Consolidation complete, ClawHub CLI available
+**Output**: Verification report, any format fixes, compatibility documentation
 
-> **Note**: This plan should execute AFTER the consolidation plan. Post-consolidation,
-> the 5 bridge skills become 1 `clawhub-bridge` skill with 5 sub-commands. The adapter
-> code remains the same; only the SKILL.md organization changes.
+> **Note**: This plan was reframed after consolidation. The original approach used runtime
+> adapters; the new approach uses file-based interoperability through shared workspace formats.
+> See `docs/implementation/agentic-consolidation-results.md` for consolidation details.
+
+## Context: Post-Consolidation Architecture
+
+The consolidation (2026-02-15) changed the ClawHub integration approach:
+
+| Before | After |
+|--------|-------|
+| 5 bridge skills with mock adapters | Documentation + workspace files |
+| Runtime API integration planned | File-based interoperability |
+| `agentic/bridge/adapters/*.ts` | Archived to `_archive/2026-02-consolidation/` |
+
+**Current integration model**:
+```
+Live Neon Skills ←→ Workspace Files ←→ ClawHub Skills
+     ↓                    ↓                    ↓
+ /fm record    →   .learnings/LEARNINGS.md  ← self-improving-agent
+ /ce generate  →   output/constraints/      ← proactive-agent
+ HEARTBEAT.md  →   Periodic checks          ← VFM scoring
+```
 
 ## Why This Matters
 
-The Bridge layer currently uses mock adapters that simulate ClawHub behavior. While this
-enabled development and contract testing, the skills provide no real value until connected
-to actual ClawHub components. Phase 5B completes the integration story.
+ClawHub skills expect specific file formats. If our workspace files don't match,
+ClawHub skills won't be able to read our observations/constraints, breaking interoperability.
 
-**Current state**: 5 Bridge skills with 31 contract tests passing against mocks
-**Target state**: Same skills working with live ClawHub APIs
+**Current state**: Workspace files created with assumed format
+**Target state**: Verified compatibility with ClawHub skill specifications
 
 ---
 
 ## Prerequisites
 
-Before starting implementation:
+Before starting verification:
 
-1. **Consolidation complete**: `2026-02-15-agentic-skills-consolidation.md` executed
-2. **ClawHub API access**: Valid authentication token in `.env`
-3. **API documentation**: Endpoints for self-improving-agent, proactive-agent, VFM
-4. **Test environment**: ClawHub staging/sandbox environment for integration tests
+1. **Consolidation complete**: ✅ `2026-02-15-agentic-skills-consolidation.md` executed
+2. **ClawHub CLI available**: `openclaw` command installed
+3. **Skill specs accessible**: self-improving-agent, proactive-agent documentation
 
 ### Verification
 
@@ -59,236 +74,188 @@ Before starting implementation:
 # Verify ClawHub CLI is available
 openclaw --version
 
-# Verify API access
-curl -H "Authorization: Bearer $CLAWHUB_TOKEN" https://api.clawhub.ai/health
+# Verify skill documentation accessible
+openclaw skill info self-improving-agent
+openclaw skill info proactive-agent
 ```
 
 ---
 
-## Stage 1: API Discovery and Interface Validation
+## Stage 1: Format Specification Review
 
-**Duration**: 0.5 day
-**Goal**: Document actual ClawHub APIs and validate current interfaces match
+**Duration**: 2 hours
+**Goal**: Document exact format requirements from ClawHub skill specs
 
 ### Tasks
 
-1. **Document ClawHub APIs**
-   - Fetch OpenAPI/schema for self-improving-agent endpoints
-   - Fetch OpenAPI/schema for proactive-agent endpoints
-   - Fetch OpenAPI/schema for VFM system endpoints
-   - Create `docs/references/clawhub-api-mapping.md`
+1. **Review self-improving-agent@1.0.5 spec**
+   - Document `.learnings/LEARNINGS.md` expected format
+   - Document `.learnings/ERRORS.md` expected format
+   - Document `[LRN-YYYYMMDD-XXX]` ID scheme requirements
+   - Note any required frontmatter fields
 
-2. **Compare interfaces**
-   - Validate `Learning` / `LearningsExport` against self-improving-agent API
-   - Validate `WALEntry` / `WALFailure` / `HealthAlert` against proactive-agent API
-   - Validate `VFMScore` / `VFMRanking` against VFM system API
-   - Document any mismatches in interface-audit.md
+2. **Review proactive-agent@3.1.0 spec**
+   - Document `output/constraints/` directory structure
+   - Document constraint file format (YAML? JSON? Markdown?)
+   - Document WAL protocol requirements (if applicable)
+   - Note HEARTBEAT.md expectations
 
-3. **Decision point**: Interface changes required?
-   - If yes: Create interface migration subtask
-   - If no: Proceed to Stage 2
+3. **Review VFM scoring spec**
+   - Document `output/constraints/metadata.json` format
+   - Document VFM weight fields and ranges
+
+4. **Create compatibility matrix**
+   - Map our formats to ClawHub expected formats
+   - Identify any gaps or mismatches
 
 ### Acceptance Criteria
 
-- [ ] ClawHub API endpoints documented
-- [ ] Interface comparison table created
-- [ ] Decision on interface changes recorded
+- [ ] self-improving-agent format documented
+- [ ] proactive-agent format documented
+- [ ] VFM format documented
+- [ ] Compatibility matrix created
 
-### Files Created/Modified
+### Files Created
 
-- `docs/references/clawhub-api-mapping.md` (new)
-- `docs/references/interface-audit.md` (new)
-
----
-
-## Stage 2: Real Adapter Implementation - self-improving-agent
-
-**Duration**: 0.5 day
-**Goal**: Implement real adapter for self-improving-agent
-
-### Tasks
-
-1. **Create real adapter**
-   - Create `agentic/bridge/adapters/real-self-improving-agent.ts`
-   - Implement `consumeLearnings(export: LearningsExport): Promise<void>`
-   - Implement `queryLearnings(query: LearningsQuery): Promise<Learning[]>`
-   - Add authentication handling (Bearer token from env)
-   - Add error handling and retries
-
-2. **Update factory**
-   - Modify `factory.ts` to return real adapter when `BRIDGE_ADAPTER_MODE=real`
-   - Add adapter availability check via health endpoint
-
-3. **Integration tests**
-   - Create `tests/integration/self-improving-agent.integration.test.ts`
-   - Test learnings export to real API
-   - Test learnings query from real API
-   - Skip in CI without credentials
-
-### Acceptance Criteria
-
-- [ ] `real-self-improving-agent.ts` implemented
-- [ ] Factory returns real adapter when mode=real
-- [ ] Integration tests pass with live API
-
-### Files Created/Modified
-
-- `agentic/bridge/adapters/real-self-improving-agent.ts` (new)
-- `agentic/bridge/adapters/factory.ts` (modify)
-- `tests/integration/self-improving-agent.integration.test.ts` (new)
+- `docs/references/clawhub-format-compatibility.md` (new)
 
 ---
 
-## Stage 3: Real Adapter Implementation - proactive-agent
+## Stage 2: Workspace File Verification
 
-**Duration**: 0.5 day
-**Goal**: Implement real adapter for proactive-agent
-
-### Tasks
-
-1. **Create real adapter**
-   - Create `agentic/bridge/adapters/real-proactive-agent.ts`
-   - Implement `parseWAL(path: string): Promise<WALEntry[]>`
-   - Implement `sendHealthAlert(alert: HealthAlert): Promise<void>`
-   - Implement `getHealthSummary(): Promise<HealthCheckSummary>`
-   - Add WAL file watching capability
-
-2. **Update factory**
-   - Add proactive-agent to real adapter routing
-
-3. **Integration tests**
-   - Create `tests/integration/proactive-agent.integration.test.ts`
-   - Test WAL parsing with real proactive-agent WAL format
-   - Test health alert sending
-   - Test health summary retrieval
-
-### Acceptance Criteria
-
-- [ ] `real-proactive-agent.ts` implemented
-- [ ] WAL parsing matches actual proactive-agent format
-- [ ] Integration tests pass with live API
-
-### Files Created/Modified
-
-- `agentic/bridge/adapters/real-proactive-agent.ts` (new)
-- `agentic/bridge/adapters/factory.ts` (modify)
-- `tests/integration/proactive-agent.integration.test.ts` (new)
-
----
-
-## Stage 4: Real Adapter Implementation - VFM System
-
-**Duration**: 0.5 day
-**Goal**: Implement real adapter for VFM system
+**Duration**: 2 hours
+**Goal**: Verify our workspace files match ClawHub expectations
 
 ### Tasks
 
-1. **Create real adapter**
-   - Create `agentic/bridge/adapters/real-vfm-system.ts`
-   - Implement `submitScore(score: VFMScore): Promise<void>`
-   - Implement `submitRanking(ranking: VFMRanking): Promise<void>`
-   - Implement `getWeights(): Promise<VFMWeights>`
-
-2. **Update factory**
-   - Add VFM system to real adapter routing
-   - Complete `isRealAdapterAvailable()` implementation
-
-3. **Integration tests**
-   - Create `tests/integration/vfm-system.integration.test.ts`
-   - Test score submission
-   - Test ranking export
-   - Test weight retrieval
-
-### Acceptance Criteria
-
-- [ ] `real-vfm-system.ts` implemented
-- [ ] Score submission accepted by VFM API
-- [ ] Integration tests pass with live API
-
-### Files Created/Modified
-
-- `agentic/bridge/adapters/real-vfm-system.ts` (new)
-- `agentic/bridge/adapters/factory.ts` (modify)
-- `tests/integration/vfm-system.integration.test.ts` (new)
-
----
-
-## Stage 5: End-to-End Integration Testing
-
-**Duration**: 0.5 day
-**Goal**: Verify complete data flow through all Bridge skills with real APIs
-
-### Tasks
-
-1. **E2E test scenarios**
-   - Create `tests/e2e/bridge-integration.e2e.test.ts`
-   - Scenario 1: Observation N≥3 → learnings-n-counter → self-improving-agent
-   - Scenario 2: Constraint gap → feature-request-tracker → proactive-agent
-   - Scenario 3: WAL failure → wal-failure-detector → failure pattern
-   - Scenario 4: Constraint check → heartbeat-constraint-check → health alert
-   - Scenario 5: Constraint scoring → vfm-constraint-scorer → VFM ranking
-
-2. **Documentation updates**
-   - Update ARCHITECTURE.md Bridge layer section
-   - Remove "mock adapter" caveats
-   - Add ClawHub configuration section
-
-3. **Environment setup**
-   - Create `.env.clawhub.example` with required variables
-   - Document required ClawHub permissions/scopes
-
-### Acceptance Criteria
-
-- [ ] All 5 E2E scenarios pass
-- [ ] ARCHITECTURE.md updated
-- [ ] Environment setup documented
-
-### Files Created/Modified
-
-- `tests/e2e/bridge-integration.e2e.test.ts` (new)
-- `ARCHITECTURE.md` (modify)
-- `.env.clawhub.example` (new)
-
----
-
-## Stage 6: Verification and Cleanup
-
-**Duration**: 0.5 day
-**Goal**: Final verification and documentation
-
-### Tasks
-
-1. **Run full test suite**
+1. **Verify .learnings/ format**
    ```bash
-   # Contract tests (should still pass with mocks)
-   BRIDGE_ADAPTER_MODE=mock npm test
+   # Check LEARNINGS.md structure
+   head -30 .learnings/LEARNINGS.md
 
-   # Integration tests (requires credentials)
-   BRIDGE_ADAPTER_MODE=real npm run test:integration
+   # Verify ID format matches [LRN-YYYYMMDD-XXX]
+   grep -E '\[LRN-[0-9]{8}-[0-9]{3}\]' .learnings/LEARNINGS.md
 
-   # E2E tests
-   BRIDGE_ADAPTER_MODE=real npm run test:e2e
+   # Check ERRORS.md structure
+   head -30 .learnings/ERRORS.md
    ```
 
-2. **Update deferred items**
-   - Remove Phase 5B items from specification deferred list
-   - Update Phase 5 results file
+2. **Verify output/ format**
+   ```bash
+   # Check VERSION.md declares compatibility
+   cat output/VERSION.md
 
-3. **Create results file**
-   - Document what was implemented
-   - Note any API differences discovered
-   - List remaining items (if any)
+   # Check constraints directory structure
+   ls -la output/constraints/
+   ```
+
+3. **Run ClawHub validation (if available)**
+   ```bash
+   # Validate against self-improving-agent
+   openclaw validate .learnings/ --skill self-improving-agent
+
+   # Validate against proactive-agent
+   openclaw validate output/ --skill proactive-agent
+   ```
+
+4. **Document any mismatches**
+   - Create issue for each format mismatch
+   - Prioritize by impact on interoperability
 
 ### Acceptance Criteria
 
-- [ ] All tests pass (mock and real modes)
-- [ ] Deferred items updated
-- [ ] Results file created
+- [ ] .learnings/ format verified
+- [ ] output/ format verified
+- [ ] ClawHub validation passes (or issues documented)
+- [ ] Mismatches documented with fixes
+
+### Files Modified (if fixes needed)
+
+- `.learnings/LEARNINGS.md`
+- `.learnings/ERRORS.md`
+- `output/VERSION.md`
+
+---
+
+## Stage 3: Integration Test with ClawHub CLI
+
+**Duration**: 2 hours
+**Goal**: Test actual interoperability with ClawHub skills
+
+### Tasks
+
+1. **Test self-improving-agent consumption**
+   ```bash
+   # Export learnings in ClawHub format
+   openclaw skill run self-improving-agent consume --path .learnings/
+
+   # Verify learnings are readable
+   openclaw skill run self-improving-agent query --query "deployment"
+   ```
+
+2. **Test proactive-agent integration**
+   ```bash
+   # Check constraint recognition
+   openclaw skill run proactive-agent scan --path output/constraints/
+
+   # Verify HEARTBEAT recognition
+   openclaw skill run proactive-agent heartbeat --path HEARTBEAT.md
+   ```
+
+3. **Test round-trip**
+   - Create observation via `/fm record`
+   - Export to ClawHub format
+   - Import back and verify data integrity
+
+### Acceptance Criteria
+
+- [ ] self-improving-agent can read .learnings/
+- [ ] proactive-agent can read output/constraints/
+- [ ] Round-trip data integrity verified
+
+### Files Created
+
+- `tests/integration/clawhub-compatibility.test.ts` (new)
+
+---
+
+## Stage 4: Documentation and Cleanup
+
+**Duration**: 1 hour
+**Goal**: Document results and update references
+
+### Tasks
+
+1. **Create verification report**
+   - Summary of compatibility status
+   - Any fixes applied
+   - Remaining limitations
+
+2. **Update VERSION.md**
+   - Confirm format versions are accurate
+   - Add verification date
+
+3. **Update ARCHITECTURE.md**
+   - Update ClawHub integration section
+   - Remove any "unverified" caveats
+
+4. **Update results file**
+   - Mark ClawHub compatibility as verified
+   - Document any deferred items
+
+### Acceptance Criteria
+
+- [ ] Verification report created
+- [ ] VERSION.md updated with verification date
+- [ ] ARCHITECTURE.md updated
+- [ ] Results file updated
 
 ### Files Created/Modified
 
 - `docs/implementation/agentic-phase5b-results.md` (new)
-- `docs/proposals/2026-02-13-agentic-skills-specification.md` (modify)
+- `output/VERSION.md` (modify)
+- `docs/architecture/README.md` (modify)
+- `docs/implementation/agentic-consolidation-results.md` (modify)
 
 ---
 
@@ -296,10 +263,10 @@ curl -H "Authorization: Bearer $CLAWHUB_TOKEN" https://api.clawhub.ai/health
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| ClawHub API differs from interfaces | Medium | High | Stage 1 discovers early; interface adapter pattern |
-| API rate limits | Low | Medium | Add rate limiting to real adapters |
-| Authentication complexity | Medium | Medium | Document OAuth/token flow clearly |
-| WAL format changes | Medium | Medium | Flexible parser, version field |
+| ClawHub CLI not available locally | Medium | High | Document manual verification steps |
+| Format specs differ from assumed | Medium | Medium | Stage 1 discovers early; fix in Stage 2 |
+| ClawHub skills not published yet | Medium | Low | Verify against spec, defer runtime test |
+| ID scheme mismatch | Low | Medium | Regex validation, format migration |
 
 ---
 
@@ -307,25 +274,41 @@ curl -H "Authorization: Bearer $CLAWHUB_TOKEN" https://api.clawhub.ai/health
 
 | Stage | Duration | Cumulative | Description |
 |-------|----------|------------|-------------|
-| Stage 1 | 0.5 day | 0.5 day | API discovery, interface validation |
-| Stage 2 | 0.5 day | 1 day | self-improving-agent adapter |
-| Stage 3 | 0.5 day | 1.5 days | proactive-agent adapter |
-| Stage 4 | 0.5 day | 2 days | VFM system adapter |
-| Stage 5 | 0.5 day | 2.5 days | E2E integration testing |
-| Stage 6 | 0.5 day | 3 days | Verification and cleanup |
+| Stage 1 | 2 hours | 2 hours | Format specification review |
+| Stage 2 | 2 hours | 4 hours | Workspace file verification |
+| Stage 3 | 2 hours | 6 hours | Integration test with ClawHub CLI |
+| Stage 4 | 1 hour | 7 hours | Documentation and cleanup |
 
-**Total**: 2.5-3 days
+**Total**: 0.5-1 day (depending on ClawHub CLI availability)
 
 ---
 
 ## Success Criteria
 
-- [ ] 3 real adapters implemented (self-improving-agent, proactive-agent, vfm-system)
-- [ ] Factory correctly routes to real adapters when `BRIDGE_ADAPTER_MODE=real`
-- [ ] Contract tests still pass with mock adapters
-- [ ] Integration tests pass with real APIs
-- [ ] E2E scenarios verified
-- [ ] Documentation updated (no more "mock" caveats in Bridge section)
+- [ ] ClawHub format specifications documented
+- [ ] Workspace files verified compatible (or fixed)
+- [ ] Integration test passes (or documented as blocked)
+- [ ] VERSION.md updated with verification status
+- [ ] Results file created
+
+---
+
+## Fallback: Manual Verification
+
+If ClawHub CLI is not available:
+
+1. **Spec-based verification**
+   - Compare our formats against published ClawHub documentation
+   - Use regex validation for ID schemes
+   - Manual structure comparison
+
+2. **Deferred runtime verification**
+   - Document as "format-verified, runtime-pending"
+   - Create follow-up task for when CLI available
+
+3. **Community validation**
+   - Share formats on ClawHub discussions
+   - Request feedback from skill maintainers
 
 ---
 
@@ -333,9 +316,10 @@ curl -H "Authorization: Bearer $CLAWHUB_TOKEN" https://api.clawhub.ai/health
 
 The following are explicitly NOT part of Phase 5B:
 
+- **Runtime adapter implementation** - Superseded by file-based approach
 - **Publishing skills to ClawHub** - Separate plan
-- **New Bridge skills** - Only integrating existing 5
-- **Multi-agent coordination** - Deferred to RG-2 research
+- **New Bridge skills** - Archived; file-based integration instead
+- **Multi-agent coordination** - Deferred to future research
 - **VFM weight tuning** - Requires N≥10 usage data
 
 ---
@@ -343,11 +327,20 @@ The following are explicitly NOT part of Phase 5B:
 ## Cross-References
 
 - **Specification**: `../proposals/2026-02-13-agentic-skills-specification.md`
-- **Phase 5 Results**: `../implementation/agentic-phase5-results.md`
-- **Architecture**: `../../ARCHITECTURE.md` (Bridge Layer section)
-- **Interfaces**: `../../agentic/bridge/interfaces/`
-- **Adapters**: `../../agentic/bridge/adapters/`
+- **Consolidation Results**: `../implementation/agentic-consolidation-results.md`
+- **Architecture**: `../../docs/architecture/README.md` (智:clawhub section)
+- **Archived Adapters**: `../../agentic/_archive/2026-02-consolidation/bridge/`
+- **Workspace Format**: `../../output/VERSION.md`
 
 ---
 
-*Plan created 2026-02-15. Phase 5B completes the ClawHub integration story.*
+## History
+
+| Date | Change |
+|------|--------|
+| 2026-02-15 | Created as runtime adapter implementation plan |
+| 2026-02-15 | Reframed to workspace compatibility verification (post-consolidation) |
+
+---
+
+*Plan reframed 2026-02-15 after consolidation. File-based interoperability replaces runtime adapters.*
