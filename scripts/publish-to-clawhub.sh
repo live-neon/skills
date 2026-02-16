@@ -2,7 +2,11 @@
 #
 # Publish remaining agentic skills to ClawHub with rate limit delays
 #
-# Usage: ./scripts/publish-to-clawhub.sh
+# SCOPE: Agentic skills only (agentic/*). PBD skills (pbd/*) use manual
+#        clawhub publish commands per plan Stage 3, because they are
+#        already published and only need version bumps.
+#
+# Usage: ./scripts/publish-to-clawhub.sh [--skip-wait]
 #
 # This script waits 1 hour for GitHub API rate limits to reset,
 # then publishes one skill every 15 minutes.
@@ -14,7 +18,7 @@
 # Reference: docs/workflows/skill-publish.md (ClawHub publishing workflow)
 # Plan: docs/plans/2026-02-16-agentic-clawhub-publication.md
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILLS_DIR="$(dirname "$SCRIPT_DIR")"
@@ -43,14 +47,15 @@ echo "Authenticated as leegitw"
 
 # Skills to publish (in dependency order)
 # Format: slug|name|tags|version|changelog (version/changelog optional, default 1.0.0)
+# Note: Keep names simple - descriptions come from SKILL.md
 declare -a SKILLS=(
-    "context-verifier|Context Verifier - File Integrity and Hash Computation|verification,hashing,integrity,context,foundation|1.0.1|Security: Added config/workspace declarations, security section, --include-content warnings"
-    "failure-memory|Failure Memory - Pattern Detection and Observation Recording|failure,memory,patterns,observations,learning,rcd-counters"
-    "constraint-engine|Constraint Engine - Generation, Enforcement, and Circuit Breaker|constraints,enforcement,circuit-breaker,governance,rules"
-    "safety-checks|Safety Checks - Model Pinning, Fallbacks, and Runtime Validation|safety,validation,model-pinning,fallbacks,security"
-    "review-orchestrator|Review Orchestrator - Multi-Perspective Review Coordination|review,multi-perspective,cognitive-modes,quality-gates"
-    "governance|Governance - Constraint Lifecycle and Periodic Reviews|governance,lifecycle,compliance,reviews,adoption"
-    "workflow-tools|Workflow Tools - Loop Detection, Parallel Decisions, MCE Analysis|workflow,loops,parallel,mce,utilities"
+    "context-verifier|Context Verifier|verification,hashing,integrity,context,foundation|1.0.1|Security: Added config/workspace declarations, security section, --include-content warnings"
+    "failure-memory|Failure Memory|failure,memory,patterns,observations,learning,rcd-counters"
+    "constraint-engine|Constraint Engine|constraints,enforcement,circuit-breaker,governance,rules"
+    "safety-checks|Safety Checks|safety,validation,model-pinning,fallbacks,security"
+    "review-orchestrator|Review Orchestrator|review,multi-perspective,cognitive-modes,quality-gates"
+    "governance|Governance|governance,lifecycle,compliance,reviews,adoption"
+    "workflow-tools|Workflow Tools|workflow,loops,parallel,mce,utilities"
 )
 
 DELAY_BETWEEN_SKILLS=900  # 15 minutes in seconds
@@ -69,14 +74,15 @@ publish_skill() {
 
     log "Publishing $slug v$version..."
 
-    local cmd="clawhub publish agentic/$slug --slug $slug --name \"$name\" --version $version --tags \"$tags\""
+    # Build command as array to avoid eval (safer argument handling)
+    local cmd_args=("publish" "agentic/$slug" "--slug" "$slug" "--name" "$name" "--version" "$version" "--tags" "$tags")
 
     # Add changelog if specified
     if [ -n "$changelog" ]; then
-        cmd="$cmd --changelog \"$changelog\""
+        cmd_args+=("--changelog" "$changelog")
     fi
 
-    if eval "$cmd"; then
+    if clawhub "${cmd_args[@]}"; then
         log "SUCCESS: $slug v$version published"
         return 0
     else
@@ -87,7 +93,7 @@ publish_skill() {
 
 # Check for --skip-wait flag
 SKIP_WAIT=false
-if [ "$1" = "--skip-wait" ]; then
+if [ "${1:-}" = "--skip-wait" ]; then
     SKIP_WAIT=true
     log "Skipping initial wait (--skip-wait flag)"
 fi
