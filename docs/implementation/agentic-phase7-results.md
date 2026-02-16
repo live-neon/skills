@@ -114,11 +114,11 @@ Duration: 353ms
 
 ## Deferred Items
 
-| Item | Reason | Recommendation |
-|------|--------|----------------|
-| Mock DRY refactoring | Lower priority; type-specific interfaces | Future: when >10 test files |
+| Item | Reason | Plan |
+|------|--------|------|
+| Mock DRY refactoring | Lower priority; type-specific interfaces | [Test Mock DRY Refactoring](../plans/2026-02-15-test-mock-dry-refactoring.md) (backlog) |
 | threshold-delegator "When NOT to use" | Time-box; 2 skills sufficient for pilot | Future: batch update |
-| N-count evidence verification | Out of scope (Phase 7+) | Documented in backlog |
+| N-count evidence verification | Out of scope (Phase 7+) | [N-Count Evidence Verification](../plans/2026-02-15-n-count-evidence-verification.md) (backlog) |
 
 ## Files Modified
 

@@ -217,11 +217,11 @@ value_score = (prevention_rate × 0.4) + (precision × 0.3) + (usage × 0.2) + (
 
 ## Deferred Items
 
-| Item | Description | Tracking |
-|------|-------------|----------|
-| Real ClawHub integration | Contract tests pass, real integration awaits ClawHub | Phase 5b |
-| VFM weight tuning | Collect real usage data for calibration | Future |
-| Circular reference detection | N-count validation for inflated counts | learnings-n-counter |
+| Item | Description | Plan |
+|------|-------------|------|
+| Real ClawHub integration | Contract tests pass, real integration awaits ClawHub | ✅ [Phase 5B](../plans/2026-02-15-agentic-skills-phase5b-implementation.md) (complete) |
+| VFM weight tuning | Collect real usage data for calibration | [VFM Weight Tuning](../plans/2026-02-15-vfm-weight-tuning.md) (backlog) |
+| Circular reference detection | N-count validation for inflated counts | [Circular Reference Detection](../plans/2026-02-15-circular-reference-detection.md) (backlog) |
 
 ## Code Review Status
 

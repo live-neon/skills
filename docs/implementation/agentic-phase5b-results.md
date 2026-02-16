@@ -86,11 +86,11 @@ Skills mounted in Docker at `/skills/clawhub:ro`.
 
 ## Deferred Items
 
-| Item | Reason | Future Action |
-|------|--------|---------------|
+| Item | Reason | Plan |
+|------|--------|------|
 | Runtime integration test | File-based approach, no runtime needed | N/A |
-| ClawHub CLI automation | Rate limited | Retry when limit clears |
-| VFM weight tuning | Requires N≥10 usage data | Track in observations |
+| ClawHub CLI automation | Rate limited | [ClawHub CLI Automation](../plans/2026-02-15-clawhub-cli-automation.md) (backlog) |
+| VFM weight tuning | Requires N≥10 usage data | [VFM Weight Tuning](../plans/2026-02-15-vfm-weight-tuning.md) (backlog) |
 
 ## Lessons Learned
 
