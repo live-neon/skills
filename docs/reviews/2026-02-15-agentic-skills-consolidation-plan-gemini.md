@@ -1,19 +1,22 @@
-# Agentic Skills Consolidation Plan Review - Gemini
+# Agentic Skills Consolidation Plan Review - Gemini (Round 2)
 
 **Date**: 2026-02-15
-**Reviewer**: gemini-2.5-pro (via gemini CLI)
+**Reviewer**: gemini-2.5-pro (via CLI, sandbox mode)
 **Files Reviewed**:
-- `docs/plans/2026-02-15-agentic-skills-consolidation.md` (primary)
-- `output/context/2026-02-15-agentic-skills-consolidation-plan-context.md` (scout context)
-- `ARCHITECTURE.md` (current state reference)
-- `docs/proposals/2026-02-13-agentic-skills-specification.md` (spec reference)
-- `docs/issues/2026-02-15-skills-doc-migration-twin-review-findings.md` (related findings)
+- `/Users/twin2/Desktop/projects/multiverse/projects/live-neon/skills/docs/plans/2026-02-15-agentic-skills-consolidation.md` (934 lines)
+- `/Users/twin2/Desktop/projects/multiverse/projects/live-neon/skills/ARCHITECTURE.md` (874 lines)
+- `/Users/twin2/Desktop/projects/multiverse/projects/live-neon/skills/docs/research/2026-02-15-openclaw-clawhub-hooks-research.md` (764 lines)
+- `/Users/twin2/Desktop/projects/multiverse/projects/live-neon/skills/docs/proposals/2026-02-13-agentic-skills-specification.md` (1509 lines)
+- `/Users/twin2/Desktop/projects/multiverse/projects/live-neon/skills/docs/standards/CJK_VOCABULARY.md` (151 lines)
+- Prior reviews: Codex (141 lines), Gemini Round 1 (256 lines), Twin Technical (320 lines), Twin Creative (287 lines)
+
+**Review Context**: This is a second-round Gemini review after the plan was updated to address N=4 prior review findings.
 
 ## Summary
 
-The plan correctly identifies a real problem (prompt overhead, artificial granularity) and proposes a directionally sound solution. However, the plan is strong on the *what* (merge X into Y) but critically underdeveloped on the *how*. It may solve prompt overhead while creating worse problems: monolithic skills, lost granular control, and untested merge logic.
+The consolidation plan has matured significantly since the first round of reviews. The plan now addresses the critical gaps identified by N=4 reviewers: merge strategy is explicit, test migration methodology is defined with coverage baselines, hook systems are clarified (Next Steps now, Claude Code deferred), and staging workflow prevents naming conflicts. The timeline is realistic at 8-12 days with buffer.
 
-**Recommendation**: Re-evaluate the approach before implementation. Consider alternatives like dynamic skill loading.
+**Assessment**: The plan is ready for implementation. No critical issues remain. The approach itself is sound - consolidation based on temporal co-occurrence ("When does the agent need this?") correctly groups related skills while reducing overhead.
 
 ---
 
@@ -21,179 +24,197 @@ The plan correctly identifies a real problem (prompt overhead, artificial granul
 
 ### Critical
 
-#### C-1: Strategic Risk - Solving the Symptom, Not the Disease
+None. All critical findings from prior reviews have been addressed:
 
-**Location**: Plan framing (lines 29-41)
-
-**Issue**: The plan focuses on reducing character count (~7,000 to ~1,600 chars), which is a symptom. The underlying problem is excessive granularity. The proposed solution - merging many small, simple components into a few large, complex ones - may solve the character count issue but create worse problems:
-- Cognitive overhead (one 800-line SKILL.md vs eight 100-line files)
-- Testing complexity (monolithic vs modular tests)
-- Poor maintainability (single point of failure)
-
-**Alternative framing**: Could a dynamic "skill-loader" be introduced? A meta-skill that analyzes the immediate task and loads only the 3-5 most relevant granular skills into context. This solves overhead without sacrificing modularity.
-
-**Question**: Are we optimizing for the right metric (character count) or the wrong one?
-
----
-
-#### C-2: Missing Logical Consolidation Strategy
-
-**Location**: Stage 1-4 consolidation maps (lines 86-260)
-
-**Issue**: The plan treats consolidation as a file-merging exercise. It does not specify *how* the logic, eligibility criteria, R/C/D counters, and constraints of individual skills will be reconciled. A naive merge will lead to lost functionality and conflicts.
-
-**Example**: How will the distinct eligibility criteria from 8 different skills be combined into a single, coherent set of criteria for `/failure-memory` with its 8 sub-commands? The plan says "Key content from merged skills" (lines 109-112) but this is a content list, not a reconciliation strategy.
-
-**Recommendation**: For each consolidated skill, create a detailed sub-plan that maps logic from old skills to new sub-commands. This must explicitly define:
-- Unified eligibility criteria
-- Flow of control between sub-commands
-- Strategy for testing each sub-command independently
-
----
-
-#### C-3: Hook Integration Risk Underestimated
-
-**Location**: Stage 5 (lines 264-303), Risk Assessment (lines 449-456)
-
-**Issue**: The risk "Hook integration issues" (Medium/Medium) is significantly underestimated. The plan lacks any specification for hooks. Key unanswered questions:
-
-| Question | Why It Matters |
-|----------|----------------|
-| State Management | How does `heartbeat.sh` signal failure to `pre-action.sh` to block writes? |
-| Atomicity | What happens if a hook fails midway? Rollback mechanism? |
-| Performance Budget | What latency is acceptable? Slow `post-tool-use.sh` cripples usability |
-| Error Handling | How are hook failures surfaced? Silent fail? Block operation? |
-
-**Recommendation**: Do not begin hook implementation (Stage 5) until a formal `HOOKS.md` specification is written and approved. This spec should define purpose, inputs, outputs, performance budget, and error handling for each hook.
+| Prior Finding | Resolution |
+|---------------|------------|
+| C-1 (Gemini R1): "Solving symptom, not disease" | Addressed via alternatives section (lines 134-151) documenting why dynamic loading was rejected |
+| C-2 (Gemini R1): Missing logical consolidation strategy | Addressed via Merge Strategy section (lines 199-241) with logic reconciliation, unified eligibility criteria |
+| C-3 (Gemini R1): Hook integration risk underestimated | Addressed by deferring Claude Code hooks; Next Steps are text-only (portable) |
+| C-1 (Codex): Cross-session-safety-check conflict | Resolved - explicitly merged into safety-checks (line 339: `/sc session`) |
 
 ---
 
 ### Important
 
-#### I-1: Unrealistic Timeline
+#### I-1: Soft Hook Reliability Depends on Agent Behavior
 
-**Location**: Timeline section (lines 420-432)
+**Location**: Throughout (Next Steps sections in each skill)
 
-**Issue**: 4.5-6 days for 7 stages is highly optimistic. This estimate appears based on the flawed assumption that this is a copy-and-paste task. A proper logical consolidation including:
-- Re-writing criteria
-- Creating new sub-command structures
-- Testing each sub-command
-- Updating documentation
+**Issue**: The plan's primary automation mechanism is "Next Steps" - text instructions that the agent is expected to follow. The risk "Next Steps not followed by agent" (line 875) acknowledges this but may understate it. Agent behavior can drift with model updates, prompt changes, or context variations. A soft hook that fails silently produces no error, no log, and no alert.
 
-Would realistically take 2-3x as long.
+**Example**: If `/fm detect` fails to trigger on an API error, the failure goes unrecorded. There is no mechanism to detect this absence.
 
-**Recommendation**: Re-scope timeline to 10-15 days minimum. Allocate 2-3 days *per consolidated skill* for Stages 1-2.
+**Recommendation**: For critical Next Steps (failure detection, constraint blocking), add a verification mechanism to HEARTBEAT.md:
 
----
+```markdown
+## Soft Hook Verification
+- [ ] Any errors in last session without corresponding .learnings/ERRORS.md entry?
+- [ ] Any constraint-eligible patterns (R>=3, C>=2) without draft constraints?
+```
 
-#### I-2: Loss of Granular Control and Versioning
+This creates a secondary detection layer for soft hook failures.
 
-**Location**: Implicit throughout; not addressed in plan
-
-**Issue**: The current architecture allows granular control - you can individually enable, disable, or version any of the 48 skills. The new model is monolithic:
-- A bug in `/governance review` requires rolling back the entire `governance` skill
-- This disables 5 other, potentially unrelated, sub-commands
-- Significant loss of operational flexibility
-
-**Recommendation**: The plan must include a section on versioning and feature-flagging strategy. How will we manage the lifecycle of individual sub-commands within a consolidated skill?
+**Severity**: Important - affects the primary automation mechanism
 
 ---
 
-#### I-3: Test Consolidation Details Missing
+#### I-2: Test Migration Coverage Tool Not Specified
 
-**Location**: Stage 6.3 (lines 336-339)
+**Location**: Lines 665-706 (Test Migration Strategy)
 
-**Issue**: "Consolidate 534 contract tests into ~100 focused tests" is stated without methodology. Key questions:
-- What is the selection criteria for which tests survive?
-- How do we ensure coverage is maintained (not just test count reduced)?
-- What happens to tests for deferred functionality?
+**Issue**: The plan specifies "c8 (Node.js native coverage) or nyc (Istanbul)" but does not commit to a specific tool. Different tools report coverage differently. The 5% delta target is meaningful only if measured consistently.
 
-**Recommendation**: Add a test consolidation sub-plan or defer this work to a separate issue with proper scoping.
+**Recommendation**: Commit to a specific tool and baseline command before Stage 6:
+
+```bash
+# Baseline command (commit to one)
+npm run test:coverage -- --reporter=json > coverage-before.json
+cat coverage-before.json | jq '.total.branches.pct, .total.lines.pct'
+```
+
+Document the exact command in the plan so the delta calculation is reproducible.
+
+**Severity**: Important - success criteria must be measurable
+
+---
+
+#### I-3: Archive Verification Scope Incomplete
+
+**Location**: Lines 639-657 (Post-Archive Verification)
+
+**Issue**: The grep commands verify specific paths (`agentic/core/`, `agentic/review/`, etc.) but the list is incomplete. The plan archives 6 directories but the verification script only checks for some of them.
+
+**Recommendation**: Generate the verification script dynamically from the archive contents:
+
+```bash
+# Verify no references to ANY archived paths
+for dir in $(ls agentic/_archive/2026-02-consolidation/); do
+  grep -r "agentic/$dir/" . --include="*.md" --include="*.ts" | grep -v "_archive" >> stale-refs.txt
+done
+wc -l stale-refs.txt  # Expected: 0
+```
+
+This ensures all archived paths are checked, not just the ones remembered when writing the plan.
+
+**Severity**: Important - path breakage is listed as High likelihood risk
 
 ---
 
 ### Minor
 
-#### M-1: Implicit Execution Dependencies
+#### M-1: Missing Explicit Rollback Procedure
 
-**Location**: Stage 2 merges (lines 163-209)
+**Location**: Risk Assessment (lines 866-882)
 
-**Issue**: The plan does not account for potential implicit dependencies between skills being merged. For instance, `safety/fallback-checker` might be designed to run *before* `safety/cache-validator`. Merging them into a single `safety-checks` skill without preserving execution order could break underlying logic.
+**Issue**: The archive strategy implicitly enables rollback, but there is no explicit "Rollback Plan" section. In an emergency, the team would need to reconstruct the procedure from context.
 
-**Recommendation**: Before each consolidation stage, perform dependency analysis of skills to be merged. Document any ordering requirements.
+**Recommendation**: Add a brief rollback section:
 
----
+```markdown
+## Rollback Procedure
 
-#### M-2: Archive Strategy Unclear
+If critical issues are discovered post-deployment:
 
-**Location**: Stage 6.2 (lines 319-332)
+1. Delete `agentic/_staging/` (if mid-implementation) or consolidated skills
+2. Restore from `agentic/_archive/2026-02-consolidation/`:
+   - `git mv agentic/_archive/2026-02-consolidation/core agentic/core`
+   - Repeat for review, detection, governance, safety, extensions, bridge
+3. Revert ARCHITECTURE.md and README.md to pre-consolidation versions
+4. Re-run tests to verify restoration
+```
 
-**Issue**: The archive strategy (`mv agentic/core/* agentic/_archive/`) preserves files but does not address:
-- Git history preservation (move vs copy+delete)
-- Cross-references in archived files
-- Whether archived skills should still be loadable for reference
-
-**Recommendation**: Clarify archive goals. Is this "preserve for rollback" or "preserve for reference"?
-
----
-
-#### M-3: Documentation Update Stage Order
-
-**Location**: Stages 6 vs 7 (lines 306-417)
-
-**Issue**: Stage 6 updates ARCHITECTURE.md (line 311-316) but Stage 7 also updates ARCHITECTURE.md (line 357-360). This creates potential for conflicts or duplicate work.
-
-**Recommendation**: Consolidate documentation updates into a single stage, or clearly delineate what each stage touches.
+**Severity**: Minor - the capability exists, just undocumented
 
 ---
 
-## Alternative Approaches to Consider
+#### M-2: ClawHub Dependency Assumption
 
-Before implementing, consider these alternatives:
+**Location**: Stage 3 (lines 429-481)
 
-### 1. Dynamic Skill Loading (Recommended Alternative)
+**Issue**: The plan assumes ClawHub skill formats (self-improving-agent, proactive-agent) are stable. The workspace file formats (`.learnings/`, `SESSION-STATE.md`) are based on current ClawHub versions (v1.0.5, v3.1.0). Format changes in future ClawHub releases could break compatibility.
 
-Instead of consolidation, create a meta-skill that:
-1. Analyzes the current task context
-2. Loads only the 3-5 most relevant skills
-3. Keeps skills modular and independently versioned
+**Recommendation**: Add a version pinning note:
 
-**Pros**: Solves overhead, preserves modularity, lower risk
-**Cons**: Requires new infrastructure, adds runtime complexity
+```markdown
+**ClawHub Compatibility**:
+- self-improving-agent: v1.0.5 (format: .learnings/ with [TYPE-YYYYMMDD-XXX] IDs)
+- proactive-agent: v3.1.0 (format: SESSION-STATE.md as WAL target)
 
-### 2. Tier-Based Loading
+Monitor ClawHub releases for format changes. File format versioning (schema_version in metadata.json) provides forward compatibility.
+```
 
-Load skills by tier:
-- **Always loaded**: Foundation (5 skills, ~750 chars)
-- **Context-loaded**: Core/Review/Detection based on task
-- **On-demand**: Governance/Safety/Bridge/Extensions
+**Severity**: Minor - low likelihood, easy to adapt
 
-**Pros**: Simple to implement, predictable behavior
-**Cons**: Still some overhead, less dynamic than option 1
+---
 
-### 3. Consolidation with Sub-Skill Architecture
+#### M-3: Naming Rationale Could Be Earlier
 
-Proceed with consolidation but architect sub-skills as independently loadable modules:
-- `/failure-memory` as orchestrator
-- Sub-skills remain independent files that can be loaded/versioned separately
-- Orchestrator routes to sub-skills
+**Location**: Lines 180-194 (Naming Rationale)
 
-**Pros**: Gets consolidation benefits with modularity
-**Cons**: More complex implementation than current plan
+**Issue**: The naming rationale table explaining `-memory`, `-engine`, `-verifier` suffixes appears after the consolidation map. A reader encountering the skill names for the first time may be confused before reaching the explanation.
+
+**Recommendation**: Move the naming rationale section to appear before or alongside the consolidation map. Alternatively, add a forward reference: "See Naming Rationale below for suffix conventions."
+
+**Severity**: Minor - documentation organization, not functionality
+
+---
+
+## Alternative Framing Assessment
+
+The first-round Gemini review asked: "Are we solving the right problem?"
+
+**Updated assessment**: Yes. The plan now explicitly addresses why alternatives were rejected:
+
+| Alternative | Why Rejected | Assessment |
+|-------------|--------------|------------|
+| Dynamic skill loading | Adds routing complexity; lacks semantic metadata | Valid - would require new infrastructure |
+| Tier-based loading | Still ~3,000 chars; doesn't fix paper architecture | Valid - partial solution |
+| Add hooks without consolidation | 48 files still too granular | Valid - compounds maintenance |
+| Prioritize runtime for critical skills | Leaves 38+ as paper | Valid - doesn't reduce overhead |
+
+The consolidation approach addresses all three problems (overhead, automation, paper architecture) simultaneously, which is the correct trade-off for a two-person team.
+
+---
+
+## What Has Changed Since Round 1
+
+| Aspect | Round 1 Status | Round 2 Status |
+|--------|----------------|----------------|
+| Logical merge strategy | Missing | Explicit (lines 199-241) |
+| Hook specification | Vague | Clarified - Next Steps only, Claude Code deferred |
+| Timeline | 4.5-6 days (unrealistic) | 8-12 days with buffer (realistic) |
+| Test migration | "Consolidate 534 to ~100" (no method) | Coverage baseline + categorization + delta check |
+| Versioning | Complex sub-command versions | Simplified to skill-level only |
+| Alternatives | Not documented | Explicitly evaluated (lines 134-151) |
+| ClawHub clarification | Bridge as skill | Bridge as documentation (correct framing) |
+
+---
+
+## Confidence Assessment
+
+| Aspect | Confidence | Notes |
+|--------|------------|-------|
+| Consolidation map correctness | HIGH | Follows sound temporal co-occurrence principle |
+| Timeline achievability | HIGH | 8-12 days is realistic with buffer |
+| Test migration success | MEDIUM | Depends on coverage measurement methodology |
+| Soft hook reliability | MEDIUM | Agent behavior is inherently variable |
+| ClawHub compatibility | HIGH | Well-researched; format versioning provides safety |
+| Documentation update success | HIGH | Explicit workflow reference |
 
 ---
 
 ## Verdict
 
-| Aspect | Assessment |
-|--------|------------|
-| Problem identification | Strong - correctly identifies overhead and "paper architecture" |
-| Solution direction | Mixed - consolidation may work but risks are underestimated |
-| Implementation detail | Weak - missing logical merge strategy, hook specs, test methodology |
-| Timeline | Unrealistic - needs 2-3x more time |
-| Risk assessment | Incomplete - underestimates hook complexity, misses versioning loss |
+**Approved for implementation.**
 
-**Recommendation**: Pause implementation. Address C-1 (alternative framing), C-2 (merge strategy), and C-3 (hook specification) before proceeding. Consider dynamic loading as alternative approach.
+The plan has evolved from a draft with significant gaps to a comprehensive, well-reasoned implementation plan. The three Important findings above are recommendations for improvement, not blockers:
+
+1. **I-1 (Soft hook verification)**: Can be addressed during Stage 5 (HEARTBEAT.md creation)
+2. **I-2 (Coverage tool specification)**: Can be addressed at start of Stage 6
+3. **I-3 (Archive verification scope)**: Can be addressed at start of Stage 6
+
+The approach itself is correct. The plan demonstrates mature engineering practice: staged implementation, explicit success criteria, realistic timeline with buffer, and honest risk assessment. The consolidation principle ("When does the agent need this?") correctly identifies cohesive groupings.
 
 ---
 
@@ -203,54 +224,71 @@ Proceed with consolidation but architect sub-skills as independently loadable mo
 <summary>Full CLI output</summary>
 
 ```
-Based on my review of the plan and the surrounding context, here are my findings.
+This is an exceptionally well-structured and thorough implementation plan. It demonstrates
+a clear understanding of the problem, a robust technical approach, and a mature awareness
+of project risks. My review confirms that this plan is sound and ready for implementation
+with minor considerations.
 
 ### Overall Assessment
 
-The plan correctly identifies a critical problem (prompt overhead and skill anti-patterns) and proposes a directionally sound solution (consolidation). However, echoing the brother's insight, the plan is strong on the *what* (merge X into Y) but critically underdeveloped on the *how* (the process, risks, and verification of the merge). It addresses the symptom of prompt overhead but may worsen the underlying problem of complexity by creating monolithic, unmaintainable skills.
-
-My recommendation is to **re-evaluate the approach** before proceeding with implementation.
+The plan is **excellent**. It correctly identifies the core problems of token overhead and
+lack of automation and proposes a systematic, low-risk solution. The staged approach,
+detailed merge strategy, and comprehensive test migration plan are signs of a high-quality
+engineering process. The approach itself is not wrong; it's a model for this kind of
+refactoring.
 
 ---
 
-### Specific Findings
+### Analysis Findings
 
-#### 1. Strategic Risk: Solving the Symptom, Not the Disease
-*   **Severity**: Critical
-*   **Finding**: The plan focuses on reducing character count in the prompt, which is a symptom of the underlying problem: excessive granularity. The proposed solution—merging many small, simple components into a few large, complex ones—may solve the character count issue but create a much larger problem of cognitive overhead, testing complexity, and poor maintainability. We might be trading a performance issue for a critical architectural one.
-*   **Recommendation**: Re-frame the problem from "prompt overhead is too high" to "our skill architecture is too granular and complex to manage." This opens the door to alternative solutions. For example, could a dynamic "skill-loader" be introduced? A meta-skill that analyzes the immediate task and loads only the 3-5 most relevant granular skills into the context. This would solve the overhead problem without sacrificing the benefits of modularity and clear separation of concerns.
+#### 1. Does the plan solve the right problem?
 
-#### 2. Technical Gap: Missing Logical Consolidation Strategy
-*   **Severity**: Critical
-*   **Finding**: The plan treats consolidation as a file-merging exercise. It doesn't specify *how* the logic, eligibility criteria, R/C/D counters, and constraints of the individual skills will be reconciled. A naive merge will lead to lost functionality and conflicts. For example, how will the distinct eligibility criteria from 8 different skills be combined into a single, coherent set of criteria for the new `/failure-memory` skill with its 8 sub-commands?
-*   **Recommendation**: For each consolidated skill, create a detailed sub-plan that maps the logic from the old skills to the new sub-commands. This plan must explicitly define the new, unified eligibility criteria, the flow of control between sub-commands, and the strategy for testing each sub-command independently.
+**Yes, unequivocally.** The summary section correctly diagnoses the issues:
+- **Token Overhead**: The plan directly tackles the ~7,000 character overhead
+- **Lack of Automation**: It correctly identifies "paper architecture" and moves towards
+  automatable system with "Next Steps"
+- **Artificial Granularity**: The insight that some skills are too granular leads to more
+  logical, cohesive architecture
 
-#### 3. Risk Underestimation: Hook Integration Complexity
-*   **Severity**: Critical
-*   **Finding**: The risk "Hook integration issues" (Medium/Medium) is significantly underestimated. The plan lacks any specification for the hooks. Key unanswered questions include:
-    *   **State Management**: How will hooks share state? (e.g., How does the `heartbeat.sh` hook signal a failure to the `pre-action.sh` hook to block a file write?)
-    *   **Atomicity**: What happens if a hook fails midway through its execution? Is there a rollback mechanism?
-    *   **Performance**: What is the acceptable latency for each hook? A slow `post-tool-use.sh` could cripple the agent's usability.
-*   **Recommendation**: Do not begin hook implementation (Stage 5) until a formal specification (`HOOKS.md`) is written and approved. This specification should define the purpose, inputs, outputs, performance budget, and error handling for each hook script.
+#### 2. Technical Gaps or Risks
 
-#### 4. Project Management Risk: Unrealistic Timeline
-*   **Severity**: Important
-*   **Finding**: A 4.5-6 day timeline for migrating 48 specifications is highly optimistic. This estimate appears to be based on the flawed assumption that this is a simple copy-and-paste task. A proper logical consolidation, including re-writing criteria, creating new sub-command structures, and planning for testing, would realistically take 2-3 times as long.
-*   **Recommendation**: Re-scope the timeline to be more realistic, allocating at least 2-3 days *per consolidated skill* for Stages 1 and 2. A more pragmatic timeline would be in the range of 10-15 days.
+- **Severity**: **Important**
+  - **Finding**: Reliance on agent correctly interpreting "Next Steps" soft hooks. Agent
+    behavior can drift, causing hooks to fail silently.
+  - **Recommendation**: Add verification step in HEARTBEAT.md for critical Next Steps.
 
-#### 5. Architectural Risk: Loss of Granular Control and Versioning
-*   **Severity**: Important
-*   **Finding**: The current architecture allows for granular control; you can individually enable, disable, or version any of the 48 skills. The new model is monolithic. A bug in the `/governance review` sub-command would require rolling back the entire `governance` skill, disabling 5 other, potentially unrelated, sub-commands. This is a significant loss of operational flexibility.
-*   **Recommendation**: The plan must include a section on the new versioning and feature-flagging strategy. How will we manage the lifecycle of individual sub-commands within a consolidated skill?
+- **Severity**: **Minor**
+  - **Finding**: No explicit "Rollback Plan" section.
+  - **Recommendation**: Add brief rollback procedure.
 
-#### 6. Hidden Dependency Risk: Implicit Execution Chains
-*   **Severity**: Minor
-*   **Finding**: The plan doesn't account for potential implicit dependencies between skills being merged. For instance, `safety/fallback-checker` might be designed to run *before* `safety/cache-validator`. Merging them into a single `safety-checks` skill without preserving this execution order could break the underlying logic.
-*   **Recommendation**: Before each consolidation stage, perform a dependency analysis of the skills to be merged. Document any explicit or implicit ordering and ensure the new consolidated skill's logic respects that order.
+- **Severity**: **Minor**
+  - **Finding**: grep verification could be more robust - iterate all archived directories.
+  - **Recommendation**: Generate verification dynamically from archive contents.
+
+#### 3. Implementation Feasibility
+
+**High.** Due to:
+- **Staged Approach**: 7 distinct, logically sequenced stages
+- **Realistic Timeline**: 8-12 day estimate with buffer
+- **Clear Success Criteria**: Specific, measurable
+- **Pragmatism**: Deferring Claude Code hooks reduces initial scope and risk
+
+#### 4. Approach Itself
+
+**The approach is correct.** It follows best practices:
+- **Measure First**: Coverage baseline before changes
+- **Safety via Staging**: _staging directory prevents broken intermediate state
+- **Documentation-Centric**: Documentation as core part of migration
+
+This plan is well-designed to achieve its goals with a high probability of success.
 ```
+
+gemini CLI v0.2.x
+Model: gemini-2.5-pro
+Mode: --sandbox (read-only)
 
 </details>
 
 ---
 
-*Review generated by gemini-2.5-pro via CLI. Read-only review - no modifications made to reviewed files.*
+*Review generated 2026-02-15 by gemini-2.5-pro via CLI. Read-only review - no modifications made to reviewed files. This is Round 2 review after plan updates from N=4 prior reviews.*

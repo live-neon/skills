@@ -762,3 +762,9 @@ After this skill completes:
 *Research completed 2026-02-15. Updated with case study analysis of self-improving-agent and proactive-agent.*
 *Updated 2026-02-15: Clarified three distinct hook systems (Claude Code, Gateway, Webhook) based on additional research. Added planning-with-files, linear-webhook, fieldy-ai-webhook examples.*
 *Updated 2026-02-15: Initial release targets ClawHub/OpenClaw only. Using "Next Steps" soft hooks (like proactive-agent). Claude Code hooks deferred to future release.*
+
+---
+
+## Related Research
+
+- **Soft Hook Enforcement Patterns**: `2026-02-15-soft-hook-enforcement-patterns.md` - Addresses N=2 code review findings on soft hook reliability. Covers Three-Layer Enforcement Model, HEARTBEAT verification, and structured output patterns.

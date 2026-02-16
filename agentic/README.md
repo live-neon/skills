@@ -5,6 +5,27 @@
 Skills for failure-anchored learning and constraint enforcement. These skills implement
 the core insight that **AI systems learn best from consequences, not instructions**.
 
+## Quick Start
+
+New to agentic skills? Try these 4 commands:
+
+```bash
+# 1. Search for past failures related to your work
+/fm search --query "deployment"
+
+# 2. Check if any constraints apply to your current action
+/ce check "git commit without tests"
+
+# 3. Verify a file hasn't changed since last review
+/cv verify --file src/handler.go
+
+# 4. Run a twin review on your changes
+/ro twin src/handlers/
+```
+
+**Next steps**: See [Consolidated Skills](#consolidated-skills-7) for full command reference,
+or [ARCHITECTURE.md](../ARCHITECTURE.md) for system design.
+
 ## The Failure → Constraint Lifecycle
 
 ```
@@ -15,7 +36,7 @@ the core insight that **AI systems learn best from consequences, not instruction
                           ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                 OBSERVATION CREATED                              │
-│  failure-tracker creates/updates observation file                │
+│  /fm detect creates/updates observation file                     │
 │  R (recurrence) counter incremented                              │
 └─────────────────────────┬───────────────────────────────────────┘
                           ▼
@@ -27,8 +48,8 @@ the core insight that **AI systems learn best from consequences, not instruction
                           ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │              ELIGIBILITY CHECK                                   │
-│  R ≥ 3 AND C ≥ 2 AND |unique_sources| ≥ 2                       │
-│  constraint-generator creates candidate if eligible              │
+│  R ≥ 3 AND C ≥ 2 AND D/(C+D) < 0.2 AND sources ≥ 2              │
+│  /ce generate creates candidate if eligible                      │
 └─────────────────────────┬───────────────────────────────────────┘
                           ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -39,53 +60,72 @@ the core insight that **AI systems learn best from consequences, not instruction
                           ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │              RUNTIME ENFORCEMENT                                 │
-│  constraint-enforcer checks actions                              │
+│  /ce check validates actions against constraints                 │
 │  circuit-breaker tracks violations (5 in 30d → OPEN)            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Skill Layers
+## Consolidated Skills (7)
 
-| Layer | Purpose | Skills |
-|-------|---------|--------|
-| **Foundation** | Low-level primitives | context-packet, file-verifier, constraint-enforcer, severity-tagger, positive-framer |
-| **Core** | Memory operations | failure-tracker, constraint-generator, observation-recorder, memory-search, circuit-breaker, emergency-override, constraint-lifecycle, contextual-injection, progressive-loader |
-| **Review** | Multi-agent review | twin-review, cognitive-review, review-selector, staged-quality-gate, prompt-normalizer, slug-taxonomy |
-| **Detection** | Pattern recognition | failure-detector, topic-tagger, evidence-tier, effectiveness-metrics |
-| **Governance** | Constraint management | constraint-reviewer, index-generator, round-trip-tester, governance-state |
-| **Safety** | Runtime protection | model-pinner, fallback-checker, cache-validator, adoption-monitor |
-| **Bridge** | ClawHub integration | learnings-n-counter, feature-request-tracker, wal-failure-detector, heartbeat-constraint-check, vfm-constraint-scorer |
-| **Extensions** | Observation-backed | constraint-versioning, pbd-strength-classifier, cross-session-safety-check, pattern-convergence-detector |
+| Skill | Alias | Layer | Purpose |
+|-------|-------|-------|---------|
+| **failure-memory** | `/fm` | Core | Failure detection, observation recording, pattern search |
+| **constraint-engine** | `/ce` | Core | Constraint generation, enforcement, circuit breaker |
+| **context-verifier** | `/cv` | Foundation | File hashing, integrity verification, context packets |
+| **review-orchestrator** | `/ro` | Review | Twin/cognitive review coordination, quality gates |
+| **governance** | `/gov` | Governance | Constraint lifecycle, 90-day reviews, state management |
+| **safety-checks** | `/sc` | Safety | Model pinning, fallback validation, cache checks |
+| **workflow-tools** | `/wt` | Extensions | Loop detection, parallel decisions, MCE analysis |
 
 ## Directory Structure
 
 ```
 agentic/
-├── README.md           # This file
-├── SKILL_TEMPLATE.md   # Template for new skills
-├── core/               # Core memory skills
-├── review/             # Review workflow skills
-├── detection/          # Pattern detection skills
-├── governance/         # Constraint lifecycle skills
-├── safety/             # Runtime safety skills
-├── bridge/             # ClawHub integration skills
-└── extensions/         # Observation-backed skills
+├── README.md              # This file
+├── SKILL_TEMPLATE.md      # Template for new skills
+├── failure-memory/        # /fm - Core memory operations
+├── constraint-engine/     # /ce - Constraint enforcement
+├── context-verifier/      # /cv - File integrity
+├── review-orchestrator/   # /ro - Review workflows
+├── governance/            # /gov - Lifecycle management
+├── safety-checks/         # /sc - Runtime safety
+├── workflow-tools/        # /wt - Utility tools
+└── _archive/              # Archived pre-consolidation skills
+    └── 2026-02-consolidation/
 ```
 
 ## Counter Terminology
 
 | Counter | Meaning | Updated By |
 |---------|---------|------------|
-| **R** (Recurrence) | Auto-detected occurrences | failure-tracker |
-| **C** (Confirmations) | Human-verified true positives | Human via CLI |
-| **D** (Disconfirmations) | Human-verified false positives | Human via CLI |
+| **R** (Recurrence) | Auto-detected occurrences | `/fm detect` |
+| **C** (Confirmations) | Human-verified true positives | `/fm record C` |
+| **D** (Disconfirmations) | Human-verified false positives | `/fm record D` |
+
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| Detect failure | `/fm detect test` |
+| Record observation | `/fm record "pattern description"` |
+| Search memory | `/fm search "query"` |
+| Check eligibility | `/fm status --eligible` |
+| Generate constraint | `/ce generate OBS-ID` |
+| Check action | `/ce check "git commit"` |
+| Verify file | `/cv hash src/main.go` |
+| Run twin review | `/ro twin src/handlers/` |
+| Check governance | `/gov state` |
+| Safety check | `/sc model` |
+| Find open loops | `/wt loops` |
 
 ## ClawHub Integration
 
-These skills integrate with existing ClawHub skills:
+These skills are compatible with ClawHub ecosystem skills:
 
-- **self-improving-agent**: Learns from session patterns via `learnings-n-counter`
-- **proactive-agent**: Monitors system health via `heartbeat-constraint-check` and `wal-failure-detector`
+- **self-improving-agent@1.0.5**: `.learnings/` file format
+- **proactive-agent@3.1.0**: WAL protocol, VFM scoring
+
+See `output/VERSION.md` for format compatibility details.
 
 ## Getting Started
 
@@ -96,36 +136,27 @@ These skills integrate with existing ClawHub skills:
 
 2. Invoke a skill:
    ```
-   /context-packet src/main.go src/handlers.go
+   /fm detect test
+   /ce status
+   /cv hash src/main.go
    ```
 
 3. See skill documentation:
    ```
-   /skill-name --help
+   cat agentic/failure-memory/SKILL.md
    ```
 
 ## Documentation
 
-- **Architecture**: See `ARCHITECTURE.md` in parent directory for system overview
-- **Phase 1 Results**: See `docs/implementation/agentic-phase1-results.md` for implementation status
-- **Specification**: See `[multiverse]/docs/proposals/2026-02-13-agentic-skills-specification.md`
-- **Guides**: See `[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_*.md`
-- **CJK Vocabulary**: See `docs/standards/CJK_VOCABULARY.md` for skill aliases and math notation
+- **Architecture**: See `ARCHITECTURE.md` in parent directory
+- **Consolidation Results**: See `docs/implementation/agentic-consolidation-results.md`
+- **Workspace Files**: See `output/VERSION.md` for format versions
+- **CJK Vocabulary**: See `docs/standards/CJK_VOCABULARY.md`
 
-## Testing
+## Archive
 
-Unified test infrastructure at skills repo root:
-
-```bash
-# Run all skill tests (PBD + Agentic)
-cd tests && npm install && npm test
-
-# Docker-based testing with OpenClaw
-cd docker && docker compose up -d
-docker compose --profile test up
-```
-
-See `docker/README.md` and `tests/e2e/skill-loading.test.ts` for details.
+Pre-consolidation skills (48 granular skills) are preserved in `_archive/2026-02-consolidation/`
+for reference. These are no longer active and should not be used.
 
 ## License
 

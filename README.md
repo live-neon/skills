@@ -49,15 +49,17 @@ Skills for extracting and synthesizing invariant principles from text.
 
 Skills for failure detection, constraint enforcement, and memory operations. See [agentic/README.md](agentic/README.md) for the full lifecycle.
 
-| Skill | Layer | Description |
-|-------|-------|-------------|
-| [context-packet](agentic/core/context-packet/) | Foundation | Generate auditable context with file hashes |
-| [file-verifier](agentic/core/file-verifier/) | Foundation | Verify file identity via checksum |
-| [constraint-enforcer](agentic/core/constraint-enforcer/) | Foundation | Check actions against constraints |
-| [severity-tagger](agentic/review/severity-tagger/) | Foundation | Classify findings (critical/important/minor) |
-| [positive-framer](agentic/detection/positive-framer/) | Foundation | Transform "Don't X" → "Always Y" |
+| Skill | Alias | Layer | Description |
+|-------|-------|-------|-------------|
+| failure-memory | `/fm` | Core | Failure tracking, observations, pattern detection |
+| constraint-engine | `/ce` | Core | Constraint generation, enforcement, circuit breaker |
+| context-verifier | `/cv` | Foundation | File hashes, integrity verification |
+| review-orchestrator | `/ro` | Review | Twin and cognitive review coordination |
+| governance | `/gov` | Governance | Constraint lifecycle, state management |
+| safety-checks | `/sc` | Safety | Model pinning, fallbacks, session state |
+| workflow-tools | `/wt` | Extensions | Loop detection, parallel decisions, MCE |
 
-**All phases complete** — 48 skills across 6 layers. See [ARCHITECTURE.md](ARCHITECTURE.md) for full skill inventory.
+**Consolidated architecture** — 7 skills (from 48 granular). See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
 
 ## Usage
 
@@ -71,9 +73,34 @@ After installation, invoke skills in Claude Code:
 ## Architecture
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for how skills work together, including:
-- Skill layer diagram (Foundation → Core → Review/Detection → Governance/Safety → Bridge)
+- Skill layer diagram (Foundation → Core → Review/Detection → Governance/Safety)
 - Failure → Constraint lifecycle
 - ClawHub integration points
+
+## ClawHub Integration
+
+These skills integrate with ClawHub skills via shared workspace files:
+
+| ClawHub Skill | Integration | What We Provide |
+|---------------|-------------|-----------------|
+| `self-improving-agent` | Reads our learnings | `.learnings/LEARNINGS.md`, `.learnings/ERRORS.md` |
+| `proactive-agent` | Reads our constraints | `output/constraints/`, `SESSION-STATE.md` |
+| `VFM system` | Reads constraint metadata | `output/constraints/metadata.json` |
+
+**File format compatibility**: See [output/VERSION.md](output/VERSION.md) for version pinning.
+
+**Workspace structure**:
+```
+.learnings/                  # self-improving-agent format
+├── LEARNINGS.md             # [LRN-YYYYMMDD-XXX] corrections
+├── ERRORS.md                # [ERR-YYYYMMDD-XXX] failures
+└── FEATURE_REQUESTS.md      # [FEAT-YYYYMMDD-XXX] requests
+
+output/
+├── constraints/             # Constraint storage
+├── context-packets/         # File hash packets
+└── hooks/                   # Hook execution logs
+```
 
 ## Guides
 
