@@ -157,9 +157,34 @@ ls -la .openclaw/skills/context-verifier/
 - [x] `clawhub publish` returns success ✓ 2026-02-16 (ID: k97fps4cxnkjxjd7ex42437wzn8183rs)
 - [x] `clawhub explore` shows context-verifier ✓ 2026-02-16
 - [ ] `openclaw install leegitw/context-verifier` succeeds (pending verification)
-- [x] No security warnings from ClawHub ✓ 2026-02-16
+- [ ] No security warnings from ClawHub ⚠️ **NEEDS REPUBLISH** (see below)
 
-**Phase 2 Status**: ✅ PUBLISHED (verification pending)
+**Phase 2 Status**: ⚠️ NEEDS REPUBLISH (v1.0.1 security fix)
+
+### Security Scan Remediation (2026-02-16)
+
+ClawHub's VirusTotal scan flagged context-verifier v1.0.0 as "Suspicious" due to:
+1. Config paths not declared in frontmatter metadata
+2. Sensitive file handling not documented (`--include-content` risk)
+3. No security guidance for storage and retention
+
+**Fixes applied** (commit 819be7f):
+- Added `config_paths` and `workspace_paths` to frontmatter
+- Added Security Considerations section
+- Added `--include-content` warnings
+- Added `.gitignore` guidance
+- Version bumped to 1.0.1
+
+**Republish command**:
+```bash
+set -a && source .env && set +a
+clawhub publish agentic/context-verifier \
+  --slug context-verifier \
+  --name "Context Verifier - File Integrity and Hash Computation" \
+  --version 1.0.1 \
+  --changelog "Security: Added config/workspace path declarations, security considerations section, --include-content warnings" \
+  --tags "verification,hashing,integrity,context,foundation"
+```
 
 ---
 

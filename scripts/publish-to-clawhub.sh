@@ -7,7 +7,7 @@
 # This script waits 1 hour for GitHub API rate limits to reset,
 # then publishes one skill every 15 minutes.
 #
-# Already published: context-verifier
+# To republish: context-verifier (v1.0.1 security fix)
 # To publish: failure-memory, constraint-engine, safety-checks,
 #             review-orchestrator, governance, workflow-tools
 #
@@ -42,7 +42,9 @@ fi
 echo "Authenticated as leegitw"
 
 # Skills to publish (in dependency order)
+# Format: slug|name|tags|version|changelog (version/changelog optional, default 1.0.0)
 declare -a SKILLS=(
+    "context-verifier|Context Verifier - File Integrity and Hash Computation|verification,hashing,integrity,context,foundation|1.0.1|Security: Added config/workspace declarations, security section, --include-content warnings"
     "failure-memory|Failure Memory - Pattern Detection and Observation Recording|failure,memory,patterns,observations,learning,rcd-counters"
     "constraint-engine|Constraint Engine - Generation, Enforcement, and Circuit Breaker|constraints,enforcement,circuit-breaker,governance,rules"
     "safety-checks|Safety Checks - Model Pinning, Fallbacks, and Runtime Validation|safety,validation,model-pinning,fallbacks,security"
@@ -60,16 +62,22 @@ log() {
 
 publish_skill() {
     local skill_data="$1"
-    IFS='|' read -r slug name tags <<< "$skill_data"
+    IFS='|' read -r slug name tags version changelog <<< "$skill_data"
 
-    log "Publishing $slug..."
+    # Default version to 1.0.0 if not specified
+    version="${version:-1.0.0}"
 
-    if clawhub publish "agentic/$slug" \
-        --slug "$slug" \
-        --name "$name" \
-        --version 1.0.0 \
-        --tags "$tags"; then
-        log "SUCCESS: $slug published"
+    log "Publishing $slug v$version..."
+
+    local cmd="clawhub publish agentic/$slug --slug $slug --name \"$name\" --version $version --tags \"$tags\""
+
+    # Add changelog if specified
+    if [ -n "$changelog" ]; then
+        cmd="$cmd --changelog \"$changelog\""
+    fi
+
+    if eval "$cmd"; then
+        log "SUCCESS: $slug v$version published"
         return 0
     else
         log "FAILED: $slug - will retry on next run"
@@ -105,9 +113,10 @@ FAILED=()
 
 for i in "${!SKILLS[@]}"; do
     skill_data="${SKILLS[$i]}"
-    IFS='|' read -r slug name tags <<< "$skill_data"
+    IFS='|' read -r slug name tags version changelog <<< "$skill_data"
+    version="${version:-1.0.0}"
 
-    log "[$((i+1))/${#SKILLS[@]}] Processing $slug"
+    log "[$((i+1))/${#SKILLS[@]}] Processing $slug v$version"
 
     if publish_skill "$skill_data"; then
         PUBLISHED+=("$slug")
