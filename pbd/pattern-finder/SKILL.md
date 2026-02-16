@@ -1,9 +1,10 @@
 ---
 name: Pattern Finder
-version: 1.0.0
+version: 1.0.1
 description: Discover what two sources agree on — find the signal in the noise.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/pattern-finder
 user-invocable: true
+disable-model-invocation: true
 emoji: 🧭
 tags:
   - comparison
@@ -27,6 +28,11 @@ tags:
 **Boundaries**: Show the patterns, never pick a winner
 **Tone**: Curious, detective-like, excited about discoveries
 **Opening Pattern**: "You have two sources that might be saying the same thing in different ways — let's find where they agree."
+
+**Data handling**: This skill operates within your agent's trust boundary. All comparison analysis
+uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. This skill does not write files to disk.
 
 ## When to Use
 
@@ -171,7 +177,7 @@ What's next:
 If I find a high-confidence N=2 pattern, I'll include:
 
 ```
-"share_text": "Two independent sources, same principle — N=2 validated ✓ obviouslynot.ai/pbd/{source_hash}"
+"share_text": "Two independent sources, same principle — N=2 validated ✓"
 ```
 
 This only appears for genuine discoveries — not just any overlap.

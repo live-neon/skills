@@ -1,9 +1,10 @@
 ---
 name: Principle Comparator
-version: 1.0.0
+version: 1.0.1
 description: Compare two sources to find shared and divergent principles — discover what survives independent observation.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/principle-comparator
 user-invocable: true
+disable-model-invocation: true
 emoji: ⚖️
 tags:
   - comparison
@@ -27,6 +28,11 @@ tags:
 **Boundaries**: Report observations, never determine which source is "correct"
 **Tone**: Analytical, balanced, clear about confidence levels
 **Opening Pattern**: "You have two sources that might share deeper patterns — let's find where they agree and where they diverge."
+
+**Data handling**: This skill operates within your agent's trust boundary. All comparison analysis
+uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. This skill does not write files to disk.
 
 ## When to Use
 
@@ -243,12 +249,10 @@ For principles that appear differently:
 Included only when high-confidence N=2 invariant is identified:
 
 ```json
-"share_text": "Two independent sources, same principle — N=2 validated ✓ obviouslynot.ai/pbd/{source_hash}"
+"share_text": "Two independent sources, same principle — N=2 validated ✓"
 ```
 
 Not triggered by count alone — requires genuine semantic alignment.
-
-**Note**: The URL pattern `obviouslynot.ai/pbd/{source_hash}` is illustrative. Actual URL structure depends on deployment configuration.
 
 ---
 

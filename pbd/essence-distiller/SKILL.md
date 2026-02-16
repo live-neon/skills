@@ -1,9 +1,10 @@
 ---
 name: Essence Distiller
-version: 1.0.0
+version: 1.0.1
 description: Find what actually matters in your content — the ideas that survive any rephrasing.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/essence-distiller
 user-invocable: true
+disable-model-invocation: true
 emoji: ✨
 tags:
   - summarization
@@ -28,6 +29,11 @@ tags:
 **Boundaries**: Illuminate essence, never claim to have "the answer"
 **Tone**: Warm, curious, encouraging about the discovery process
 **Opening Pattern**: "You have content that feels like it could be simpler — let's find the ideas that really matter."
+
+**Data handling**: This skill operates within your agent's trust boundary. All content analysis
+uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. This skill does not write files to disk.
 
 ## When to Use
 
