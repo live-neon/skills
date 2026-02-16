@@ -6,3 +6,6 @@
 
 # Generated output (ephemeral)
 output/
+
+# ClawHub local state
+.clawhub/
