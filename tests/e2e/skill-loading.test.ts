@@ -4,21 +4,30 @@
  * Validates ALL skills (PBD + Agentic) can be loaded and parsed.
  * Tests SKILL.md format, frontmatter, and documentation structure.
  *
+ * Updated 2026-02-15 for consolidated agentic skills (48 → 7).
+ *
  * Run:
  *   npm test tests/e2e/skill-loading.test.ts
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { resolve, join, basename, dirname } from 'node:path';
+import { resolve, join } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
 // Skill categories
 const SKILLS_ROOT = resolve(import.meta.dirname, '../../');
-const SKILL_CATEGORIES = {
-  pbd: ['plan', 'remember', 'observe'],  // PBD methodology skills
-  agentic: ['core', 'review', 'detection', 'governance', 'safety', 'bridge', 'extensions'],
-};
+
+// Consolidated agentic skills (7 total)
+const CONSOLIDATED_AGENTIC_SKILLS = [
+  'failure-memory',
+  'constraint-engine',
+  'context-verifier',
+  'review-orchestrator',
+  'governance',
+  'safety-checks',
+  'workflow-tools',
+];
 
 interface SkillFrontmatter {
   name: string;
@@ -27,13 +36,15 @@ interface SkillFrontmatter {
   author?: string;
   homepage?: string;
   tags?: string[];
+  layer?: string;
+  status?: string;
+  alias?: string;
   'user-invocable'?: boolean;
 }
 
 interface SkillInfo {
   path: string;
   category: string;
-  subcategory: string;
   name: string;
   frontmatter: SkillFrontmatter;
   body: string;
@@ -53,51 +64,47 @@ function parseSkillMd(content: string): { frontmatter: SkillFrontmatter; body: s
 function discoverSkills(): SkillInfo[] {
   const skills: SkillInfo[] = [];
 
-  for (const [category, subcategories] of Object.entries(SKILL_CATEGORIES)) {
-    const categoryPath = join(SKILLS_ROOT, category);
-    if (!existsSync(categoryPath)) continue;
-
-    // Check direct skill directories (e.g., pbd/plan/)
-    const entries = readdirSync(categoryPath, { withFileTypes: true });
-    for (const entry of entries) {
+  // Discover PBD skills (pbd/plan/, pbd/remember/, pbd/observe/)
+  const pbdPath = join(SKILLS_ROOT, 'pbd');
+  if (existsSync(pbdPath)) {
+    const pbdEntries = readdirSync(pbdPath, { withFileTypes: true });
+    for (const entry of pbdEntries) {
       if (!entry.isDirectory()) continue;
-
-      // Check if this is a skill directory (has SKILL.md)
-      const skillMdPath = join(categoryPath, entry.name, 'SKILL.md');
+      const skillMdPath = join(pbdPath, entry.name, 'SKILL.md');
       if (existsSync(skillMdPath)) {
         const content = readFileSync(skillMdPath, 'utf-8');
         const { frontmatter, body } = parseSkillMd(content);
         skills.push({
           path: skillMdPath,
-          category,
-          subcategory: entry.name,
+          category: 'pbd',
           name: frontmatter.name || entry.name,
           frontmatter,
           body,
         });
-        continue;
       }
+    }
+  }
 
-      // Check subdirectories (e.g., agentic/core/context-packet/)
-      if (subcategories.includes(entry.name)) {
-        const subPath = join(categoryPath, entry.name);
-        const subEntries = readdirSync(subPath, { withFileTypes: true });
-        for (const subEntry of subEntries) {
-          if (!subEntry.isDirectory()) continue;
-          const subSkillMdPath = join(subPath, subEntry.name, 'SKILL.md');
-          if (existsSync(subSkillMdPath)) {
-            const content = readFileSync(subSkillMdPath, 'utf-8');
-            const { frontmatter, body } = parseSkillMd(content);
-            skills.push({
-              path: subSkillMdPath,
-              category,
-              subcategory: entry.name,
-              name: frontmatter.name || subEntry.name,
-              frontmatter,
-              body,
-            });
-          }
-        }
+  // Discover consolidated agentic skills (agentic/failure-memory/, etc.)
+  const agenticPath = join(SKILLS_ROOT, 'agentic');
+  if (existsSync(agenticPath)) {
+    const agenticEntries = readdirSync(agenticPath, { withFileTypes: true });
+    for (const entry of agenticEntries) {
+      if (!entry.isDirectory()) continue;
+      // Skip archive and other non-skill directories
+      if (entry.name.startsWith('_')) continue;
+
+      const skillMdPath = join(agenticPath, entry.name, 'SKILL.md');
+      if (existsSync(skillMdPath)) {
+        const content = readFileSync(skillMdPath, 'utf-8');
+        const { frontmatter, body } = parseSkillMd(content);
+        skills.push({
+          path: skillMdPath,
+          category: 'agentic',
+          name: frontmatter.name || entry.name,
+          frontmatter,
+          body,
+        });
       }
     }
   }
@@ -117,12 +124,16 @@ describe('E2E: All Skills Loading', () => {
 
     console.log(`\nDiscovered ${allSkills.length} skills:`);
     console.log(`  PBD: ${pbdSkills.length}`);
-    console.log(`  Agentic: ${agenticSkills.length}\n`);
+    console.log(`  Agentic: ${agenticSkills.length} (consolidated)\n`);
   });
 
   describe('Skill Discovery', () => {
     it('should discover skills from all categories', () => {
       expect(allSkills.length).toBeGreaterThan(0);
+    });
+
+    it('should discover exactly 7 consolidated agentic skills', () => {
+      expect(agenticSkills.length).toBe(7);
     });
   });
 
@@ -136,35 +147,54 @@ describe('E2E: All Skills Loading', () => {
     });
   });
 
-  describe('Agentic Skills', () => {
-    it('should find at least 5 agentic skills (Phase 1)', () => {
-      expect(agenticSkills.length).toBeGreaterThanOrEqual(5);
-    });
-
-    it('should have Foundation layer skills', () => {
-      const foundationSkills = ['context-packet', 'file-verifier', 'constraint-enforcer', 'severity-tagger', 'positive-framer'];
-      for (const name of foundationSkills) {
+  describe('Agentic Skills (Consolidated)', () => {
+    it('should have all 7 consolidated skills', () => {
+      for (const expectedName of CONSOLIDATED_AGENTIC_SKILLS) {
         const found = agenticSkills.some(s =>
-          s.path.includes(`/${name}/`) || s.frontmatter.name?.toLowerCase().includes(name)
+          s.name === expectedName || s.frontmatter.name === expectedName
         );
-        expect(found, `Missing Foundation skill: ${name}`).toBe(true);
+        expect(found, `Missing consolidated skill: ${expectedName}`).toBe(true);
       }
     });
 
     it('should have valid SKILL.md format', () => {
       for (const skill of agenticSkills) {
-        expect(skill.frontmatter.name).toBeDefined();
-        expect(skill.frontmatter.version).toBeDefined();
-        expect(skill.frontmatter.description).toBeDefined();
-        expect(skill.frontmatter.author).toBe('Live Neon');
+        expect(skill.frontmatter.name, `${skill.name} missing name`).toBeDefined();
+        expect(skill.frontmatter.version, `${skill.name} missing version`).toBeDefined();
+        expect(skill.frontmatter.description, `${skill.name} missing description`).toBeDefined();
+        expect(skill.frontmatter.author, `${skill.name} missing author`).toBe('Live Neon');
+        expect(skill.frontmatter.layer, `${skill.name} missing layer`).toBeDefined();
+        expect(skill.frontmatter.alias, `${skill.name} missing alias`).toBeDefined();
       }
     });
 
     it('should have required documentation sections', () => {
       for (const skill of agenticSkills) {
         expect(skill.body, `${skill.name} missing Usage`).toContain('## Usage');
-        expect(skill.body, `${skill.name} missing Example`).toContain('## Example');
+        expect(skill.body, `${skill.name} missing Sub-Commands`).toContain('## Sub-Commands');
         expect(skill.body, `${skill.name} missing Integration`).toContain('## Integration');
+        expect(skill.body, `${skill.name} missing Next Steps`).toContain('## Next Steps');
+        expect(skill.body, `${skill.name} missing Acceptance Criteria`).toContain('## Acceptance Criteria');
+      }
+    });
+
+    it('should have layer assignments', () => {
+      const expectedLayers = ['core', 'foundation', 'review', 'governance', 'safety', 'extensions'];
+      for (const skill of agenticSkills) {
+        expect(
+          expectedLayers.includes(skill.frontmatter.layer!),
+          `${skill.name} has invalid layer: ${skill.frontmatter.layer}`
+        ).toBe(true);
+      }
+    });
+
+    it('should have short aliases', () => {
+      const expectedAliases = ['fm', 'ce', 'cv', 'ro', 'gov', 'sc', 'wt'];
+      for (const skill of agenticSkills) {
+        expect(
+          expectedAliases.includes(skill.frontmatter.alias!),
+          `${skill.name} has unexpected alias: ${skill.frontmatter.alias}`
+        ).toBe(true);
       }
     });
   });
