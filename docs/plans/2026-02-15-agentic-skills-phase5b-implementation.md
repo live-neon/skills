@@ -8,7 +8,7 @@ previous_phase: ../plans/2026-02-14-agentic-skills-phase5-implementation.md
 depends_on:
   - ../plans/2026-02-14-agentic-skills-phase5-implementation.md
 blocked_by:
-  - "[multiverse]/docs/plans/2026-02-15-agentic-skills-consolidation.md"
+  - 2026-02-15-agentic-skills-consolidation.md
 related_guides:
   - "[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_ARCHITECTURE_GUIDE.md"
 external_dependencies:
@@ -26,7 +26,7 @@ This enables the constraint/observation system to communicate with ClawHub's
 
 **Duration**: 2-3 days
 **Prerequisites**: Consolidation plan complete, ClawHub API access
-**Blocked by**: `[multiverse]/docs/plans/2026-02-15-agentic-skills-consolidation.md`
+**Blocked by**: `2026-02-15-agentic-skills-consolidation.md`
 **Output**: Real adapters in `agentic/clawhub-bridge/adapters/`, integration tests passing
 
 > **Note**: This plan should execute AFTER the consolidation plan. Post-consolidation,
@@ -48,7 +48,7 @@ to actual ClawHub components. Phase 5B completes the integration story.
 
 Before starting implementation:
 
-1. **Consolidation complete**: `[multiverse]/docs/plans/2026-02-15-agentic-skills-consolidation.md` executed
+1. **Consolidation complete**: `2026-02-15-agentic-skills-consolidation.md` executed
 2. **ClawHub API access**: Valid authentication token in `.env`
 3. **API documentation**: Endpoints for self-improving-agent, proactive-agent, VFM
 4. **Test environment**: ClawHub staging/sandbox environment for integration tests
