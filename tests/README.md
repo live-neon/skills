@@ -71,13 +71,16 @@ Validates all SKILL.md files across both categories:
 ### Current Coverage
 
 ```
-Discovered 12 skills:
+Discovered 14 skills:
   PBD: 7
-  Agentic: 5
+  Agentic: 7 (consolidated)
 
 Test Files  1 passed (1)
-     Tests  8 passed (8)
+     Tests  10 passed (10)
 ```
+
+**Note**: After consolidation (2026-02-15), 48 granular agentic skills were merged into 7.
+Archived tests are in `_archive/pre-consolidation/` (excluded via `vitest.config.ts`).
 
 ## Docker Testing
 

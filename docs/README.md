@@ -28,15 +28,21 @@ Documentation for the Live Neon Skills project.
 
 ### By Phase
 
-| Phase | Plan | Results | Reviews |
-|-------|------|---------|---------|
+| Phase | Plan | Results | Description |
+|-------|------|---------|-------------|
 | Phase 1 | [Plan](plans/2026-02-13-agentic-skills-phase1-implementation.md) | [Results](implementation/agentic-phase1-results.md) | Foundation layer |
 | Phase 2 | [Plan](plans/2026-02-13-agentic-skills-phase2-implementation.md) | [Results](implementation/agentic-phase2-results.md) | Core layer |
 | Phase 3 | [Plan](plans/2026-02-13-agentic-skills-phase3-implementation.md) | [Results](implementation/agentic-phase3-results.md) | Governance layer |
 | Phase 4 | [Plan](plans/2026-02-14-agentic-skills-phase4-implementation.md) | [Results](implementation/agentic-phase4-results.md) | Safety layer |
 | Phase 5 | [Plan](plans/2026-02-14-agentic-skills-phase5-implementation.md) | [Results](implementation/agentic-phase5-results.md) | Bridge layer |
+| Phase 5B | [Plan](plans/2026-02-15-agentic-skills-phase5b-implementation.md) | [Results](implementation/agentic-phase5b-results.md) | ClawHub compatibility |
 | Phase 6 | [Plan](plans/2026-02-15-agentic-skills-phase6-implementation.md) | [Results](implementation/agentic-phase6-results.md) | Extensions layer |
 | Phase 7 | [Plan](plans/2026-02-15-agentic-skills-phase7-implementation.md) | [Results](implementation/agentic-phase7-results.md) | Architecture finalization |
+| Consolidation | [Plan](plans/2026-02-15-agentic-skills-consolidation.md) | [Results](implementation/agentic-consolidation-results.md) | 48 → 7 skills |
+
+### Backlog
+
+Future work with explicit triggers: [BACKLOG.md](plans/BACKLOG.md)
 
 ## See Also
 

@@ -644,6 +644,7 @@ To add a sub-command to an existing skill:
 | 0.8.0 | 2026-02-15 | Phase 7 complete: All 48 skills operational |
 | **1.0.0** | **2026-02-15** | **Consolidation: 48 skills → 7 consolidated skills** |
 | **1.1.0** | **2026-02-15** | **Architecture hub pattern applied** |
+| **1.2.0** | **2026-02-15** | **Phase 5B: ClawHub compatibility verified** |
 
 <!-- END SECTION: version-history -->
 
