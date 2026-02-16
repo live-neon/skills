@@ -23,6 +23,13 @@ Brief description of what this skill does and why it exists in the agentic syste
 /skill-name <required-arg> [optional-arg]
 ```
 
+## Sub-Commands
+
+| Command | Description |
+|---------|-------------|
+| `/skill-name action` | Primary action |
+| `/skill-name status` | Check current state |
+
 ## Arguments
 
 | Argument | Required | Description |
