@@ -75,6 +75,8 @@ docs/reviews/                          # Code review and twin review outputs
 **Document purposes**:
 - **SKILL.md**: Authoritative skill specification (usage, arguments, output, failure modes)
 - **ARCHITECTURE.md**: System reference (layers, data flow, threat model, circuit breaker)
+- **Proposals**: Design specifications and architectural intent (authoritative for design decisions, must be updated when implementation diverges)
+- **Plans**: Implementation blueprints (historical record of how features were built)
 - **Guides**: Deep technical documentation (semantic similarity, etc.)
 - **Research**: External validation of architecture decisions (hooks, learning theory, industry patterns)
 - **SKILL_TEMPLATE.md**: Starting point for new skills
@@ -83,7 +85,9 @@ docs/reviews/                          # Code review and twin review outputs
 - **tests/README.md**: Testing philosophy, commands, coverage
 
 **Rule**: SKILL.md files are authoritative for individual skills. ARCHITECTURE.md is
-authoritative for system behavior. Guides provide deep technical reference.
+authoritative for system behavior. Proposals are authoritative for design intent but
+must be updated when major implementation changes occur (e.g., consolidation, restructuring).
+Guides provide deep technical reference.
 
 ---
 
@@ -105,6 +109,8 @@ Classify the change:
 | **Template update** | SKILL_TEMPLATE.md, possibly existing SKILL.md files |
 | **Test infrastructure** | tests/README.md, package.json |
 | **Phase completion** | docs/implementation/, ARCHITECTURE.md (phase status) |
+| **Proposal/specification update** | docs/proposals/, ARCHITECTURE.md (if structure changed) |
+| **Major architecture change** | docs/proposals/ (alignment audit), ARCHITECTURE.md, affected SKILL.md files |
 
 ### Step 2: Update SKILL.md (if skill changed)
 
@@ -341,6 +347,22 @@ cd tests && npm test
 - `agentic/SKILL_TEMPLATE.md` (frontmatter example)
 - `pbd/SKILL_TEMPLATE.md` (frontmatter example)
 
+### 10. Letting Proposals Drift from Implementation
+
+**Wrong**: Completing major restructuring (e.g., consolidation) without updating specification
+**Right**: Run alignment audit after major changes, update specification to reflect reality
+
+**Pattern** (from memory-garden Plan 010):
+1. After major architecture change → Run "Stage 0: Alignment Audit"
+2. Document divergences in a table (specification says X, reality is Y)
+3. Update specification to reflect current implementation
+4. Add `last_aligned` date to frontmatter for staleness detection
+
+**Example**: Consolidation reduced 48 skills to 7, but specification still said 47 skills.
+Solution: Add "Post-Phase 7: Consolidation" section, update TL;DR, implementation location.
+
+**Reference**: `docs/plans/2026-02-16-proposal-alignment.md` (alignment audit pattern)
+
 ---
 
 ## Verification
@@ -458,6 +480,35 @@ grep "NEW_REQUIREMENT" docs/workflows/skill-publish.md docs/workflows/creating-n
 grep "NEW_REQUIREMENT" agentic/SKILL_TEMPLATE.md pbd/SKILL_TEMPLATE.md
 ```
 
+### Example: Updating Proposals After Major Architecture Change
+
+**Trigger**: Consolidation reduced 48 skills to 7, but specification still described 47 skills.
+
+**Pattern** (Stage 0 Alignment Audit from memory-garden):
+1. Create divergence table (spec says X, reality is Y)
+2. Update specification frontmatter with `last_aligned` date
+3. Update TL;DR with current skill count
+4. Add section documenting the change (e.g., "Post-Phase 7: Consolidation")
+5. Update implementation location, success criteria, timeline
+6. Verify original proposal correctly references updated specification
+
+**Files updated** (in order):
+1. `docs/proposals/2026-02-13-agentic-skills-specification.md` - TL;DR, consolidation section, implementation location, success criteria, timeline
+2. `docs/proposals/2026-02-13-openclaw-skills-for-agentic-system.md` - Note consolidation in superseded notice
+3. `ARCHITECTURE.md` - Verify skill counts match
+
+**Verification**:
+```bash
+# Specification shows correct skill count
+grep "consolidated_count:" docs/proposals/2026-02-13-agentic-skills-specification.md
+# Consolidation section exists
+grep "Post-Phase 7: Consolidation" docs/proposals/2026-02-13-agentic-skills-specification.md
+# last_aligned date present
+grep "last_aligned:" docs/proposals/2026-02-13-agentic-skills-specification.md
+```
+
+**Reference**: `docs/plans/2026-02-16-proposal-alignment.md`
+
 ---
 
 ## Anti-Patterns
@@ -474,6 +525,7 @@ grep "NEW_REQUIREMENT" agentic/SKILL_TEMPLATE.md pbd/SKILL_TEMPLATE.md
 | Layer-violating dependencies | Breaks architecture | Dependencies flow upward only |
 | Missing dependency docs | AI can't discover context | Always document Integration section |
 | Security compliance drift | Inconsistent requirements | Sync creating-new-skill.md ↔ skill-publish.md |
+| Proposal drift | Spec contradicts reality | Run alignment audit after major changes |
 
 ---
 
@@ -528,8 +580,14 @@ After completing documentation updates, **close the loop**:
 - **[OpenClaw/ClawHub Hooks](../research/2026-02-15-openclaw-clawhub-hooks-research.md)** - Three hook systems, SKILL.md format
 - **[Soft Hook Enforcement](../research/2026-02-15-soft-hook-enforcement-patterns.md)** - Three-Layer Model, HEARTBEAT verification
 
+### Proposal Alignment
+
+- **[Proposal Alignment Plan](../plans/2026-02-16-proposal-alignment.md)** - Stage 0 alignment audit pattern
+- **Pattern Source**: memory-garden/docs/plans/010-architecture-documentation-hub.md (cross-project reference)
+
 ---
 
 *Workflow created 2026-02-13 to support standalone skills project documentation.*
 *Updated 2026-02-14: Added Next Steps section and phase-completion reference.*
 *Updated 2026-02-16: Added research documents to scope and examples.*
+*Updated 2026-02-16: Added proposal alignment guidance (pattern from memory-garden Plan 010).*
