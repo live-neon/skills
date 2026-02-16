@@ -25,6 +25,9 @@ external_skills:
 > [`../proposals/2026-02-13-agentic-skills-specification.md`](./2026-02-13-agentic-skills-specification.md).
 > Use the specification for implementation. This document is retained for historical context
 > and detailed SKILL.md examples.
+>
+> **Note**: The specification itself has been updated to reflect the 2026-02-15 consolidation
+> (48 → 7 skills). See the "Post-Phase 7: Consolidation" section in the specification.
 
 ## Summary
 

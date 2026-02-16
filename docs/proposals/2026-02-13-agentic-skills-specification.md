@@ -13,6 +13,14 @@ implementation_plans:
   - ../plans/2026-02-14-agentic-skills-phase5-implementation.md
   - ../plans/2026-02-15-agentic-skills-phase6-implementation.md
   - ../plans/2026-02-15-agentic-skills-phase7-implementation.md
+consolidation_plan: ../plans/2026-02-15-agentic-skills-consolidation.md
+decoupling_plan: ../plans/2026-02-15-agentic-clawhub-decoupling.md
+publication_plan: ../plans/2026-02-16-agentic-clawhub-publication.md
+implementation_status: consolidated
+consolidated_count: 7
+original_count: 47
+archived_count: 48
+last_aligned: 2026-02-16
 related_proposals:
   - ../proposals/2026-02-13-openclaw-skills-for-agentic-system.md
 related_reviews:
@@ -52,24 +60,33 @@ brands:
 
 ## TL;DR
 
-**What**: 47 AI memory skills for failure-anchored learning across 6 layers.
+**What**: AI memory skills for failure-anchored learning.
+
+**Original design**: 47 skills across 6 layers.
+**Consolidated implementation**: 7 skills after internal review identified over-engineering (2026-02-15).
+
+| Consolidated Skill | Merged From | Function |
+|--------------------|-------------|----------|
+| context-verifier | 3 foundation skills | Verifies file integrity via MD5 hashes, detects unauthorized changes |
+| failure-memory | 10 core/detection skills | Records failures with R/C/D counters, detects recurring patterns |
+| constraint-engine | 9 core skills | Generates constraints from failures, enforces at runtime, circuit breaker |
+| review-orchestrator | 5 review skills | Coordinates multi-perspective reviews (technical, creative, external) |
+| governance | 6 governance skills | Manages skill lifecycle, triggers 90-day reviews, tracks adoption |
+| safety-checks | 4 safety skills | Validates model configs, enforces pinning, provides fallback handling |
+| workflow-tools | 4 extension skills | Detects infinite loops, evaluates parallel vs serial, suggests MCE splits |
+
+*Table shows 41 merged skills. Full accounting: 41 merged + 5 bridge (→ documentation) + 1 removed + 1 added during impl = 48 archived.*
 
 **Core insight**: AI learns from consequences, not instructions. Failures become constraints.
 
 **Lifecycle**: Failure detected → R≥3 recurrences → C≥2 human confirmations → Constraint generated → Runtime enforced
 
-**Key requirements**:
+**Key requirements** (unchanged):
 - Semantic classification (LLM-based), NOT pattern matching
 - R/C/D counters: Recurrence (auto), Confirmations (human), Disconfirmations (false positives)
-- Circuit breaker: 5 violations in 30 days → OPEN state → human intervention
+- Circuit breaker: Severity-tiered (CRITICAL: 3/30d, IMPORTANT: 5/30d, MINOR: 10/30d)
 
-**Phase 1 (complete)**: 5 Foundation skills (context-packet, file-verifier, constraint-enforcer, severity-tagger, positive-framer)
-
-**Phases 2-6**: Core Memory → Review/Detection → Governance/Safety → Bridge → Extensions
-
-**Research gates**: 8 topics requiring external validation (4 for Phase 2, 1 for Phase 3, 3 for Phase 4)
-
-**Implementation**: `projects/live-neon/skills/agentic/` (golden master, no copies)
+**Implementation**: `projects/live-neon/skills/agentic/` (golden master, consolidated structure)
 
 ---
 
@@ -80,6 +97,7 @@ This specification is 1,400+ lines. Use this table to navigate:
 | If you need to... | Read sections... |
 |-------------------|------------------|
 | Understand the core concept | TL;DR, Strategic Context |
+| Understand consolidation (47 → 7) | Post-Phase 7: Consolidation |
 | Implement a specific skill | Skill Template (Phase 1), relevant Phase section |
 | Understand the 6-layer architecture | Design Principles, Layer Overview |
 | Check research status | Research Gates |
@@ -94,11 +112,12 @@ This specification is 1,400+ lines. Use this table to navigate:
 
 ## Summary
 
-Specification for 47 agentic memory skills for failure-anchored learning and constraint
-enforcement. Skills are developed directly in the golden master location
-(`projects/live-neon/skills/agentic/`).
+**Current State**: 7 consolidated skills for failure-anchored learning, developed in
+`projects/live-neon/skills/agentic/` (golden master location).
 
-**Composition**: 37 original proposal skills + 10 observation-backed extensions.
+> **Historical Context**: Originally designed as 47 skills (37 proposal + 10 extensions),
+> consolidated to 7 on 2026-02-15 after internal review identified over-engineering.
+> This specification preserves the original design for historical reference.
 
 **Golden Master Pattern** (observation N=4): `projects/live-neon/skills` is the single
 source of truth. No temporary copies elsewhere. See
@@ -247,7 +266,10 @@ The defaults apply when no override is specified.
 
 ---
 
-## Skill Tiers (47 skills)
+## Skill Tiers (47 Skills)
+
+> **Historical Context**: These 47 skills were consolidated to 7 on 2026-02-15.
+> See TL;DR and "Post-Phase 7: Consolidation" section for current state.
 
 From `../proposals/2026-02-13-openclaw-skills-for-agentic-system.md` + observation analysis:
 
@@ -284,15 +306,42 @@ The system delivers value at this point. Phases 3-7 add refinement and scale.
 
 **Location**: `projects/live-neon/skills/agentic/` (golden master)
 
+### Original Design (Pre-Consolidation)
+
+> **Historical Context**: These counts reflect the original specification design.
+> Actual implementation counts differed slightly. Archive contains 48 SKILL.md files
+> (authoritative count). Extensions layer (10 skills) not shown below.
+
 ```
 projects/live-neon/skills/agentic/
-├── core/
-├── review/
-├── detection/
-├── governance/
-├── safety/
-└── bridge/
+├── core/           # 14 skills (spec design)
+├── review/         # 6 skills (spec design)
+├── detection/      # 4 skills (spec design)
+├── governance/     # 4 skills (spec design)
+├── safety/         # 4 skills (spec design)
+└── bridge/         # 5 skills (spec design)
 ```
+
+### Current Structure (Post-Consolidation)
+
+```
+projects/live-neon/skills/agentic/
+├── context-verifier/    # Foundation: file integrity, hashing
+├── failure-memory/      # Core: pattern detection, R/C/D tracking
+├── constraint-engine/   # Core: generation, enforcement, circuit breaker
+├── review-orchestrator/ # Review: multi-perspective coordination
+├── governance/          # Governance: lifecycle, periodic reviews
+├── safety-checks/       # Safety: model pinning, fallbacks
+├── workflow-tools/      # Extensions: loops, parallel, MCE
+├── _archive/            # Archived 48 original skills (reference only)
+├── CHANGELOG.md
+├── INDEX.md
+├── LICENSE
+├── README.md
+└── SKILL_TEMPLATE.md
+```
+
+**Note**: Original 48 skills archived at `agentic/_archive/2026-02-consolidation/` for reference and rollback.
 
 **Prerequisite**: Plan A must be complete (submodule at `projects/live-neon/skills/` exists).
 
@@ -1112,6 +1161,67 @@ Document how all 48 skills work together as a coherent system. This is the
 
 ---
 
+## Post-Phase 7: Consolidation
+
+**Date**: 2026-02-15
+**Plan**: `../plans/2026-02-15-agentic-skills-consolidation.md`
+
+### Why Consolidate
+
+Internal review (2026-02-14) identified:
+1. **Token overhead**: 48 skills × ~150 chars = ~7,000 chars injected per session
+2. **No automation**: Zero `scripts/` directories - relied on agent "remembering"
+3. **Paper architecture**: 48 SKILL.md specs, but no runtime hooks
+4. **Artificial granularity**: e.g., `positive-framer` as its own skill
+
+### Consolidation Result
+
+| Before | After |
+|--------|-------|
+| 48 skills | 7 consolidated skills |
+| 6 layers + bridge + extensions | Flat structure |
+| ~7,000 chars overhead | ~1,400 chars overhead |
+| Zero hooks | Next Steps soft hooks |
+
+### What Was Preserved
+
+- R/C/D counter model
+- Eligibility criteria (R≥3, C≥2, D/(C+D)<0.2, sources≥2)
+- Severity-tiered circuit breaker
+- Event-driven governance
+- Golden master pattern
+- Bridge layer (as documentation, not skill)
+
+### Skill Mapping
+
+| Consolidated Skill | Source Skills Count | Source Layers |
+|--------------------|---------------------|---------------|
+| context-verifier | 3 | Foundation |
+| failure-memory | 10 | Core + Detection + Foundation |
+| constraint-engine | 9 | Core |
+| review-orchestrator | 5 | Review |
+| governance | 6 | Governance + Safety (adoption-monitor) |
+| safety-checks | 4 | Safety |
+| workflow-tools | 4 | Extensions |
+| *(documentation)* | 5 | Bridge |
+| *(removed)* | 1 | Extensions (pbd-strength-classifier, redundant) |
+
+*Table totals 47. Archive contains 48 SKILL.md files (1 skill added during Phase 6 implementation).*
+
+### Post-Consolidation Work
+
+- **Decoupling** (2026-02-15): `../plans/2026-02-15-agentic-clawhub-decoupling.md`
+  - Removed Multiverse-specific dependencies
+  - Added OpenClaw config path support
+  - Made cognitive modes model-agnostic
+
+- **ClawHub Publication** (2026-02-16): `../plans/2026-02-16-agentic-clawhub-publication.md`
+  - Publishing 7 agentic + 7 PBD skills
+  - Security compliance (disable-model-invocation, data handling)
+  - Rate limit handling (15-min delays)
+
+---
+
 ## Per-Phase Documentation Requirement
 
 **Each phase implementation plan MUST include**:
@@ -1267,90 +1377,78 @@ Description of what the skill outputs.
 
 ## Timeline
 
-| Phase | Duration | Skills | Cumulative | Doc Update |
-|-------|----------|--------|------------|------------|
-| Phase 1: Quick Wins | 1-2 days | 5 | 5 | ARCHITECTURE.md created |
-| Phase 2: Core Memory | 3-5 days | 9 | 14 | + Core layer |
-| Phase 3: Review & Detection | 2-3 days | 10 | 24 | + Review/Detection layer |
-| Phase 4: Governance & Safety | 2-3 days | 8 | 32 | + Governance/Safety layer |
-| Phase 5: Bridge | 1-2 days | 5 | 37 | + Bridge layer, ClawHub integration |
-| Phase 6: Observation Extensions | 2-3 days | 10 | 47 | + Extensions layer |
-| Phase 7: Architecture Finalization | 1 day | 0 | 47 | Final review, diagrams |
+### Original Implementation (Phases 1-7)
 
-**Total**: 12-20 days for all 47 skills + architecture documentation
+| Phase | Duration | Skills | Status |
+|-------|----------|--------|--------|
+| Phase 1: Quick Wins | 1-2 days | 5 | ✅ Complete |
+| Phase 2: Core Memory | 3-5 days | 9 | ✅ Complete |
+| Phase 3: Review & Detection | 2-3 days | 10 | ✅ Complete |
+| Phase 4: Governance & Safety | 2-3 days | 8 | ✅ Complete |
+| Phase 5: Bridge | 1-2 days | 5 | ✅ Complete |
+| Phase 6: Extensions | 2-3 days | 10 | ✅ Complete |
+| Phase 7: Architecture | 1 day | 0 | ✅ Complete |
 
-**Prerequisite**: Plan A complete (skills submodule exists at `projects/live-neon/skills/`)
+**Original subtotal**: 12-20 days
 
-**Recommendation**: Complete Phase 1-2 (14 core skills) first. These provide
-the most value. Phases 3-5 can be prioritized based on need.
+### Post-Phase 7 Work
+
+| Phase | Duration | Scope | Status |
+|-------|----------|-------|--------|
+| Consolidation | 6-8.5 days | 48 → 7 skills | ✅ Complete |
+| Decoupling | ~3-4 days (8-11 sessions) | Remove Multiverse deps | ✅ Complete |
+| ClawHub Publication | ~1 day (2-3 sessions) | 14 skills to ClawHub | ⏳ In Progress |
+
+**Post-Phase 7 subtotal**: ~10-14 days
+
+**Note on units**: "Sessions" refers to focused work sessions (~2-4 hours each).
+Post-Phase 7 work used session-based tracking due to intermittent availability.
 
 ---
 
 ## Success Criteria
 
-### Phase 1 ✅ Complete (2026-02-13)
-- [x] 5 quick-win skills implemented
-- [x] All load in Claude Code (validated by skill-loading.test.ts)
-- [x] At least 3 produce correct output
-- [x] Unified testing infrastructure created
+### Original Phases (Pre-Consolidation)
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase1-results.md` for details.
+Phases 1-7 were completed as designed, implementing 47 individual skills.
+See implementation results in `docs/implementation/agentic-phase*-results.md`.
 
-### Phase 2 ✅ Complete (2026-02-13)
-- [x] 14 core skills complete
-- [x] failure→eligibility→constraint flow works (R≥3, C≥2, sources≥2)
-- [x] Circuit breaker integration tested (per-constraint, 30-day window)
-- [x] file-verifier `algorithm:hash` format implemented (deferred from Phase 1)
-- [x] Behavioral tests implemented (stubs at `tests/e2e/skill-behavior.test.ts`)
+### Consolidation (2026-02-15)
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase2-results.md` for details.
+After Phase 7 completion, internal review identified over-engineering.
+Consolidation reduced 48 skills to 7 while preserving all core functionality.
 
-### Phase 3 ✅ Complete (2026-02-14)
-- [x] Review skills integrate with workflows
-- [x] Detection skills integrate with failure system
+**Evidence**: See `docs/implementation/agentic-consolidation-results.md` and
+`docs/plans/2026-02-15-agentic-skills-consolidation.md` (status: complete).
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase3-results.md` for details.
+- [x] 7 consolidated skills operational (down from 48)
+- [x] Prompt overhead reduced (~7,000 → ~1,400 chars)
+- [x] Next Steps soft hooks in all skills
+- [x] Core lifecycle works: failure → record → eligible → constraint → enforce
+- [x] HEARTBEAT.md created for periodic checks
+- [x] Test coverage maintained (<5% delta)
+- [x] Documentation updated (ARCHITECTURE.md, READMEs)
 
-### Phase 4 ✅ Complete (2026-02-14)
-- [x] Governance skills ready for 90-day reviews
-- [x] Safety skills integrated with model configs
-- [ ] Packet signing for context-packet implemented (deferred to Phase 6)
+### Decoupling (2026-02-15)
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase4-results.md` for details.
+**Evidence**: See `docs/plans/2026-02-15-agentic-clawhub-decoupling.md` (status: complete).
 
-### Phase 5 ✅ Complete (2026-02-14)
-- [x] Bridge skills work with mock adapters (ClawHub integration deferred to Phase 5b)
-- [x] Contract tests validate data flow (31/31 tests pass)
-- [x] All 5 Bridge skills implemented with SKILL.md
-- [x] All 37 original skills in public repo (golden master location)
-- [ ] Full system integration tested (awaits ClawHub availability - Phase 5b)
+- [x] All 7 skills decoupled from Multiverse dependencies
+- [x] Both `.openclaw/` and `.claude/` config paths supported
+- [x] Cognitive modes model-agnostic
+- [x] No hardcoded model references
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase5-results.md` for details.
+### ClawHub Publication (2026-02-16 - In Progress)
 
-### Phase 6 ✅ Complete (2026-02-15)
-- [x] 10 observation-backed extension skills implemented
-- [x] constraint-versioning tracks N-count progression history
-- [x] pbd-strength-classifier integrates with observation-recorder
-- [x] cross-session-safety-check validates against historical incidents
-- [x] observation-refactoring detects rename/consolidate/promote/archive candidates
-- [x] loop-closer detects open loops (DEFERRED, PLACEHOLDER, TODO markers)
-- [x] parallel-decision evaluates 5 criteria and recommends serial/parallel
-- [x] threshold-delegator triggers at configured thresholds
-- [x] mce-refactorer suggests split strategies for code files
-- [x] hub-subworkflow suggests hub + sub-document structure for docs
-- [x] All 48 skills operational
+**Evidence**: See `docs/plans/2026-02-16-agentic-clawhub-publication.md` (status: in-progress).
 
-See `projects/live-neon/skills/docs/implementation/agentic-phase6-results.md` for details.
-
-### Phase 7 ✅ Complete (2026-02-15)
-- [x] ARCHITECTURE.md complete at `projects/live-neon/skills/ARCHITECTURE.md`
-- [x] All 6 skill layers documented with descriptions
-- [x] Dependency graph verified against each skill's Integration section (12-skill sample)
-- [x] Failure→constraint lifecycle data flow documented (6-step lifecycle)
-- [x] ClawHub integration points (self-improving-agent, proactive-agent) documented
-- [x] Extension guide for adding new skills (5 numbered steps)
-
-See `projects/live-neon/skills/docs/implementation/agentic-phase7-results.md` for details.
+- [x] Phase 1: CLI setup and authentication
+- [x] Phase 2: context-verifier published (v1.0.1)
+- [ ] Phase 3: Core pipeline (failure-memory, constraint-engine)
+- [ ] Phase 4: Extended suite (4 remaining skills)
+- [x] Phase 5: Security compliance (all 14 skills)
+- [ ] Phase 6: PBD skills publication
+- [ ] Phase 7: Cross-linking
 
 ---
 
@@ -1479,7 +1577,10 @@ Foundation research from `projects/live-neon/neon-soul/docs/research/`:
 
 ---
 
-**Changelog Note**: High update frequency on 2026-02-13/14 reflects active implementation
+<details>
+<summary><strong>Changelog</strong> (click to expand)</summary>
+
+**Note**: High update frequency on 2026-02-13/14 reflects active implementation
 phases (Phase 1-4 completed rapidly). This is a living specification that evolves with
 implementation learnings. Status "approved" indicates architectural direction is stable;
 details continue to be refined.
@@ -1507,3 +1608,5 @@ details continue to be refined.
 *Updated 2026-02-15: Marked Phases 6 and 7 as complete in Success Criteria. All 47 skills operational (specification + contract tests). Added Phase 7 deferred items (mock DRY, "When NOT to use" sections, N-count evidence verification).*
 *Updated 2026-02-15: Added implementation review findings from N=2 code review (Codex + Gemini). Key finding: "paper architecture" - specs complete but zero runtime. Semantic classification unimplemented. See ../issues/2026-02-15-agentic-skills-implementation-review-findings.md.*
 *Updated 2026-02-15: Added deferred items from N=2 twin review (Technical + Creative). Items: dependency version pinning (Phase 8+), Foundation skill consolidation (Phase 8+), Core Memory SKILL.md splitting (Phase 8+). Marked "When NOT to use" sections as resolved (all 10 extension skills complete). Added Reading Guide section. See ../issues/2026-02-15-agentic-skills-impl-twin-review-findings.md.*
+
+</details>
