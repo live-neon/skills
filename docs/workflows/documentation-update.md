@@ -1,14 +1,14 @@
 ---
-status: Draft
+status: Active
 observation_file: null
-observation_count: 0
-last_updated: 2026-02-13
+observation_count: 1
+last_updated: 2026-02-16
 ---
 
 # Workflow: Documentation Update
 
-**Status**: Draft (N=0)
-**Last Updated**: 2026-02-13
+**Status**: Active (N=1)
+**Last Updated**: 2026-02-16
 
 ## Purpose
 
@@ -26,14 +26,17 @@ or guides change.
 - Modifying existing skill behavior or arguments
 - Changing layer structure or dependencies
 - Adding/updating guides (docs/guides/)
+- Adding/updating workflows (docs/workflows/)
+- Adding/updating research (docs/research/) that affects skill design
 - Updating ARCHITECTURE.md (layers, data flow, circuit breaker)
 - Modifying test infrastructure
 - Changing SKILL_TEMPLATE.md
+- **Updating security compliance requirements** (affects creating-new-skill.md, skill-publish.md)
 
 **Skip when:**
 - Internal implementation details (no public interface change)
 - Test-only changes that don't affect test README
-- Research notes that don't affect skills
+- Research notes that don't affect skills (pure external documentation)
 
 ---
 
@@ -51,6 +54,8 @@ docs/proposals/                        # Specifications and architectural propos
 docs/plans/                            # Implementation plans for each phase
         ↓
 docs/guides/                           # Technical guides (semantic similarity, etc.)
+        ↓
+docs/research/                         # External research (validates architecture decisions)
         ↓
 agentic/SKILL_TEMPLATE.md             # Template for new skills
         ↓
@@ -71,6 +76,7 @@ docs/reviews/                          # Code review and twin review outputs
 - **SKILL.md**: Authoritative skill specification (usage, arguments, output, failure modes)
 - **ARCHITECTURE.md**: System reference (layers, data flow, threat model, circuit breaker)
 - **Guides**: Deep technical documentation (semantic similarity, etc.)
+- **Research**: External validation of architecture decisions (hooks, learning theory, industry patterns)
 - **SKILL_TEMPLATE.md**: Starting point for new skills
 - **agentic/README.md**: Failure-to-constraint lifecycle, counter terminology
 - **README.md**: Newcomer entry point (problem/solution, installation)
@@ -93,6 +99,9 @@ Classify the change:
 | **Skill modification** | SKILL.md only (unless arguments/output change significantly) |
 | **Layer change** | ARCHITECTURE.md, affected SKILL.md files, README.md |
 | **New guide** | docs/guides/, ARCHITECTURE.md (guides section), README.md (guides section) |
+| **New workflow** | docs/workflows/, docs/README.md (workflows section), README.md (workflows section) |
+| **New research** | docs/research/, docs/README.md (research section), README.md (documentation table), cross-references in related workflows |
+| **Security compliance update** | creating-new-skill.md, skill-publish.md, SKILL_TEMPLATE.md, affected SKILL.md files |
 | **Template update** | SKILL_TEMPLATE.md, possibly existing SKILL.md files |
 | **Test infrastructure** | tests/README.md, package.json |
 | **Phase completion** | docs/implementation/, ARCHITECTURE.md (phase status) |
@@ -244,10 +253,15 @@ cd tests && npm test
 | `agentic/*/*/SKILL.md` | Same as above (nested structure) |
 | `ARCHITECTURE.md` | Layer tables, data flow, circuit breaker, threat model, guides |
 | `docs/guides/*.md` | Technical accuracy, cross-references |
+| `docs/research/*.md` | External research, cross-references to workflows and architecture |
+| `docs/workflows/*.md` | Purpose, triggers, steps, cross-references |
+| `docs/workflows/creating-new-skill.md` | Security compliance in sync with skill-publish.md |
+| `docs/workflows/skill-publish.md` | Security compliance in sync with creating-new-skill.md |
 | `docs/standards/CJK_VOCABULARY.md` | Skill aliases, sub-commands, math notation (agent-facing) |
 | `agentic/SKILL_TEMPLATE.md` | Layer guidance, required sections, dependency fields |
 | `agentic/README.md` | Lifecycle diagram, counters, layers |
-| `README.md` | Problem/solution, skill tables, guides, testing |
+| `README.md` | Problem/solution, skill tables, guides, workflows, testing, documentation dirs |
+| `docs/README.md` | Workflows section, research section, navigation index |
 | `tests/README.md` | Commands, philosophy, coverage |
 | `tests/package.json` | Test scripts, dependencies |
 | `docs/implementation/*.md` | Phase results, acceptance criteria |
@@ -316,6 +330,17 @@ cd tests && npm test
 **Wrong**: Core layer skill depending on Review layer skill
 **Right**: Dependencies flow upward only (Foundation → Core → Review/Detection → etc.)
 
+### 9. Security Compliance Drift
+
+**Wrong**: Updating skill-publish.md compliance section but not creating-new-skill.md
+**Right**: Both workflows must stay in sync - they share security compliance requirements
+
+**Files that must stay in sync**:
+- `docs/workflows/creating-new-skill.md` (Phase 4: Security Compliance)
+- `docs/workflows/skill-publish.md` (Security Scan Compliance section)
+- `agentic/SKILL_TEMPLATE.md` (frontmatter example)
+- `pbd/SKILL_TEMPLATE.md` (frontmatter example)
+
 ---
 
 ## Verification
@@ -344,6 +369,14 @@ for f in $(find agentic -name "SKILL.md"); do
     echo "Missing name: $f"
   fi
 done
+
+# Security compliance sync check (both should mention same required fields)
+echo "=== Security compliance sync ==="
+echo "creating-new-skill.md mentions:"
+grep -E "disable-model-invocation|config_paths|workspace_paths" docs/workflows/creating-new-skill.md | wc -l
+echo "skill-publish.md mentions:"
+grep -E "disable-model-invocation|config_paths|workspace_paths" docs/workflows/skill-publish.md | wc -l
+# Both counts should be similar (documents cover same requirements)
 ```
 
 ---
@@ -378,6 +411,53 @@ grep "NEW_GUIDE" ARCHITECTURE.md README.md  # Both should match
 grep "docs/guides/NEW_GUIDE" agentic/  # Skills should reference it
 ```
 
+### Example: Adding a New Workflow
+
+**Files updated** (in order):
+1. `docs/workflows/NEW_WORKFLOW.md` - Created workflow document
+2. `docs/README.md` - Added to Workflows section table
+3. `README.md` - Added to Workflows section table
+4. `docs/workflows/documentation-update.md` - Added to Related Documentation (this file)
+5. Relevant files - Added cross-references (CONTRIBUTING.md, other workflows)
+
+**Verification**:
+```bash
+grep "NEW_WORKFLOW" docs/README.md README.md  # Both should match
+grep "docs/workflows/NEW_WORKFLOW" .  # Cross-references present
+```
+
+### Example: Adding New Research
+
+**Files updated** (in order):
+1. `docs/research/YYYY-MM-DD-topic-research.md` - Created research document
+2. `docs/README.md` - Added to Research section table
+3. `README.md` - Added to Documentation directories table
+4. `docs/workflows/creating-new-skill.md` - Added cross-reference (if affects skill design)
+5. Relevant workflows - Added cross-references to Research section
+
+**Verification**:
+```bash
+grep "topic-research" docs/README.md README.md  # Both should reference it
+grep "docs/research/.*topic" docs/workflows/  # Cross-references in workflows
+```
+
+### Example: Adding New Security Compliance Requirement
+
+**Files updated** (in order):
+1. `docs/workflows/skill-publish.md` - Add requirement to Security Scan Compliance section
+2. `docs/workflows/creating-new-skill.md` - Add requirement to Phase 4: Security Compliance
+3. `agentic/SKILL_TEMPLATE.md` - Update frontmatter example
+4. `pbd/SKILL_TEMPLATE.md` - Update frontmatter example
+5. Affected `SKILL.md` files - Apply new requirement
+
+**Verification**:
+```bash
+# Both workflows should mention the new requirement
+grep "NEW_REQUIREMENT" docs/workflows/skill-publish.md docs/workflows/creating-new-skill.md
+# Templates should include new field
+grep "NEW_REQUIREMENT" agentic/SKILL_TEMPLATE.md pbd/SKILL_TEMPLATE.md
+```
+
 ---
 
 ## Anti-Patterns
@@ -393,6 +473,7 @@ grep "docs/guides/NEW_GUIDE" agentic/  # Skills should reference it
 | One-way dependency links | Breaks AI traversal | Update both "Depends on" and "Used by" |
 | Layer-violating dependencies | Breaks architecture | Dependencies flow upward only |
 | Missing dependency docs | AI can't discover context | Always document Integration section |
+| Security compliance drift | Inconsistent requirements | Sync creating-new-skill.md ↔ skill-publish.md |
 
 ---
 
@@ -431,6 +512,8 @@ After completing documentation updates, **close the loop**:
 ## Related Documentation
 
 - **[ARCHITECTURE.md](../../ARCHITECTURE.md)** - System overview, layer tables
+- **[Creating a New Skill](creating-new-skill.md)** - Complete skill creation workflow
+- **[Skill Publishing](skill-publish.md)** - Publishing workflow with security compliance
 - **[Semantic Similarity Guide](../guides/SEMANTIC_SIMILARITY_GUIDE.md)** - LLM-based matching
 - **[CJK Vocabulary](../standards/CJK_VOCABULARY.md)** - Skill aliases, sub-commands, math notation
 - **[SKILL_TEMPLATE.md](../../agentic/SKILL_TEMPLATE.md)** - New skill template
@@ -439,7 +522,14 @@ After completing documentation updates, **close the loop**:
 - **[Tests README](../../tests/README.md)** - Testing documentation
 - **Closing Loops** - See multiverse `docs/workflows/closing-loops.md` (external to skills submodule)
 
+### Research Documents
+
+- **[Consequences-Based Learning](../research/2026-02-16-consequences-based-learning-llm-research.md)** - R/C/D counters, RLVR, self-improving agents
+- **[OpenClaw/ClawHub Hooks](../research/2026-02-15-openclaw-clawhub-hooks-research.md)** - Three hook systems, SKILL.md format
+- **[Soft Hook Enforcement](../research/2026-02-15-soft-hook-enforcement-patterns.md)** - Three-Layer Model, HEARTBEAT verification
+
 ---
 
 *Workflow created 2026-02-13 to support standalone skills project documentation.*
 *Updated 2026-02-14: Added Next Steps section and phase-completion reference.*
+*Updated 2026-02-16: Added research documents to scope and examples.*

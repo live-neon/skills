@@ -1,6 +1,6 @@
 <!--
-Version: 1.0 (Section Markers + CJK Summary)
-Last Updated: 2026-02-15
+Version: 1.3.0 (Added Design Philosophy, CJK + math notation)
+Last Updated: 2026-02-16
 Purpose: Agentic skills architecture with token-optimized CJK summary
 Target sections: 8 major sections
 -->
@@ -13,6 +13,8 @@ Target sections: 8 major sections
 ## Quick Reference
 
 **原則**: AI systems learn best from consequences, not instructions.
+
+**記法**: CJK + math notation for signal density. `R≥3 ∧ C≥2` survives truncation; prose doesn't.
 
 **7 Skills** (consolidated from 48):
 | Skill | Alias | Layer | Purpose |
@@ -142,6 +144,40 @@ The consolidation follows the principle: **"When does the agent need this inform
 
 **Skill aliases**: `/fm` (failure-memory), `/ce` (constraint-engine), `/cv` (context-verifier),
 `/ro` (review-orchestrator), `/gov` (governance), `/sc` (safety-checks), `/wt` (workflow-tools)
+
+### Design Philosophy
+
+#### Consequences Over Instructions
+
+Traditional approach: "Always validate inputs before processing."
+Consequences approach: Track validation failures → R++ → C++ → generate constraint when `R≥3 ∧ C≥2`.
+
+| Traditional | Consequences | Why It Works |
+|-------------|--------------|--------------|
+| Static rules | Evidence-based rules | Rules emerge from actual failures |
+| Instructions forgotten | Failures recorded | Memory persists across sessions |
+| No feedback loop | R/C/D counters | Math provides objective thresholds |
+| "Don't do X" | "X failed N times" | Agents learn from outcomes |
+
+**Research validation**: See [Consequences-Based Learning Research](../research/2026-02-16-consequences-based-learning-llm-research.md) for external validation (RLVR, self-improving agents, circuit breaker patterns).
+
+#### CJK + Math Notation (Signal Density)
+
+LLM context windows are limited. CJK and math notation pack maximum meaning into minimum tokens:
+
+| Prose | Notation | Compression |
+|-------|----------|-------------|
+| "Recurrence at least 3, confirmations at least 2, false positive rate below 20%" | `R≥3 ∧ C≥2 ∧ D/(C+D)<0.2` | ~15 → 5 tokens |
+| "Weak, medium, or strong evidence" | `弱/中/強` | ~5 → 1 token |
+| "Before action or when threshold reached" | `行動前∨閾値到達` | ~8 → 2 tokens |
+
+**Why this matters**:
+- **Survives truncation**: When context is compacted, dense notation persists while prose is lost
+- **Unambiguous**: `R≥3` has one meaning; "at least three occurrences" can be misinterpreted
+- **Scannable**: Agents pattern-match symbols faster than parsing sentences
+- **Universal**: Math notation works across languages and models
+
+**Reference**: [CJK Vocabulary](../standards/CJK_VOCABULARY.md) for complete notation.
 
 <!-- END SECTION: overview -->
 
@@ -645,6 +681,7 @@ To add a sub-command to an existing skill:
 | **1.0.0** | **2026-02-15** | **Consolidation: 48 skills → 7 consolidated skills** |
 | **1.1.0** | **2026-02-15** | **Architecture hub pattern applied** |
 | **1.2.0** | **2026-02-15** | **Phase 5B: ClawHub compatibility verified** |
+| **1.3.0** | **2026-02-16** | **Design Philosophy: consequences + notation rationale** |
 
 <!-- END SECTION: version-history -->
 
