@@ -29,8 +29,11 @@ fi
 
 # Verify authentication
 echo "Verifying ClawHub authentication..."
-if ! clawhub whoami | grep -q "leegitw"; then
+# Strip ANSI color codes before checking output
+WHOAMI_OUTPUT=$(clawhub whoami 2>&1 | sed 's/\x1b\[[0-9;]*m//g')
+if ! echo "$WHOAMI_OUTPUT" | grep -q "leegitw"; then
     echo "Error: Not authenticated as leegitw"
+    echo "Output was: $WHOAMI_OUTPUT"
     exit 1
 fi
 echo "Authenticated as leegitw"

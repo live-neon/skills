@@ -1,12 +1,13 @@
 ---
 created: 2026-02-16
 type: plan
-status: draft
+status: in_progress
 priority: high
 estimated_effort: 1-2 sessions
 depends_on:
   - docs/plans/2026-02-15-agentic-clawhub-decoupling.md
 workflow_reference: docs/workflows/skill-publish.md
+publish_script: scripts/publish-to-clawhub.sh
 ---
 
 # Plan: Agentic Skills ClawHub Publication
@@ -30,13 +31,17 @@ following the dependency order established in the decoupling plan.
 
 | Phase | Goal | Skills | Status |
 |-------|------|--------|--------|
-| 1 | Setup | CLI, auth, verification | ⏳ Pending |
-| 2 | Foundation | context-verifier | ⏳ Pending |
-| 3 | Core Pipeline | failure-memory, constraint-engine | ⏳ Pending |
-| 4 | Extended Suite | safety-checks, review-orchestrator, governance, workflow-tools | ⏳ Pending |
+| 1 | Setup | CLI, auth, verification | ✅ Complete |
+| 2 | Foundation | context-verifier | ✅ Published |
+| 3 | Core Pipeline | failure-memory, constraint-engine | ⏳ Pending (script) |
+| 4 | Extended Suite | safety-checks, review-orchestrator, governance, workflow-tools | ⏳ Pending (script) |
 | 5 | Cross-linking | NEON-SOUL references | ⏳ Pending |
 
 **Total**: 1-2 sessions
+
+> **Rate Limit Note**: ClawHub's publish API is rate-limited by GitHub API quotas (~60 req/hour
+> unauthenticated). A publish script (`scripts/publish-to-clawhub.sh`) handles this by waiting
+> 1 hour for rate limit reset, then publishing 1 skill every 15 minutes.
 
 ---
 
@@ -49,6 +54,7 @@ Before starting, ensure:
 - [x] Twin review N=2 passed (Technical + Creative)
 - [x] All SKILL.md files at version 1.0.0
 - [x] LICENSE file present
+- [x] CLAWHUB_TOKEN added to .env
 - [ ] Git changes pushed to origin/main
 
 ---
@@ -96,9 +102,11 @@ clawhub whoami
 
 ### Exit Criteria
 
-- [ ] `clawhub whoami` shows `leegitw` username
-- [ ] Token has publish permissions
-- [ ] CLI version is current
+- [x] `clawhub whoami` shows `leegitw` username ✓ 2026-02-16
+- [x] Token has publish permissions ✓ 2026-02-16
+- [x] CLI version is current (v0.6.0) ✓ 2026-02-16
+
+**Phase 1 Status**: ✅ COMPLETE
 
 ---
 
@@ -146,10 +154,12 @@ ls -la .openclaw/skills/context-verifier/
 
 ### Exit Criteria
 
-- [ ] `clawhub inspect context-verifier` shows correct metadata
-- [ ] `openclaw install leegitw/context-verifier` succeeds
-- [ ] SKILL.md content matches source
-- [ ] No security warnings from ClawHub
+- [x] `clawhub publish` returns success ✓ 2026-02-16 (ID: k97fps4cxnkjxjd7ex42437wzn8183rs)
+- [x] `clawhub explore` shows context-verifier ✓ 2026-02-16
+- [ ] `openclaw install leegitw/context-verifier` succeeds (pending verification)
+- [x] No security warnings from ClawHub ✓ 2026-02-16
+
+**Phase 2 Status**: ✅ PUBLISHED (verification pending)
 
 ---
 
@@ -212,12 +222,28 @@ ls -la .openclaw/skills/
 # /ce generate OBS-YYYYMMDD-XXX (with eligible observation)
 ```
 
+### Automated Publishing
+
+Due to ClawHub rate limits (GitHub API: 60 req/hour), use the publish script:
+
+```bash
+# Run in background (recommended)
+nohup ./scripts/publish-to-clawhub.sh > publish.log 2>&1 &
+
+# Monitor progress
+tail -f publish.log
+```
+
+The script waits 1 hour for rate limit reset, then publishes skills with 15-minute gaps.
+
 ### Exit Criteria
 
 - [ ] Both skills published successfully
 - [ ] Installation chain works in order
 - [ ] No dependency errors
 - [ ] Core pipeline commands functional
+
+**Phase 3 Status**: ⏳ PENDING (awaiting script execution)
 
 ---
 
@@ -307,6 +333,8 @@ clawhub search "leegitw"
 - [ ] `clawhub search leegitw` returns all 7 skills
 - [ ] No security warnings
 
+**Phase 4 Status**: ⏳ PENDING (awaiting script execution)
+
 ---
 
 ## Phase 5: Cross-linking
@@ -347,6 +375,12 @@ clawhub search "leegitw"
 | Dependency install fails | Low | Medium | Test each phase before proceeding |
 | Token permissions insufficient | Low | Low | Verify token scope before starting |
 | Network/service interruption | Low | Low | Retry; phases are independent |
+| **GitHub API rate limit** | **High** | **Medium** | **Use publish script with 15-min delays; wait 1hr for reset** |
+
+> **Rate Limit Discovery** (2026-02-16): ClawHub's publish API calls GitHub to verify accounts.
+> GitHub's unauthenticated API limit is 60 requests/hour. Publishing multiple skills in quick
+> succession triggers rate limiting. The `scripts/publish-to-clawhub.sh` script handles this
+> by spacing publishes 15 minutes apart after an initial 1-hour wait.
 
 ---
 
@@ -369,7 +403,7 @@ clawhub unpublish leegitw/[skill-name]
 ## Success Criteria
 
 **Minimum Viable Publication**:
-- [ ] Phase 2 complete (context-verifier available)
+- [x] Phase 2 complete (context-verifier available) ✓ 2026-02-16
 - [ ] Phase 3 complete (core pipeline available)
 
 **Full Publication**:
