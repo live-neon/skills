@@ -39,6 +39,34 @@ openclaw install leegitw/constraint-engine
 git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
 ```
 
+## Getting Started
+
+**Which skill should I start with?**
+
+| Goal | Start With | Then Add |
+|------|------------|----------|
+| **Extract principles from text** | `essence-distiller` | `pattern-finder` for comparison |
+| **Prevent AI from repeating mistakes** | `context-verifier` | `failure-memory` → `constraint-engine` |
+| **Full failure-to-constraint lifecycle** | Install in order below | - |
+
+**Recommended installation order for agentic skills**:
+```bash
+# 1. Foundation (no dependencies)
+openclaw install leegitw/context-verifier
+
+# 2. Core (builds on foundation)
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+
+# 3. Extended (builds on core)
+openclaw install leegitw/safety-checks
+openclaw install leegitw/review-orchestrator
+openclaw install leegitw/governance
+openclaw install leegitw/workflow-tools
+```
+
+**PBD skills** work standalone — install any one to start extracting principles.
+
 ## Available Skills
 
 ### PBD (Principle-Based Development)
@@ -125,6 +153,8 @@ Technical guides for skill implementation:
 
 | Workflow | Description |
 |----------|-------------|
+| [Creating a New Skill](docs/workflows/creating-new-skill.md) | Complete skill creation from validation to publication |
+| [Skill Publishing](docs/workflows/skill-publish.md) | Publishing workflow with security compliance |
 | [Documentation Update](docs/workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
 | [Phase Completion](docs/workflows/phase-completion.md) | Checklist for completing implementation phases |
 | [Batch File Modification](docs/workflows/batch-file-modification.md) | Bulk file changes with verification |
@@ -139,6 +169,7 @@ Implementation history and specifications:
 | [docs/patterns/](docs/patterns/) | Validated patterns (N≥3 evidence) |
 | [docs/proposals/](docs/proposals/) | Specifications and proposals |
 | [docs/plans/](docs/plans/) | Implementation plans (phases 1-7) |
+| [docs/research/](docs/research/) | External research (hooks, learning theory, industry patterns) |
 | [docs/issues/](docs/issues/) | Review findings and issues |
 | [docs/reviews/](docs/reviews/) | Code and twin reviews |
 | [docs/implementation/](docs/implementation/) | Phase results |
