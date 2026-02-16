@@ -1,7 +1,7 @@
 ---
 name: workflow-tools
 version: 1.0.0
-description: Utility tools for workflow management, parallel decisions, and MCE refactoring
+description: Work smarter with loop detection, parallel decisions, and file size analysis
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/workflow-tools
 repository: leegitw/workflow-tools
@@ -10,6 +10,15 @@ tags: [agentic, workflow, tools, parallel, mce, loops]
 layer: extensions
 status: active
 alias: wt
+disable-model-invocation: true
+config_paths:
+  - .openclaw/workflow-tools.yaml
+  - .claude/workflow-tools.yaml
+workspace_paths:
+  - output/loops/
+  - output/parallel-decisions/
+  - output/mce-analysis/
+  - output/subworkflows/
 ---
 
 # workflow-tools (工具)
@@ -43,6 +52,21 @@ openclaw install leegitw/workflow-tools
 
 **Standalone usage**: Loop detection, parallel decisions, and MCE analysis work independently.
 Full integration provides constraint-aware workflow recommendations.
+
+**Data handling**: This skill operates within your agent's trust boundary. All workflow
+analysis uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Results are written to `output/` subdirectories in your workspace.
+
+## What This Solves
+
+Workflows accumulate friction — loops that never close, decisions about parallel vs serial execution, files that grow too large. This skill provides utilities for common workflow problems:
+
+1. **Loop detection** — find DEFERRED, PLACEHOLDER, and TODO markers before marking work complete
+2. **Parallel decisions** — 5-factor framework for when to parallelize vs serialize
+3. **MCE analysis** — identify files exceeding size thresholds, suggest splits
+
+**The insight**: Small tools that do one thing well. Don't overthink the workflow — detect, decide, analyze, move on.
 
 ## Usage
 

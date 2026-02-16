@@ -1,7 +1,7 @@
 ---
 name: review-orchestrator
 version: 1.0.0
-description: Multi-perspective review coordination with configurable cognitive modes
+description: Get multiple perspectives on your work — coordinate reviews across cognitive modes
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/review-orchestrator
 repository: leegitw/review-orchestrator
@@ -10,6 +10,12 @@ tags: [agentic, review, twin, cognitive, orchestration, multi-perspective]
 layer: review
 status: active
 alias: ro
+disable-model-invocation: true
+config_paths:
+  - .openclaw/review-orchestrator.yaml
+  - .claude/review-orchestrator.yaml
+workspace_paths:
+  - docs/reviews/
 ---
 
 # review-orchestrator (審査)
@@ -40,6 +46,21 @@ openclaw install leegitw/review-orchestrator
 
 **Standalone usage**: Review orchestration works independently for multi-perspective reviews.
 Integration with failure-memory enables automatic observation recording from review findings.
+
+**Data handling**: This skill operates within your agent's trust boundary. All review analysis
+uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Review results are written to `docs/reviews/` in your workspace.
+
+## What This Solves
+
+One perspective has blind spots. This skill coordinates multiple reviewers to catch what single-pass review misses:
+
+1. **Twin review** — technical and creative perspectives for balance
+2. **Cognitive modes** — Opus analyst ("what conflicts"), Opus transformer ("how to restructure"), Sonnet operator ("how to implement")
+3. **External validators** — Codex and Gemini for cross-architecture verification
+
+**The insight**: N=2 catches more than N=1. Different reviewers see different things. Coordinate them systematically.
 
 ## Usage
 

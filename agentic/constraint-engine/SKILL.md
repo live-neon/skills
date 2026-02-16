@@ -1,7 +1,7 @@
 ---
 name: constraint-engine
 version: 1.0.0
-description: Unified constraint generation, enforcement, and lifecycle management
+description: Learn from consequences, not instructions — generate and enforce constraints from experience
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
 repository: leegitw/constraint-engine
@@ -10,6 +10,13 @@ tags: [agentic, constraint, enforcement, circuit-breaker, lifecycle]
 layer: core
 status: active
 alias: ce
+disable-model-invocation: true
+config_paths:
+  - .openclaw/constraint-engine.yaml
+  - .claude/constraint-engine.yaml
+workspace_paths:
+  - output/constraints/
+  - output/hooks/
 ---
 
 # constraint-engine (制約)
@@ -38,6 +45,21 @@ openclaw install leegitw/constraint-engine
 
 **Standalone usage**: Requires failure-memory for constraint generation from observations.
 For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
+
+**Data handling**: This skill operates within your agent's trust boundary. All constraint
+analysis uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Results are written to `output/constraints/` in your workspace.
+
+## What This Solves
+
+Instructions get ignored. Rules get forgotten. Documentation goes unread. This skill takes a different approach — constraints generated from actual failures:
+
+1. **Generate constraints** from observations that meet the eligibility threshold (`R≥3 ∧ C≥2`)
+2. **Enforce constraints** at runtime with a circuit breaker (CLOSED → OPEN → HALF-OPEN)
+3. **Manage lifecycle** from proposal through adoption to retirement
+
+**The insight**: A constraint born from "this actually broke" carries more weight than "this might break." Consequences teach better than instructions.
 
 ## Usage
 

@@ -1,7 +1,7 @@
 ---
 name: context-verifier
 version: 1.0.1
-description: File integrity verification, hash computation, and context packet management
+description: Know the file you're editing is the file you think it is — verify integrity before you act
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
 repository: leegitw/context-verifier
@@ -10,6 +10,7 @@ tags: [agentic, verification, hash, integrity, context]
 layer: foundation
 status: active
 alias: cv
+disable-model-invocation: true
 config_paths:
   - .openclaw/context-verifier.yaml
   - .claude/context-verifier.yaml
@@ -37,6 +38,21 @@ openclaw install leegitw/context-verifier
 **Standalone usage**: This skill is fully functional standalone. It provides file integrity
 verification that other skills in the suite depend on. Install this first when adopting
 the Neon Agentic Suite.
+
+**Data handling**: This skill operates within your agent's trust boundary. All file analysis
+uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Results are written to `output/context-packets/` in your workspace.
+
+## What This Solves
+
+AI agents sometimes operate on stale data — editing a file that changed since it was read, or trusting cached content that's now outdated. This skill prevents that by:
+
+1. **Computing hashes** of files before and after operations
+2. **Detecting changes** between read and write
+3. **Generating context packets** with verifiable checksums for review workflows
+
+**The insight**: Trust but verify. The file you read might not be the file you're about to edit. Check first.
 
 ## Usage
 

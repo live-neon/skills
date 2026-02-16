@@ -1,7 +1,7 @@
 ---
 name: failure-memory
 version: 1.0.0
-description: Unified failure tracking, observation recording, and pattern detection
+description: Stop making the same mistakes — turn failures into patterns that prevent recurrence
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/failure-memory
 repository: leegitw/failure-memory
@@ -10,6 +10,13 @@ tags: [agentic, memory, failure, observation, pattern]
 layer: core
 status: active
 alias: fm
+disable-model-invocation: true
+config_paths:
+  - .openclaw/failure-memory.yaml
+  - .claude/failure-memory.yaml
+workspace_paths:
+  - .learnings/
+  - .learnings/observations/
 ---
 
 # failure-memory (記憶)
@@ -37,6 +44,22 @@ openclaw install leegitw/failure-memory
 
 **Standalone usage**: This skill can function independently for basic failure tracking.
 For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
+
+**Data handling**: This skill operates within your agent's trust boundary. All pattern analysis
+uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Results are written to `.learnings/` in your workspace.
+
+## What This Solves
+
+AI systems often make the same mistakes repeatedly — deleting working code, missing edge cases, forgetting context. This skill turns failures into learning by:
+
+1. **Detecting failures** when they happen (not after)
+2. **Recording observations** with R/C/D counters (Recurrence/Confirmations/Disconfirmations)
+3. **Finding patterns** across sessions and projects
+4. **Promoting to constraints** when evidence threshold is met
+
+**The insight**: Systems learn better from consequences than instructions. A failure that happened teaches more than a rule that might apply.
 
 ## Usage
 

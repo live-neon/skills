@@ -1,7 +1,7 @@
 ---
 name: governance
 version: 1.0.0
-description: Constraint lifecycle governance, state management, and periodic reviews
+description: Keep your constraints healthy — lifecycle management with automatic staleness detection
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/governance
 repository: leegitw/governance
@@ -10,6 +10,14 @@ tags: [agentic, governance, state, lifecycle, review]
 layer: governance
 status: active
 alias: gov
+disable-model-invocation: true
+config_paths:
+  - .openclaw/governance.yaml
+  - .claude/governance.yaml
+workspace_paths:
+  - output/governance/
+  - output/constraints/
+  - agentic/INDEX.md
 ---
 
 # governance (治理)
@@ -41,6 +49,21 @@ openclaw install leegitw/governance
 
 **Standalone usage**: Index generation and round-trip verification work independently.
 Full governance features require constraint-engine and failure-memory integration.
+
+**Data handling**: This skill operates within your agent's trust boundary. All governance
+analysis uses your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Results are written to `output/governance/` in your workspace.
+
+## What This Solves
+
+Constraints that never get reviewed become stale. Rules that never get challenged become dogma. This skill manages the lifecycle:
+
+1. **State tracking** — know which constraints are active, suspended, or retired
+2. **Periodic reviews** — 90-day gates to re-evaluate constraints against current evidence
+3. **Index generation** — dashboards showing constraint health at a glance
+
+**The insight**: Good governance is proactive. Constraints need maintenance, not just creation.
 
 ## Usage
 

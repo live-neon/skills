@@ -1,7 +1,7 @@
 ---
 name: safety-checks
 version: 1.0.0
-description: Runtime safety verification for model pinning, fallbacks, cache, and sessions (provider-agnostic)
+description: Verify before you trust — model pinning, fallbacks, and runtime safety validation
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
 repository: leegitw/safety-checks
@@ -10,6 +10,14 @@ tags: [agentic, safety, verification, model, cache, session]
 layer: safety
 status: active
 alias: sc
+disable-model-invocation: true
+config_paths:
+  - .openclaw/safety-checks.yaml
+  - .claude/safety-checks.yaml
+  - .claude/settings.json
+workspace_paths:
+  - .openclaw/cache/
+  - output/safety/
 ---
 
 # safety-checks (安全)
@@ -40,6 +48,22 @@ openclaw install leegitw/safety-checks
 
 **Standalone usage**: Model pinning and cache checks work independently.
 Full integration with constraint enforcement requires constraint-engine.
+
+**Data handling**: This skill operates within your agent's trust boundary. Safety checks
+use your agent's configured model — no external APIs or third-party services are called.
+If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
+as part of normal agent operation. Results are written to `output/safety/` in your workspace.
+
+## What This Solves
+
+AI systems can silently degrade — model versions drift, caches go stale, sessions accumulate state. This skill catches these issues before they cause problems:
+
+1. **Model pinning** — verify you're using the model you expect
+2. **Fallback validation** — ensure degraded-mode paths exist and work
+3. **Cache checks** — detect stale or corrupted cached data
+4. **Session hygiene** — identify cross-session state contamination
+
+**The insight**: Runtime verification catches what static rules miss. Check the system state, not just the configuration.
 
 ## Usage
 
