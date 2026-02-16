@@ -2,8 +2,10 @@
 name: failure-memory
 version: 1.0.0
 description: Unified failure tracking, observation recording, and pattern detection
-author: Live Neon
-homepage: https://github.com/live-neon/skills
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/failure-memory
+repository: leegitw/failure-memory
+license: MIT
 tags: [agentic, memory, failure, observation, pattern]
 layer: core
 status: active
@@ -18,6 +20,23 @@ Consolidates 10 granular skills into a single coherent memory system.
 **Trigger**: 失敗発生 (failure occurred)
 
 **Source skills**: failure-tracker, observation-recorder, memory-search, topic-tagger, failure-detector, evidence-tier, effectiveness-metrics, pattern-convergence-detector, positive-framer, contextual-injection
+
+## Installation
+
+```bash
+openclaw install leegitw/failure-memory
+```
+
+**Dependencies**: `leegitw/context-verifier` (for file change detection)
+
+```bash
+# Install with dependencies
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+```
+
+**Standalone usage**: This skill can function independently for basic failure tracking.
+For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
 
 ## Usage
 
@@ -97,6 +116,30 @@ Agent scans for these patterns to auto-invoke `/fm detect`:
 | "I meant...", "Not X, Y" | User message | `/fm record correction` |
 | API 4xx/5xx response | Tool output | `/fm detect api` |
 | "error:", "failed", "Exception" | Tool output | `/fm detect error` |
+| Deployment rollback | CI/CD output | `/fm detect deployment` |
+| Database migration failed | Tool output | `/fm detect migration` |
+
+### Example: API Failure Detection
+
+```
+[DETECTED] api failure
+Pattern: payment-api-timeout
+Context: Payment API returned 504 after 30s
+Observation: OBS-20260215-002
+R: 1 → 3
+Status: Eligible for constraint (R≥3)
+```
+
+### Example: Deployment Failure Detection
+
+```
+[DETECTED] deployment failure
+Pattern: staging-healthcheck-fail
+Context: Staging deployment failed health check on /api/health
+Observation: OBS-20260215-003
+R: 1 → 2
+Status: Monitoring (R<3)
+```
 
 ## Core Logic
 
@@ -148,6 +191,26 @@ Eligible for constraint (R≥3 ∧ C≥2):
 
 Recent (last 30d): 12 observations
 Pending review: 3 observations
+```
+
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/failure-memory.yaml` (OpenClaw standard)
+2. `.claude/failure-memory.yaml` (Claude Code compatibility)
+3. Defaults (built-in)
+
+```yaml
+# .openclaw/failure-memory.yaml
+detection:
+  auto_detect: true          # Enable automatic failure detection
+  patterns:                   # Custom detection patterns
+    - "FATAL:"
+    - "CRITICAL:"
+thresholds:
+  eligibility_R: 3           # Recurrence threshold (default: 3)
+  eligibility_C: 2           # Confirmation threshold (default: 2)
+  false_positive_max: 0.2    # Max D/(C+D) ratio (default: 0.2)
 ```
 
 ## Integration

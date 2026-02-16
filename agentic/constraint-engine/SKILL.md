@@ -2,8 +2,10 @@
 name: constraint-engine
 version: 1.0.0
 description: Unified constraint generation, enforcement, and lifecycle management
-author: Live Neon
-homepage: https://github.com/live-neon/skills
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
+repository: leegitw/constraint-engine
+license: MIT
 tags: [agentic, constraint, enforcement, circuit-breaker, lifecycle]
 layer: core
 status: active
@@ -18,6 +20,24 @@ and constraint lifecycle. Consolidates 7 granular skills into a single enforceme
 **Trigger**: 行動前∨閾値到達 (pre-action or threshold reached)
 
 **Source skills**: constraint-generator, circuit-breaker, emergency-override, constraint-lifecycle, constraint-versioning, positive-framer (partial), contextual-injection (partial)
+
+## Installation
+
+```bash
+openclaw install leegitw/constraint-engine
+```
+
+**Dependencies**: `leegitw/failure-memory` (for eligibility data)
+
+```bash
+# Install with dependencies
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+```
+
+**Standalone usage**: Requires failure-memory for constraint generation from observations.
+For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
 
 ## Usage
 
@@ -90,6 +110,28 @@ and constraint lifecycle. Consolidates 7 granular skills into a single enforceme
 | --C | No | Custom confirmation threshold (default: 2) |
 | --reset | No | Reset to default thresholds |
 
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/constraint-engine.yaml` (OpenClaw standard)
+2. `.claude/constraint-engine.yaml` (Claude Code compatibility)
+3. Defaults (built-in)
+
+```yaml
+# .openclaw/constraint-engine.yaml
+thresholds:
+  R: 3                       # Recurrence threshold (default: 3)
+  C: 2                       # Confirmation threshold (default: 2)
+  false_positive_max: 0.2    # Max D/(C+D) ratio (default: 0.2)
+circuit_breaker:
+  critical_threshold: 3      # Violations to trip for CRITICAL
+  important_threshold: 5     # Violations to trip for IMPORTANT
+  minor_threshold: 10        # Violations to trip for MINOR
+  window_days: 30            # Violation window (default: 30 days)
+lifecycle:
+  review_reminder_days: 80   # Days before 90-day review to remind
+```
+
 ## Core Logic
 
 ### Eligibility Criteria
@@ -115,6 +157,30 @@ Constraints are automatically reframed positively:
 |----------|----------|
 | "Don't commit without tests" | "Always run tests before commit" |
 | "Don't push to main directly" | "Always create PR for main changes" |
+| "Don't deploy without review" | "Always get code review before deployment" |
+| "Don't skip migrations" | "Always run database migrations before release" |
+
+### Example: Code Review Constraint
+
+```
+[CHECK BLOCKED] deploy production
+Constraint violated: CON-20260212-005
+  "Always get code review approval before production deployment"
+  Severity: CRITICAL
+
+Action: Request review via /ro twin, then retry deployment.
+```
+
+### Example: Deployment Gate Constraint
+
+```
+[CHECK PASSED] deploy staging
+Active constraints checked: 3
+  ✓ CON-20260210-001: Tests pass
+  ✓ CON-20260211-002: Staging smoke test
+  ✓ CON-20260212-003: Database migration verified
+All constraints satisfied. Proceeding to staging.
+```
 
 ### Circuit Breaker States
 

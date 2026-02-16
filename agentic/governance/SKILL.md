@@ -2,8 +2,10 @@
 name: governance
 version: 1.0.0
 description: Constraint lifecycle governance, state management, and periodic reviews
-author: Live Neon
-homepage: https://github.com/live-neon/skills
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/governance
+repository: leegitw/governance
+license: MIT
 tags: [agentic, governance, state, lifecycle, review]
 layer: governance
 status: active
@@ -18,6 +20,27 @@ round-trip verification, and schema migration. Consolidates 6 granular skills.
 **Trigger**: 定期保守 (periodic maintenance) or HEARTBEAT
 
 **Source skills**: constraint-reviewer, index-generator, round-trip-tester, governance-state, slug-taxonomy, adoption-monitor (from safety)
+
+## Installation
+
+```bash
+openclaw install leegitw/governance
+```
+
+**Dependencies**:
+- `leegitw/constraint-engine` (for constraint data)
+- `leegitw/failure-memory` (for observation data)
+
+```bash
+# Install full governance stack
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+openclaw install leegitw/governance
+```
+
+**Standalone usage**: Index generation and round-trip verification work independently.
+Full governance features require constraint-engine and failure-memory integration.
 
 ## Usage
 
@@ -74,6 +97,13 @@ round-trip verification, and schema migration. Consolidates 6 granular skills.
 | --to | Yes | Target schema version |
 | --dry-run | No | Show changes without applying |
 
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/governance.yaml` (OpenClaw standard)
+2. `.claude/governance.yaml` (Claude Code compatibility)
+3. Defaults (built-in)
+
 ## Core Logic
 
 ### Governance State Model
@@ -103,9 +133,16 @@ round-trip verification, and schema migration. Consolidates 6 granular skills.
 └─────────────────────────────────────────┘
 ```
 
-### 90-Day Review Cycle
+### Review Cycle
 
-Constraints require periodic review:
+Constraints require periodic review. The review cadence is configurable (default: 90 days):
+
+```yaml
+# .openclaw/governance.yaml
+governance:
+  review_cadence_days: 90    # Default
+  warning_threshold: 15      # Days before due to warn
+```
 
 | Days Since Last Review | Status | Action |
 |------------------------|--------|--------|
@@ -113,7 +150,7 @@ Constraints require periodic review:
 | 76-90 | Approaching | Warning alert |
 | 91+ | Overdue | Escalation alert |
 
-> **⚠️ Advisory Only**: This 90-day review cycle is *not enforced programmatically*.
+> **⚠️ Advisory Only**: This review cycle is *not enforced programmatically*.
 > Compliance relies on HEARTBEAT P3 checks and manual diligence.
 > Automated enforcement (`/gov review --automated`) is planned for future release.
 > See HEARTBEAT.md for current verification schedule.
@@ -226,6 +263,45 @@ Status: ✓ IN SYNC
 Files checked: 12
 Matches: 12
 Drifts: 0
+```
+
+### Example: Compliance Review
+
+```
+/gov review --all
+[CONSTRAINT REVIEW QUEUE]
+
+Compliance Status (SOC 2):
+
+1. CON-20260101-001: "Always encrypt PII at rest"
+   Age: 45 days | Status: active
+   Compliance: SOC 2 CC6.1
+   Violations (90d): 0 | Adoption: 100%
+   ✓ Compliant
+
+2. CON-20260115-002: "Always log authentication events"
+   Age: 31 days | Status: active
+   Compliance: SOC 2 CC6.2
+   Violations (90d): 1 | Adoption: 98%
+   ⚠ Review violation on 2026-02-01
+
+Summary: 12 constraints | 11 compliant | 1 needs review
+```
+
+### Example: Security Audit Preparation
+
+```
+/gov state --summary
+[GOVERNANCE STATE]
+Updated: 2026-02-15 14:00:00
+
+Audit Readiness:
+  Security constraints: 8 active
+  Last review: 2026-02-10
+  Violations (90d): 2 (both resolved)
+  Override rate: 5% (within policy)
+
+Recommendation: Ready for external audit.
 ```
 
 ## Integration

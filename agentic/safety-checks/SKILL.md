@@ -1,9 +1,11 @@
 ---
 name: safety-checks
 version: 1.0.0
-description: Runtime safety verification for model pinning, fallbacks, cache, and sessions
-author: Live Neon
-homepage: https://github.com/live-neon/skills
+description: Runtime safety verification for model pinning, fallbacks, cache, and sessions (provider-agnostic)
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
+repository: leegitw/safety-checks
+license: MIT
 tags: [agentic, safety, verification, model, cache, session]
 layer: safety
 status: active
@@ -19,6 +21,25 @@ Consolidates 4 granular skills into a single safety verification suite.
 **Trigger**: 事前検証 (pre-flight) or HEARTBEAT
 
 **Source skills**: model-pinner, fallback-checker, cache-validator, cross-session-safety-check (from extensions)
+
+## Installation
+
+```bash
+openclaw install leegitw/safety-checks
+```
+
+**Dependencies**: `leegitw/constraint-engine` (for enforcement integration)
+
+```bash
+# Install with dependencies
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+openclaw install leegitw/safety-checks
+```
+
+**Standalone usage**: Model pinning and cache checks work independently.
+Full integration with constraint enforcement requires constraint-engine.
 
 ## Usage
 
@@ -65,20 +86,31 @@ Consolidates 4 granular skills into a single safety verification suite.
 | --check-state | No | Check for state leakage between sessions |
 | --clear-state | No | Clear any leaked state |
 
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/safety-checks.yaml` (OpenClaw standard)
+2. `.claude/safety-checks.yaml` (Claude Code compatibility)
+3. Defaults (built-in)
+
 ## Core Logic
 
 ### Model Version Pinning
 
-Ensures AI model version matches expected configuration:
+Ensures AI model version matches expected configuration.
+
+**Model version format**: `{provider}-{model}-{version}-{date}`
+
+Examples:
+- `anthropic-opus-4-5-20251101`
+- `openai-gpt-4-turbo-20250301`
+- `google-gemini-2-pro-20260101`
 
 ```yaml
-# .claude/settings.json
-{
-  "model": {
-    "expected": "claude-opus-4-5-20251101",
-    "strict": true
-  }
-}
+# .openclaw/safety-checks.yaml
+model:
+  expected: "anthropic-opus-4-5-20251101"  # Provider-neutral format
+  strict: true
 ```
 
 | Condition | Result |
@@ -99,8 +131,8 @@ Primary → Fallback 1 → Fallback 2 → Safe Default
 | Chain | Components | Purpose |
 |-------|------------|---------|
 | API | Primary API → Backup API → Offline mode | External calls |
-| Model | claude-opus → claude-sonnet → cached response | AI responses |
-| Storage | S3 → Local disk → Memory | Data persistence |
+| Model | Primary model → Fallback model → Cached response | AI responses |
+| Storage | Primary (cloud) → Secondary (local disk) → Tertiary (memory) | Data persistence |
 
 ### Cache Staleness Detection
 
@@ -131,8 +163,8 @@ Detects state leakage between sessions:
 [MODEL CHECK]
 Status: ✓ PINNED
 
-Expected: claude-opus-4-5-20251101
-Actual:   claude-opus-4-5-20251101
+Expected: anthropic-opus-4-5-20251101
+Actual:   anthropic-opus-4-5-20251101
 
 Model version matches configuration.
 ```
@@ -143,8 +175,8 @@ Model version matches configuration.
 [MODEL CHECK]
 Status: ✗ VERSION DRIFT
 
-Expected: claude-opus-4-5-20251101
-Actual:   claude-opus-4-5-20251201
+Expected: anthropic-opus-4-5-20251101
+Actual:   anthropic-opus-4-5-20251201
 
 WARNING: Model version has changed.
 This may affect behavior consistency.
@@ -166,14 +198,14 @@ API Chain:
   ✓ Offline mode - available
 
 Model Chain:
-  ✓ claude-opus - available
-  ✓ claude-sonnet - available
-  ✓ cached response - 47 entries
+  ✓ Primary model - available
+  ✓ Fallback model - available
+  ✓ Cached response - 47 entries
 
 Storage Chain:
-  ✓ S3 bucket - connected
-  ✓ Local disk - 12GB free
-  ✓ Memory - 4GB free
+  ✓ Primary (cloud) - connected
+  ✓ Secondary (local disk) - 12GB free
+  ✓ Tertiary (memory) - 4GB free
 ```
 
 ### /sc cache output
@@ -220,7 +252,7 @@ Status: ✗ INTERFERENCE DETECTED
 Issues found:
 
 1. Stale file lock:
-   File: .claude/skills.lock
+   File: .openclaw/skills.lock (or .claude/skills.lock)
    Owner: PID 12345 (not running)
    Action: Remove lock with /sc session --clear-state
 
@@ -268,10 +300,13 @@ After invoking this skill:
 This skill reads/writes:
 
 ```
-.claude/
-├── settings.json          # Model pinning config
+.openclaw/
+├── safety-checks.yaml     # Primary config (OpenClaw standard)
 └── cache/
     └── staleness.log      # Cache check history
+
+.claude/
+└── settings.json          # Model pinning config (Claude Code compatibility)
 
 output/
 └── safety/
@@ -292,6 +327,40 @@ These checks should run periodically via HEARTBEAT:
 ## P2: Important (Weekly)
 - [ ] Fallback chains healthy? → /sc fallback
 - [ ] Cache fresh? → /sc cache
+```
+
+## Examples
+
+### API Key Rotation Check
+
+```
+/sc session --check-state
+[SESSION CHECK]
+Status: ⚠ ROTATION NEEDED
+
+API Key Status:
+  ✓ STRIPE_API_KEY: Rotated 15 days ago (OK)
+  ⚠ AWS_ACCESS_KEY: Rotated 85 days ago (rotation due in 5 days)
+  ✗ SENDGRID_KEY: Rotated 95 days ago (overdue)
+
+Action: Rotate overdue keys before they expire.
+```
+
+### Dependency Vulnerability Check
+
+```
+/sc fallback --chain dependencies
+[FALLBACK CHECK]
+Status: ⚠ VULNERABILITIES DETECTED
+
+Dependency Chain:
+  ✓ Primary packages - 47 installed
+  ⚠ Known vulnerabilities - 2 found
+    - lodash@4.17.15: Prototype pollution (HIGH)
+    - axios@0.21.0: SSRF vulnerability (MEDIUM)
+  ✓ Fallback: Pinned versions available
+
+Action: Update vulnerable dependencies or document exceptions.
 ```
 
 ## Acceptance Criteria

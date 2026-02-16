@@ -2,8 +2,10 @@
 name: workflow-tools
 version: 1.0.0
 description: Utility tools for workflow management, parallel decisions, and MCE refactoring
-author: Live Neon
-homepage: https://github.com/live-neon/skills
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/workflow-tools
+repository: leegitw/workflow-tools
+license: MIT
 tags: [agentic, workflow, tools, parallel, mce, loops]
 layer: extensions
 status: active
@@ -20,6 +22,27 @@ decision framework, MCE file analysis, and subworkflow spawning. Consolidates 4 
 **Source skills**: loop-closer, parallel-decision, MCE (minimal-context-engineering), subworkflow-spawner
 
 **Removed**: pbd-strength-classifier (redundant with `/fm classify`)
+
+## Installation
+
+```bash
+openclaw install leegitw/workflow-tools
+```
+
+**Dependencies**:
+- `leegitw/failure-memory` (for loop context)
+- `leegitw/constraint-engine` (for enforcement context)
+
+```bash
+# Install with dependencies
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/constraint-engine
+openclaw install leegitw/workflow-tools
+```
+
+**Standalone usage**: Loop detection, parallel decisions, and MCE analysis work independently.
+Full integration provides constraint-aware workflow recommendations.
 
 ## Usage
 
@@ -68,6 +91,33 @@ decision framework, MCE file analysis, and subworkflow spawning. Consolidates 4 
 | task | Yes | Task description |
 | --skill | No | Specific ClawHub skill to use |
 | --background | No | Run in background |
+
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/workflow-tools.yaml` (OpenClaw standard)
+2. `.claude/workflow-tools.yaml` (Claude Code compatibility)
+3. Defaults (built-in)
+
+```yaml
+# .openclaw/workflow-tools.yaml
+loops:
+  patterns:                  # Patterns to detect as open loops
+    - "TODO:"
+    - "FIXME:"
+    - "HACK:"
+    - "XXX:"
+    - "DEFERRED:"
+    - "PLACEHOLDER:"
+  exclude:                   # Paths to exclude from scanning
+    - "vendor/"
+    - "node_modules/"
+mce:
+  threshold: 200             # Line threshold for MCE compliance
+  warning_threshold: 300     # Line threshold for warning
+parallel:
+  default_factors: 5         # Number of factors to evaluate
+```
 
 ## Core Logic
 
@@ -135,6 +185,44 @@ Available skill categories:
 - `generate-*`: Content generation
 - `validate-*`: Verification and testing
 - `transform-*`: Data transformation
+
+### Example: Deployment Workflow Analysis
+
+```
+/wt parallel "Deploy new payment service to production"
+[PARALLEL VS SERIAL ANALYSIS]
+Task: "Deploy new payment service to production"
+
+Factor Analysis:
+1. Team: ✗ Serial - Single SRE team handles deploys
+2. Coupling: ✗ Serial - Payment depends on auth service
+3. Interface: ✓ Parallel - Clear API contracts defined
+4. Pattern: ✗ Serial - Requires sequential rollout (canary → staging → prod)
+5. Integration: ✗ Serial - Payment gateway integration must be verified
+
+Score: 1/5 factors favor parallel
+Recommendation: SERIAL deployment
+Rationale: High-risk service requiring careful sequential verification.
+```
+
+### Example: Infrastructure Loop Detection
+
+```
+/wt loops infra/ --pattern "MANUAL:,HARDCODED:"
+[OPEN LOOPS DETECTED]
+Scanned: ./infra
+Files checked: 23
+
+Infrastructure Issues (5):
+  infra/terraform/main.tf:45  HARDCODED: AWS region
+  infra/k8s/deployment.yaml:78  MANUAL: replica count
+  infra/docker/Dockerfile:12  TODO: multi-stage build
+  infra/scripts/deploy.sh:34  FIXME: rollback not implemented
+  infra/helm/values.yaml:56  PLACEHOLDER: production secrets
+
+Summary: 2 high, 2 medium, 1 low priority
+Action: Address HARDCODED and FIXME before next release.
+```
 
 ## Output
 

@@ -2,8 +2,10 @@
 name: context-verifier
 version: 1.0.0
 description: File integrity verification, hash computation, and context packet management
-author: Live Neon
-homepage: https://github.com/live-neon/skills
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
+repository: leegitw/context-verifier
+license: MIT
 tags: [agentic, verification, hash, integrity, context]
 layer: foundation
 status: active
@@ -18,6 +20,18 @@ and context packet creation. Consolidates 3 granular skills into a single verifi
 **Trigger**: 明示呼出 (explicit invocation)
 
 **Source skills**: context-packet, file-verifier, severity-tagger
+
+## Installation
+
+```bash
+openclaw install leegitw/context-verifier
+```
+
+**Dependencies**: None (foundational skill)
+
+**Standalone usage**: This skill is fully functional standalone. It provides file integrity
+verification that other skills in the suite depend on. Install this first when adopting
+the Neon Agentic Suite.
 
 ## Usage
 
@@ -66,6 +80,13 @@ and context packet creation. Consolidates 3 granular skills into a single verifi
 | --name | No | Packet name (default: auto-generated) |
 | --include-content | No | Include file content in packet (default: false) |
 
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/context-verifier.yaml` (OpenClaw standard)
+2. `.claude/context-verifier.yaml` (Claude Code compatibility)
+3. Defaults (built-in patterns)
+
 ## Core Logic
 
 ### Hash Computation
@@ -78,13 +99,27 @@ hash(file) = SHA256(file.content)
 
 ### Severity Classification
 
-Files are auto-classified based on patterns:
+Files are auto-classified based on configurable patterns:
 
-| Severity | File Patterns | Behavior on Change |
-|----------|---------------|-------------------|
-| critical | `*.env`, `*credentials*`, `*secret*`, `CLAUDE.md` | Block operation |
+| Severity | Default Patterns | Behavior on Change |
+|----------|------------------|-------------------|
+| critical | `*.env`, `*credentials*`, `*secret*`, project config | Block operation |
 | important | `*.go`, `*.ts`, `*.md` (in docs/) | Warn user |
 | minor | `*.log`, `*.tmp`, `output/*` | Info only |
+
+Critical file patterns are configurable via `.openclaw/context-verifier.yaml`:
+
+```yaml
+# .openclaw/context-verifier.yaml
+critical_patterns:
+  - "*.env"
+  - "*credentials*"
+  - "*secret*"
+  - "CLAUDE.md"     # Claude Code projects
+  - "AGENTS.md"     # OpenClaw projects
+  - "pyproject.toml" # Python projects
+  - "Cargo.toml"    # Rust projects
+```
 
 ### Context Packet Structure
 
@@ -236,6 +271,24 @@ output/
 
 /cv tag src/handler.go
 # Severity: important
+```
+
+### Verify database migration before deployment
+
+```
+/cv packet db/migrations/*.sql --name "pre-deploy-migrations"
+# Creates packet with all migration files
+
+# After staging deployment...
+/cv verify db/migrations/001_users.sql abc123...
+# ✓ MATCH - migration file unchanged, safe to deploy to production
+```
+
+### Create API schema verification packet
+
+```
+/cv packet api/schemas/*.json,api/openapi.yaml --name "api-schema-v2"
+# Creates packet with all API schema files for version control
 ```
 
 ## Acceptance Criteria

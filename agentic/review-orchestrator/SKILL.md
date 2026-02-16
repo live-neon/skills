@@ -1,10 +1,12 @@
 ---
 name: review-orchestrator
 version: 1.0.0
-description: Multi-agent review coordination for twin, cognitive, and code reviews
-author: Live Neon
-homepage: https://github.com/live-neon/skills
-tags: [agentic, review, twin, cognitive, orchestration]
+description: Multi-perspective review coordination with configurable cognitive modes
+author: Live Neon <contact@liveneon.dev>
+homepage: https://github.com/live-neon/skills/tree/main/agentic/review-orchestrator
+repository: leegitw/review-orchestrator
+license: MIT
+tags: [agentic, review, twin, cognitive, orchestration, multi-perspective]
 layer: review
 status: active
 alias: ro
@@ -12,12 +14,32 @@ alias: ro
 
 # review-orchestrator (審査)
 
-Unified skill for selecting review types, spawning twin/cognitive review agents,
+Unified skill for selecting review types, spawning multi-perspective and cognitive review agents,
 and managing quality gates. Consolidates 5 granular skills into a single review system.
 
 **Trigger**: レビュー要求 (review requested)
 
 **Source skills**: twin-review, cognitive-review, review-selector, staged-quality-gate, prompt-normalizer
+
+## Installation
+
+```bash
+openclaw install leegitw/review-orchestrator
+```
+
+**Dependencies**:
+- `leegitw/failure-memory` (for context)
+- `leegitw/context-verifier` (for file verification)
+
+```bash
+# Install with dependencies
+openclaw install leegitw/context-verifier
+openclaw install leegitw/failure-memory
+openclaw install leegitw/review-orchestrator
+```
+
+**Standalone usage**: Review orchestration works independently for multi-perspective reviews.
+Integration with failure-memory enables automatic observation recording from review findings.
 
 ## Usage
 
@@ -31,7 +53,8 @@ and managing quality gates. Consolidates 5 granular skills into a single review 
 |---------|-----|-------|---------|
 | `/ro select` | 選択 | context×risk→type∈{twin,cognitive,code} | Explicit |
 | `/ro twin` | 双子 | spawn(technical,creative)→findings[] | Explicit |
-| `/ro cognitive` | 認知 | spawn(opus4,opus41,sonnet45)→analysis[] | Explicit |
+| `/ro cognitive` | 認知 | spawn(modes[])→analysis[] | Explicit |
+| `/ro multi` | 双視 | alias for `/ro twin` (multi-perspective review) | Explicit |
 | `/ro gate` | 門番 | staged_work→pass✓∨block✗ | Explicit |
 
 ## Arguments
@@ -48,15 +71,21 @@ and managing quality gates. Consolidates 5 granular skills into a single review 
 | Argument | Required | Description |
 |----------|----------|-------------|
 | target | Yes | File path(s) or topic to review |
-| --technical-only | No | Skip creative twin |
-| --creative-only | No | Skip technical twin |
+| --technical-only | No | Skip creative perspective |
+| --creative-only | No | Skip technical perspective |
 
 ### /ro cognitive
 
 | Argument | Required | Description |
 |----------|----------|-------------|
 | target | Yes | File path(s) or topic to review |
-| --modes | No | Cognitive modes: `opus4`, `opus41`, `sonnet45` (default: all) |
+| --modes | No | Cognitive modes: `analyzer`, `architect`, `implementer` (default: all) |
+
+### /ro multi
+
+Alias for `/ro twin`. The name "twin" refers to the dual-perspective review pattern
+(technical + creative), not a specific team structure. `/ro multi` is provided for
+discoverability by users unfamiliar with the "twin" terminology.
 
 ### /ro gate
 
@@ -73,35 +102,94 @@ and managing quality gates. Consolidates 5 granular skills into a single review 
 | Context | Risk | Recommended Review |
 |---------|------|-------------------|
 | Implementation | Low | `/ro twin --technical-only` |
-| Implementation | Medium | `/ro twin` (both twins) |
+| Implementation | Medium | `/ro twin` (both perspectives) |
 | Implementation | High | `/ro twin` + `/ro cognitive` |
 | Architecture | Any | `/ro cognitive` |
 | Documentation | Any | `/ro twin --creative-only` |
 | Security | Any | `/ro cognitive` + external review |
 
-### Twin Review Perspectives
+### Multi-Perspective Review
 
-| Twin | Focus | CJK |
-|------|-------|-----|
+| Perspective | Focus | CJK |
+|-------------|-------|-----|
 | Technical | Architecture, standards, patterns, security | 技術 |
 | Creative | UX, communication, philosophy alignment | 創造 |
 
 ### Cognitive Modes
 
-| Mode | Model | Perspective | CJK |
-|------|-------|-------------|-----|
-| opus4 | Claude Opus 4 | "Here's what conflicts" | 審碼 |
-| opus41 | Claude Opus 4.1 | "Here's how to restructure" | 審構 |
-| sonnet45 | Claude Sonnet 4.5 | "Here's how to implement" | 審実 |
+Cognitive modes provide different analytical perspectives. Modes are configurable;
+defaults shown below.
+
+| Mode | Perspective | Focus | CJK |
+|------|-------------|-------|-----|
+| analyzer | "Here's what conflicts" | Tensions, trade-offs, contradictions | 審碼 |
+| architect | "Here's how to restructure" | Architecture, patterns, organization | 審構 |
+| implementer | "Here's how to implement" | Concrete steps, complexity, path forward | 審実 |
+
+> **Note**: Mode names are perspective-based, not model-specific. The underlying model
+> used for each mode is configurable (see Configuration section below).
+
+## Configuration
+
+Configuration is loaded from (in order of precedence):
+1. `.openclaw/review-orchestrator.yaml` (OpenClaw standard)
+2. `.claude/review-orchestrator.yaml` (Claude Code compatibility)
+3. Defaults (built-in)
+
+### Cognitive Mode Interface
+
+Each cognitive mode implements this interface:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string | Yes | Mode identifier (e.g., "analyzer", "architect") |
+| perspective | string | Yes | Human-readable perspective description |
+| prompt_prefix | string | Yes | Prompt prefix for this mode's analysis |
+| model_hint | string | No | Optional model preference (not enforced) |
+
+### Cognitive Mode Configuration
+
+```yaml
+# .openclaw/review-orchestrator.yaml
+cognitive_modes:
+  - id: analyzer
+    perspective: "Here's what conflicts"
+    prompt_prefix: "Analyze tensions, trade-offs, and conflicts in..."
+    model_hint: "prefer analytical model"
+  - id: architect
+    perspective: "Here's how to restructure"
+    prompt_prefix: "Suggest architectural improvements for..."
+    model_hint: "prefer architectural model"
+  - id: implementer
+    perspective: "Here's how to implement"
+    prompt_prefix: "Provide implementation guidance for..."
+    model_hint: "prefer practical model"
+```
+
+### Quality Gate Configuration
+
+```yaml
+# .openclaw/review-orchestrator.yaml
+quality_gates:
+  test_command: "npm test"    # Node.js (default)
+  # test_command: "go test ./..."  # Go
+  # test_command: "pytest"         # Python
+  # test_command: "cargo test"     # Rust
+  coverage_threshold: 5       # Max allowed coverage drop (%)
+  require_docs: true          # Require documentation updates
+```
 
 ### Quality Gate Checks
 
 | Check | Condition | Severity |
 |-------|-----------|----------|
-| Tests pass | `npm test` exit 0 | Critical |
-| Coverage maintained | delta ≤ 5% | Important |
+| Tests pass | `{test_command}` exit 0 | Critical |
+| Coverage maintained | delta ≤ `{coverage_threshold}`% | Important |
 | No critical findings | review.critical == 0 | Critical |
-| Docs updated | changed files have docs | Minor |
+| Docs updated | changed files have docs (if `require_docs`) | Minor |
+
+> Checks use configured values from `quality_gates` section. Defaults: test_command=`npm test`,
+> coverage_threshold=5, require_docs=true.
 
 ## Output
 
@@ -121,11 +209,11 @@ Alternative: /ro cognitive (for deeper architectural analysis)
 ### /ro twin output
 
 ```
-[TWIN REVIEW INITIATED]
+[MULTI-PERSPECTIVE REVIEW INITIATED]
 Target: src/handlers/auth.go
-Spawning: technical, creative
+Perspectives: technical, creative
 
---- Technical Twin Findings ---
+--- Technical Perspective Findings ---
 Severity: important
 - I-1: Missing error handling on line 45
 - I-2: Consider extracting validation logic
@@ -133,7 +221,7 @@ Severity: important
 Severity: minor
 - M-1: Inconsistent naming convention
 
---- Creative Twin Findings ---
+--- Creative Perspective Findings ---
 Severity: minor
 - M-1: Error messages could be more user-friendly
 - M-2: Consider adding debug logging for operators
@@ -146,17 +234,17 @@ Verdict: Approved with conditions
 ```
 [COGNITIVE REVIEW INITIATED]
 Target: docs/architecture/auth-flow.md
-Modes: opus4, opus41, sonnet45
+Modes: analyzer, architect, implementer
 
---- Opus 4 Analysis (Conflicts) ---
+--- Analyzer Perspective (Conflicts) ---
 - Tension between security and usability in token refresh
 - Trade-off: session duration vs re-auth frequency
 
---- Opus 4.1 Analysis (Restructure) ---
+--- Architect Perspective (Restructure) ---
 - Suggested: Extract token service from handler
 - Benefit: Cleaner separation of concerns
 
---- Sonnet 4.5 Analysis (Implement) ---
+--- Implementer Perspective (Implement) ---
 - Implementation path: 3 stages
 - Estimated complexity: Medium
 
@@ -193,6 +281,44 @@ Checks:
 Action required before proceeding:
 1. Add tests to restore coverage
 2. Update docs/handlers/README.md
+```
+
+### Example: API Design Review
+
+```
+/ro cognitive api/openapi.yaml --modes analyzer,architect
+[COGNITIVE REVIEW INITIATED]
+Target: api/openapi.yaml
+Modes: analyzer, architect
+
+--- Analyzer Perspective (Conflicts) ---
+- Tension: Versioning strategy (URL vs header) inconsistent across endpoints
+- Trade-off: Pagination style (cursor vs offset) mixed usage
+
+--- Architect Perspective (Restructure) ---
+- Suggested: Standardize on cursor pagination for large collections
+- Benefit: Consistent client SDK, better performance at scale
+
+Verdict: Approved with conditions
+```
+
+### Example: Performance Review
+
+```
+/ro twin src/handlers/search.go --technical-only
+[MULTI-PERSPECTIVE REVIEW INITIATED]
+Target: src/handlers/search.go
+Perspectives: technical
+
+--- Technical Perspective Findings ---
+Severity: important
+- I-1: N+1 query pattern on line 78 (database calls in loop)
+- I-2: Missing index on search_terms table
+
+Severity: minor
+- M-1: Consider caching frequent searches (>100 req/min)
+
+Verdict: Approved with conditions
 ```
 
 ## Integration
@@ -236,14 +362,15 @@ docs/reviews/
 ## Acceptance Criteria
 
 - [ ] `/ro select` recommends appropriate review type based on context and risk
-- [ ] `/ro twin` spawns both technical and creative twins
-- [ ] `/ro twin` aggregates findings from both twins
-- [ ] `/ro cognitive` spawns all three cognitive modes
+- [ ] `/ro twin` (or `/ro multi`) spawns both technical and creative perspectives
+- [ ] `/ro twin` aggregates findings from both perspectives
+- [ ] `/ro cognitive` spawns configured cognitive modes (default: analyzer, architect, implementer)
 - [ ] `/ro cognitive` presents different perspectives clearly
-- [ ] `/ro gate` checks all quality criteria
+- [ ] `/ro gate` checks all configured quality criteria
 - [ ] `/ro gate` blocks on critical failures
 - [ ] `/ro gate` provides clear remediation guidance
 - [ ] Review findings written to workspace files
+- [ ] Configuration loaded from `.openclaw/` or `.claude/` paths
 
 ---
 
