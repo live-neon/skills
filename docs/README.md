@@ -15,9 +15,10 @@ Documentation for the Live Neon Skills project.
 | `patterns/` | Validated patterns (N≥3 evidence) |
 | `plans/` | Implementation plans for each phase |
 | `proposals/` | Specifications and architectural proposals |
+| `research/` | External research on hooks, learning theory, and industry patterns |
 | `reviews/` | Code review and twin review outputs |
 | `templates/` | Reusable templates (governance alerts) |
-| `workflows/` | Process documentation (documentation updates, phase completion) |
+| `workflows/` | Process documentation (skill creation, publishing, documentation updates) |
 
 ## Key Documents
 
@@ -41,6 +42,24 @@ Documentation for the Live Neon Skills project.
 | Phase 6 | [Plan](plans/2026-02-15-agentic-skills-phase6-implementation.md) | [Results](implementation/agentic-phase6-results.md) | Extensions layer |
 | Phase 7 | [Plan](plans/2026-02-15-agentic-skills-phase7-implementation.md) | [Results](implementation/agentic-phase7-results.md) | Architecture finalization |
 | Consolidation | [Plan](plans/2026-02-15-agentic-skills-consolidation.md) | [Results](implementation/agentic-consolidation-results.md) | 48 → 7 skills |
+
+### Workflows
+
+| Workflow | Purpose |
+|----------|---------|
+| [Creating a New Skill](workflows/creating-new-skill.md) | Complete skill creation from validation to publication |
+| [Skill Publishing](workflows/skill-publish.md) | Publishing workflow with security compliance |
+| [Documentation Update](workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
+| [Phase Completion](workflows/phase-completion.md) | Phase completion checklist |
+| [Batch File Modification](workflows/batch-file-modification.md) | Bulk file changes with verification |
+
+### Research
+
+| Document | Purpose |
+|----------|---------|
+| [Consequences-Based Learning](research/2026-02-16-consequences-based-learning-llm-research.md) | External validation of R/C/D counters, RLVR, self-improving agents |
+| [OpenClaw/ClawHub Hooks](research/2026-02-15-openclaw-clawhub-hooks-research.md) | Three hook systems, SKILL.md format, case studies |
+| [Soft Hook Enforcement](research/2026-02-15-soft-hook-enforcement-patterns.md) | Three-Layer Model, HEARTBEAT verification, compliance patterns |
 
 ### Backlog
 
