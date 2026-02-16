@@ -244,6 +244,7 @@ cd tests && npm test
 | `agentic/*/*/SKILL.md` | Same as above (nested structure) |
 | `ARCHITECTURE.md` | Layer tables, data flow, circuit breaker, threat model, guides |
 | `docs/guides/*.md` | Technical accuracy, cross-references |
+| `docs/standards/CJK_VOCABULARY.md` | Skill aliases, sub-commands, math notation (agent-facing) |
 | `agentic/SKILL_TEMPLATE.md` | Layer guidance, required sections, dependency fields |
 | `agentic/README.md` | Lifecycle diagram, counters, layers |
 | `README.md` | Problem/solution, skill tables, guides, testing |
@@ -431,6 +432,7 @@ After completing documentation updates, **close the loop**:
 
 - **[ARCHITECTURE.md](../../ARCHITECTURE.md)** - System overview, layer tables
 - **[Semantic Similarity Guide](../guides/SEMANTIC_SIMILARITY_GUIDE.md)** - LLM-based matching
+- **[CJK Vocabulary](../standards/CJK_VOCABULARY.md)** - Skill aliases, sub-commands, math notation
 - **[SKILL_TEMPLATE.md](../../agentic/SKILL_TEMPLATE.md)** - New skill template
 - **[Phase Completion](phase-completion.md)** - Phase completion checklist
 - **[Phase 1 Results](../implementation/agentic-phase1-results.md)** - Implementation status

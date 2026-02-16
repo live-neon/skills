@@ -15,13 +15,65 @@ related_issues:
 
 ## Summary
 
-Consolidate 48 granular skills into 8 cohesive skills based on the principle:
+Systematically consolidate 48 granular skills based on the principle:
 **"When does the agent need this information?"**
 
 Skills that are always relevant at the same moment belong in the same SKILL.md.
 
 **Current**: 48 skills, ~7,000 chars prompt overhead, zero hooks/scripts
-**Target**: 8 skills, ~1,600 chars prompt overhead, hooks for automation
+**Target**: 7 consolidated skills + integration docs, ~1,400 chars overhead, Next Steps soft hooks (Claude Code hooks deferred)
+
+**Note**: The target is systematic consolidation, not a fixed number. The current groupings yield 7 skills (bridge layer becomes documentation rather than a skill), but future iterations may adjust based on actual usage patterns.
+
+---
+
+## Day in the Life (After Consolidation)
+
+A typical failure-to-constraint workflow after consolidation:
+
+```
+Scenario: You made a mistake that broke tests
+
+1. [Agent detects error pattern in output]
+   Agent follows Next Steps: "Error detected → /fm detect"
+   → Failure recorded with R=1
+
+2. [You make same mistake twice more over next few sessions]
+   Agent follows Next Steps: "Check eligibility: R≥3 ∧ C≥2"
+   → R=3, eligibility threshold reached
+
+3. /constraint-engine generate
+   → "Always run lint before commit" constraint proposed
+   → constraint-engine lifecycle: draft
+
+4. [You approve the constraint]
+   → constraint-engine lifecycle: active
+
+5. [Next session, you try to commit without lint]
+   Agent follows Next Steps: "Before file changes → /ce check"
+   → CHECK FAILS: "Always run lint before commit"
+   → You run lint, then commit succeeds
+
+6. [Periodic heartbeat - agent reads HEARTBEAT.md]
+   → Reviews constraint health, R/C/D status
+   → proactive-agent (ClawHub) reads our constraint metadata
+```
+
+**How it works**: The agent follows "Next Steps" instructions embedded in each skill. This is the same pattern used by proactive-agent (pure behavioral protocols, no programmatic hooks). Future releases may add Claude Code hooks for automatic triggering.
+
+---
+
+## Philosophy Alignment
+
+This consolidation aligns with compass principles:
+
+| Principle | Application |
+|-----------|-------------|
+| **比 Proportionality** | 48 skills was over-engineered; consolidation right-sizes |
+| **長 Long-View** | Adding hooks now prevents "paper architecture" debt |
+| **誠 Honesty** | Acknowledgment that 48 specs lacked runtime automation |
+| **証 Evidence** | Triggered by internal review (N=1, validated by twin review) |
+| **省 Reflection** | The consolidation itself is reflection on prior over-engineering |
 
 ---
 
@@ -36,9 +88,11 @@ Skills that are always relevant at the same moment belong in the same SKILL.md.
 
 ### The Insight
 
-The brother's feedback nailed it:
+Internal team review (2026-02-14) identified the core issue:
 
 > "You have the *what* (47 well-designed specs) but not the *how* (hooks, scripts, and automation that make it happen without the agent needing to remember)."
+
+This feedback triggered the consolidation planning - the 48-skill architecture was well-designed but lacked runtime automation.
 
 ### What to Preserve
 
@@ -50,6 +104,32 @@ The design decisions are solid - they just don't need 48 separate skills:
 - Event-driven governance over dashboards
 - Golden master pattern
 - Bridge layer for ClawHub integration
+
+### Three-Layer Architecture
+
+Based on ClawHub skill patterns (self-improving-agent v1.0.5, proactive-agent v3.1.0):
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    LAYER 3: AUTOMATION (Future)              │
+│  Claude Code hooks - deferred to future release              │
+│  OpenClaw Gateway hooks (agent:bootstrap) - optional         │
+├─────────────────────────────────────────────────────────────┤
+│                    LAYER 2: WORKSPACE                        │
+│  Persistent files (output/.learnings/, SESSION-STATE.md)    │
+│  Shared with ClawHub skills, survives compaction            │
+├─────────────────────────────────────────────────────────────┤
+│                    LAYER 1: SKILL (SKILL.md) ← INITIAL FOCUS │
+│  Instructions + Next Steps (portable soft hooks)            │
+│  Works everywhere, regardless of hook support               │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Initial release strategy**: Focus on Layer 1 (Next Steps) and Layer 2 (Workspace files). This matches proactive-agent's approach - pure behavioral protocols, no programmatic hooks.
+
+**Key insight**: Skills must work as text instructions. Hook automation is an enhancement, not a requirement.
+
+**Research**: See `docs/research/2026-02-15-openclaw-clawhub-hooks-research.md` for detailed analysis.
 
 ### Alternatives Considered
 
@@ -63,8 +143,8 @@ Before consolidation, we evaluated these alternatives:
 | **Prioritize runtime for critical skills only** | Implement runtime for 5-10 most-used skills | Leaves 38+ skills as "paper"; doesn't reduce prompt overhead |
 
 **Why consolidation wins**: It addresses all three problems simultaneously:
-1. Token overhead (7,000 → 1,600 chars)
-2. No automation (adding hooks is easier with 8 skills)
+1. Token overhead (7,000 → ~1,400 chars)
+2. No automation (adding hooks is easier with 7 skills)
 3. Paper architecture (fewer skills to implement runtime for)
 
 **Trade-off acknowledged**: Consolidation loses per-skill versioning flexibility. See "Versioning Strategy" below.
@@ -76,23 +156,42 @@ Before consolidation, we evaluated these alternatives:
 ### Current → Consolidated
 
 ```
-48 Skills                           8 Skills
+48 Skills                           7 Skills + Documentation
 ─────────────────────────────────────────────────────────────
-Foundation (5)  ─┬─► context-verifier
-Core Memory (9) ─┼─► failure-memory
-                 └─► constraint-engine
+Foundation (5)  ─┬─► context-verifier (3 skills)
+Core Memory (9) ─┼─► failure-memory (10 skills)
+                 └─► constraint-engine (9 skills)
 
-Review (6)      ───► review-orchestrator
+Review (6)      ───► review-orchestrator (5 skills)
 
 Detection (4)   ───► (merged into failure-memory)
 
-Governance (5)  ─┬─► governance
-Safety (4)      ─┴─► safety-checks
+Governance (5)  ─┬─► governance (6 skills)
+Safety (4)      ─┴─► safety-checks (4 skills)
 
-Bridge (5)      ───► clawhub-bridge
+Bridge (5)      ───► (documentation, not skill - see Stage 3)
 
-Extensions (10) ───► workflow-tools (3 kept, 7 deferred)
+Extensions (10) ───► workflow-tools (4 skills, 1 removed as redundant)
 ```
+
+**Total**: 48 skills → 7 consolidated skills + ClawHub integration docs
+**Removed**: pbd-strength-classifier (redundant with `/failure-memory classify`)
+
+### Naming Rationale
+
+Consolidated skill names follow a pattern based on their primary function:
+
+| Suffix | Meaning | Examples |
+|--------|---------|----------|
+| `-memory` | **Storage/recall systems** - persist and retrieve data | `failure-memory` stores failures |
+| `-engine` | **Processing systems** - transform inputs to outputs | `constraint-engine` processes constraints |
+| `-verifier` | **Validation systems** - check correctness | `context-verifier` validates file hashes |
+| `-orchestrator` | **Coordination systems** - spawn and manage sub-agents | `review-orchestrator` manages twin reviews |
+| `-tools` | **Utility collections** - grouped helper functions | `workflow-tools` bundles loop-closer, MCE, etc. |
+| `-checks` | **Verification suites** - multiple related checks | `safety-checks` bundles model, fallback, cache |
+| (none) | **Domain concepts** - self-explanatory | `governance` manages state and reviews |
+
+This naming convention helps developers predict where functionality lives without consulting documentation.
 
 ---
 
@@ -132,104 +231,151 @@ Each sub-command must be:
 
 Loss of per-skill versioning is a trade-off. Mitigation:
 
-1. **Sub-command versioning**: Track version per sub-command in SKILL.md frontmatter
-2. **Feature flags**: Critical sub-commands can have enable/disable flags
+1. **Skill-level versioning**: Start with skill-level versioning only (e.g., `failure-memory: 1.0.0`)
+2. **Feature flags**: Critical sub-commands can have enable/disable flags if needed
 3. **Deprecation path**: Sub-commands follow draft→active→retiring→retired lifecycle
 4. **Rollback scope**: If sub-command breaks, disable it via flag rather than rolling back entire skill
 
-Example frontmatter:
-```yaml
-name: failure-memory
-version: 1.0.0
-sub_commands:
-  detect: { version: 1.0.0, status: active }
-  record: { version: 1.0.0, status: active }
-  search: { version: 1.0.0, status: active }
-  classify: { version: 1.0.0, status: active }
-  status: { version: 1.0.0, status: active }
-```
+**Note**: Add sub-command versioning only after a rollback event (N≥1) demonstrates the need. This avoids premature complexity.
+
+---
+
+## Notation Reference (記法)
+
+**CJK Vocabulary**: `docs/standards/CJK_VOCABULARY.md` (skill aliases, sub-commands, math notation)
+
+---
+
+## Quick Navigation (速引)
+
+| Intent | Command | Logic | Trigger |
+|--------|---------|-------|---------|
+| fail detected | `/fm detect` | fail∈{test,user,API}→record | Next Steps |
+| record failure | `/fm record` | pattern→obs, R++∨C++∨D++ | Next Steps |
+| find failures | `/fm search` | query(pattern∨tag)→obs[] | Explicit |
+| classify tier | `/fm classify` | obs→N∈{1:弱,2:中,≥3:強} | Explicit |
+| merge obs | `/fm refactor` | obs[]→restructure | Explicit |
+| find patterns | `/fm converge` | similarity≥0.8→pattern | Explicit |
+| pre-action check | `/ce check` | constraints→pass✓∨block✗ | Next Steps |
+| create constraint | `/ce generate` | R≥3∧C≥2→constraint | Next Steps |
+| bypass constraint | `/ce override` | temp_bypass + audit | Explicit |
+| constraint state | `/ce lifecycle` | draft→active→retiring→retired | Explicit |
+| file unchanged? | `/cv verify` | file×hash→match✓∨mismatch✗ | Explicit |
+| get checksum | `/cv hash` | file→SHA256 | Explicit |
+| twin review | `/ro twin` | spawn(tech,creative)→findings | Explicit |
+| cognitive review | `/ro cognitive` | spawn(opus4,41,sonnet45) | Explicit |
+| gov state | `/gov state` | central_state + alerts | HEARTBEAT |
+| due constraints | `/gov review` | constraints.due→queue | HEARTBEAT |
+| model pinned? | `/sc model` | version→pinned✓∨drift✗ | HEARTBEAT |
+| session clean? | `/sc session` | state→clean✓∨interference✗ | HEARTBEAT |
+| open loops? | `/wt loops` | scan(TODO∨DEFERRED)→[] | Explicit |
+| parallel decision | `/wt parallel` | 5因子→serial∨parallel | Explicit |
+| spawn subworkflow | `/wt subworkflow` | task→clawhub.skill | Explicit |
 
 ---
 
 ## Stage 1: Core Skills (MVP)
 
-**Duration**: 1-2 days
+**Duration**: 2-3 days
 **Goal**: 3 consolidated skills that handle 80% of use cases
 
-### 1.1 failure-memory
+**Note**: Initial release targets ClawHub/OpenClaw only. OpenClaw uses Gateway lifecycle hooks (`agent:bootstrap`), not Claude Code tool-loop hooks (`PostToolUse`). Our skills use **"Next Steps" soft hooks** - text instructions that work in any agent. Future releases may add Claude Code hook support for Claude Code/Codex users.
 
-**Merges**: failure-tracker, failure-detector, observation-recorder, evidence-tier, memory-search, topic-tagger, slug-taxonomy, effectiveness-metrics (8 skills → 1)
+### 1.1 failure-memory (記憶)
 
-**When needed**: Something went wrong - detect, classify, record, search
-
-**Sub-commands**:
-```
-/failure-memory detect   # Multi-signal failure detection
-/failure-memory record   # Create/update observation with R/C/D
-/failure-memory search   # Query observations by pattern/tag
-/failure-memory classify # Assign evidence tier (N=1/2/3+)
-/failure-memory status   # Show pending eligibility, recent failures
-```
-
-**Hooks** (NEW):
-```bash
-# scripts/post-tool-use.sh - fires on PostToolUse
-# Detects: test failures, user corrections, API errors
-# Auto-records failures without agent needing to remember
-```
-
-**Key content from merged skills**:
-- R/C/D counter logic (from failure-tracker)
-- Evidence tiers: Weak (N=1), Emerging (N=2), Strong (N≥3) (from evidence-tier)
-- Slug taxonomy: git-*, test-*, workflow-*, security-*, docs-*, quality-* (from slug-taxonomy)
-- Effectiveness metrics: prevention rate, false positive rate (from effectiveness-metrics)
-
-### 1.2 constraint-engine
-
-**Merges**: constraint-generator, constraint-enforcer, constraint-lifecycle, contextual-injection, positive-framer, circuit-breaker, emergency-override (7 skills → 1)
-
-**When needed**: About to take action OR pattern hit threshold
+**Merges**: 10 skills → 1 | **Trigger**: 失敗発生 (failure occurred)
 
 **Sub-commands**:
 ```
-/constraint-engine check     # Pre-action constraint check
-/constraint-engine generate  # Create constraint from eligible pattern
-/constraint-engine status    # Show active constraints, circuit state
-/constraint-engine override  # Temporary bypass with audit trail
-/constraint-engine lifecycle # Manage draft→active→retiring→retired
+/fm detect   # 検出 | fail∈{test,user,API}→record | auto via ⚡
+/fm record   # 記録 | pattern→obs | R++∨C++∨D++
+/fm search   # 索引 | query(pattern∨tag∨slug)→obs[]
+/fm classify # 分類 | obs→tier∈{N=1:弱,N=2:中,N≥3:強}
+/fm status   # 状態 | eligible:R≥3∧C≥2 | recent:30d
+/fm refactor # 整理 | obs[]→merge∨split∨restructure
+/fm converge # 収束 | pattern[]→detect(similarity≥0.8)
 ```
 
-**Hooks** (NEW):
-```bash
-# scripts/pre-action.sh - fires before file modifications
-# Checks relevant constraints, blocks if circuit OPEN
-# Logs all checks for audit trail
-```
+**Detection Triggers** (自動検出 - agent scans for these patterns):
 
-**Key content from merged skills**:
-- Eligibility formula: R≥3 AND C≥2 AND D/(C+D)<0.2 AND sources≥2 (from constraint-generator)
-- Positive framing: "Don't X" → "Always Y" (from positive-framer)
-- Circuit breaker thresholds: CRITICAL 3/30d, IMPORTANT 5/30d, MINOR 10/30d (from circuit-breaker)
-- States: draft → active → retiring → retired (from constraint-lifecycle)
+| Pattern | Source | Action |
+|---------|--------|--------|
+| `test.exit_code != 0` | PostToolUse | `/fm detect test` |
+| "Actually...", "No, that's wrong" | User message | `/fm record correction` |
+| "I meant...", "Not X, Y" | User message | `/fm record correction` |
+| API 4xx/5xx response | PostToolUse | `/fm detect api` |
+| "error:", "failed", "Exception" | Tool output | `/fm detect error` |
 
-### 1.3 context-verifier
+**Core logic**:
+- R/C/D: Recurrence++ | Confirmation++ | Disconfirmation++
+- Tier: N=1→弱(weak) | N=2→中(emerging) | N≥3→強(strong)
+- Slug: git-*|test-*|workflow-*|security-*|docs-*|quality-*
+- Metrics: prevention_rate, false_positive_rate
 
-**Merges**: context-packet, file-verifier, severity-tagger (3 skills → 1)
+**Next Steps** (実行後 - soft hooks):
 
-**When needed**: Preparing context for review or verification
+| Condition | Action |
+|-----------|--------|
+| R incremented | Check eligibility: R≥3 ∧ C≥2 → notify user |
+| R≥3 ∧ C≥2 | Suggest `/ce generate` for constraint |
+| Pattern recurring | Link with `See Also`, bump priority |
+| Always | Update `output/.learnings/ERRORS.md` or `LEARNINGS.md` |
+
+### 1.2 constraint-engine (制約)
+
+**Merges**: 9 skills → 1 | **Trigger**: 行動前∨閾値到達 (pre-action ∨ threshold)
 
 **Sub-commands**:
 ```
-/context-verifier hash   # Generate SHA-256 checksums for files
-/context-verifier verify # Verify file against stored hash
-/context-verifier tag    # Classify severity (critical/important/minor)
-/context-verifier packet # Generate full context packet with hashes
+/ce check     # 検査 | action→constraints[]→pass∨block
+/ce generate  # 生成 | eligible(obs)→constraint | R≥3∧C≥2∧D/(C+D)<0.2∧src≥2
+/ce status    # 状態 | active[]|circuit∈{CLOSED,OPEN,HALF}
+/ce override  # 上書 | constraint→bypass(temp) | audit.log++
+/ce lifecycle # 周期 | state∈{draft→active→retiring→retired}
+/ce version   # 版本 | constraint→v++ | history.preserve
+/ce threshold # 閾値 | user∨context→custom_threshold
 ```
 
-**Key content from merged skills**:
-- SHA-256 checksums (from file-verifier)
-- Context packet format with file hashes (from context-packet)
-- Severity classification rubric (from severity-tagger)
+**Core logic**:
+- Eligible: R≥3 ∧ C≥2 ∧ D/(C+D)<0.2 ∧ sources≥2
+- Frame: "Don't X"→"Always Y" (positive reframe)
+- Circuit: CRITICAL→3/30d | IMPORTANT→5/30d | MINOR→10/30d
+- States: draft→active→retiring→retired
+
+**Next Steps** (実行後 - soft hooks):
+
+| Condition | Action |
+|-----------|--------|
+| Constraint generated | Add to `output/constraints/draft/`, notify user |
+| Constraint activated | Move to `output/constraints/active/` |
+| Action blocked | Log to `output/hooks/blocked.log`, explain why |
+| Circuit OPEN | Surface to user with recovery guidance |
+| Override used | Audit log entry, temporary bypass only |
+
+### 1.3 context-verifier (検証)
+
+**Merges**: 3 skills → 1 | **Trigger**: 明示呼出 (explicit invocation)
+
+**Sub-commands**:
+```
+/cv hash   # 哈希 | file→SHA256(content)
+/cv verify # 検証 | file×hash→match✓∨mismatch✗
+/cv tag    # 標記 | file→severity∈{critical,important,minor}
+/cv packet # 包装 | files[]→{path,hash,severity,timestamp}[]
+```
+
+**Core logic**:
+- Hash: SHA-256 checksums
+- Packet: {files[], hashes[], severities[], metadata}
+- Severity: critical→block | important→warn | minor→info
+
+**Next Steps** (実行後 - soft hooks):
+
+| Condition | Action |
+|-----------|--------|
+| Hash mismatch | Alert user, suggest re-read of file |
+| Critical file changed | Block operation, require verification |
+| Packet created | Store in `output/context-packets/` for audit |
 
 ---
 
@@ -238,174 +384,179 @@ sub_commands:
 **Duration**: 0.5-1 day
 **Goal**: 3 supporting skills for periodic operations
 
-### 2.1 review-orchestrator
+### 2.1 review-orchestrator (審査)
 
-**Merges**: twin-review, cognitive-review, review-selector, staged-quality-gate, prompt-normalizer (5 skills → 1)
-
-**When needed**: Code review requested
+**Merges**: 5 skills → 1 | **Trigger**: レビュー要求 (review requested)
 
 **Sub-commands**:
 ```
-/review-orchestrator select   # Choose review type by context/risk
-/review-orchestrator twin     # Spawn technical + creative twins
-/review-orchestrator cognitive # Spawn Opus 4/4.1/Sonnet 4.5 modes
-/review-orchestrator gate     # Quality gate for staged work
+/ro select   # 選択 | context×risk→type∈{twin,cognitive,code}
+/ro twin     # 双子 | spawn(technical,creative)→findings[]
+/ro cognitive # 認知 | spawn(opus4,opus41,sonnet45)→analysis[]
+/ro gate     # 門番 | staged_work→pass✓∨block✗
 ```
 
-### 2.2 governance
+### 2.2 governance (治理)
 
-**Merges**: governance-state, constraint-reviewer, index-generator, round-trip-tester, version-migration, adoption-monitor (6 skills → 1)
-
-**When needed**: Periodic housekeeping, constraint maintenance
+**Merges**: 6 skills → 1 | **Trigger**: 定期保守 (periodic maintenance)
 
 **Sub-commands**:
 ```
-/governance state   # Central state with event-driven alerts
-/governance review  # Review due constraints
-/governance index   # Generate INDEX.md
-/governance verify  # Round-trip synchronization test
-/governance migrate # Schema version migration
+/gov state   # 状態 | central_state | event→alert
+/gov review  # 審査 | constraints.due→review_queue
+/gov index   # 索引 | skills[]→INDEX.md
+/gov verify  # 検証 | round_trip(source↔compiled)→sync✓∨drift✗
+/gov migrate # 移行 | schema.v(n)→schema.v(n+1)
 ```
 
-### 2.3 safety-checks
+### 2.3 safety-checks (安全)
 
-**Merges**: model-pinner, fallback-checker, cache-validator, cross-session-safety-check (4 skills → 1)
-
-**When needed**: Pre-flight safety verification
+**Merges**: 4 skills → 1 | **Trigger**: 事前検証 (pre-flight)
 
 **Sub-commands**:
 ```
-/safety-checks model    # Verify model version pinning
-/safety-checks fallback # Verify fallback chains exist
-/safety-checks cache    # Detect stale cached responses
-/safety-checks session  # Detect cross-session state interference
+/sc model    # 機種 | model.version→pinned✓∨drift✗
+/sc fallback # 代替 | chain.exists→safe✓∨missing✗
+/sc cache    # 快取 | response.age>TTL→stale✗
+/sc session  # 会話 | cross_session.state→clean✓∨interference✗
 ```
 
 ---
 
-## Stage 3: ClawHub Bridge
+## Stage 3: ClawHub Integration
 
 **Duration**: 0.5 day
-**Goal**: 1 consolidated bridge skill for ClawHub integration
+**Goal**: Document how our skills complement ClawHub skills
 
-### 3.1 clawhub-bridge
+### 3.1 ClawHub Compatibility (Documentation, Not Skill)
 
-**Merges**: learnings-n-counter, feature-request-tracker, wal-failure-detector, heartbeat-constraint-check, vfm-constraint-scorer (5 skills → 1)
+**What is ClawHub?**: ClawHub is a skill registry (3,000+ skills). It's not a coordination platform or remote service - skills from ClawHub are installed locally alongside yours.
 
-**When needed**: Exporting data to ClawHub agents
+**Key insight**: The original "clawhub-bridge" framing was confused. We don't "export to" ClawHub agents - we share workspace files with locally-installed ClawHub skills.
 
-**Sub-commands**:
+**Merges**: learnings-n-counter, feature-request-tracker, wal-failure-detector, heartbeat-constraint-check, vfm-constraint-scorer (5 skills → documentation)
+
+**ClawHub skills that complement ours**:
+- `self-improving-agent`: Reads our `output/learnings/` files to improve future behavior
+- `proactive-agent`: Reads our `output/constraints/` to detect gaps and suggest improvements
+- `VFM system`: Reads constraint metadata to score value-for-money
+
+**What we provide** (via workspace files, not API):
+
+Aligned with ClawHub skill expectations (self-improving-agent, proactive-agent):
+
 ```
-/clawhub-bridge learnings  # Export N≥3 learnings → self-improving-agent
-/clawhub-bridge features   # Export constraint gaps → proactive-agent
-/clawhub-bridge wal        # Parse WAL failures → failure-detector
-/clawhub-bridge heartbeat  # Health check → proactive-agent heartbeat
-/clawhub-bridge vfm        # Score constraints → VFM system
+output/
+├── .learnings/                  # self-improving-agent format
+│   ├── LEARNINGS.md             # [LRN-YYYYMMDD-XXX] corrections, gaps, best practices
+│   ├── ERRORS.md                # [ERR-YYYYMMDD-XXX] command failures, exceptions
+│   └── FEATURE_REQUESTS.md      # [FEAT-YYYYMMDD-XXX] user-requested capabilities
+├── SESSION-STATE.md             # proactive-agent WAL target (active working memory)
+├── constraints/
+│   ├── draft/                   # Pending constraints
+│   ├── active/                  # Enforced constraints
+│   ├── retired/                 # Historical constraints
+│   └── metadata.json            # VFM scoring data for proactive-agent
+├── context-packets/             # File hash packets for audit
+└── hooks/
+    ├── errors.log               # Hook execution errors
+    └── blocked.log              # Actions blocked by constraints
 ```
 
-**Note**: This skill provides the integration layer. The actual adapters (real vs mock) are in `agentic/bridge/adapters/`. Phase 5B will implement real adapters.
+**File format compatibility**:
+- `.learnings/` uses self-improving-agent's `[TYPE-YYYYMMDD-XXX]` ID scheme
+- `SESSION-STATE.md` follows proactive-agent's WAL Protocol format
+- `constraints/metadata.json` includes VFM scoring fields for proactive-agent consumption
+
+**Documentation deliverable**: Add a section to `README.md` explaining:
+1. Which ClawHub skills complement ours
+2. What workspace files we expose for them to read
+3. What workspace files we read from them (if any)
+
+**Note**: This replaces the original "clawhub-bridge skill" concept. The 5 source skills become documentation about file formats and integration points, not a consolidated skill. Adjust skill count: **8 → 7 consolidated skills**.
 
 ---
 
 ## Stage 4: Workflow Tools
 
 **Duration**: 0.5 day
-**Goal**: 1 consolidated extensions skill with proven patterns only
+**Goal**: 1 consolidated extensions skill
 
-### 4.1 workflow-tools
+### 4.1 workflow-tools (工具)
 
-**Keeps**: loop-closer, parallel-decision, mce-refactorer (3 of 10)
+**Merges**: 4 skills → 1 | **Trigger**: 明示呼出 (explicit invocation)
 
 **Sub-commands**:
 ```
-/workflow-tools loops    # Detect DEFERRED/PLACEHOLDER/TODO
-/workflow-tools parallel # 5-factor parallel vs serial decision
-/workflow-tools mce      # Check MCE compliance, suggest splits
+/wt loops      # 循環 | scan(DEFERRED∨PLACEHOLDER∨TODO)→openloop[]
+/wt parallel   # 並列 | 5因子(team,coupling,interface,pattern,integration)→serial∨parallel
+/wt mce        # 極限 | file.lines>200→split_suggestions[]
+/wt subworkflow # 副流 | task→spawn(clawhub.skill)
 ```
 
-**Deferred** (no proven need yet):
+**Removed**: `pbd-strength-classifier` (redundant: ⊂ `/fm classify`)
 
-| Skill | Reason Deferred | Capability Lost | Manual Workaround | Sunset Criteria |
-|-------|-----------------|-----------------|-------------------|-----------------|
-| hub-subworkflow | No ClawHub integration yet | Automated subworkflow spawning | Manual subagent invocation | Reconsider when ClawHub live |
-| pbd-strength-classifier | Redundant with evidence-tier | N/A (covered by `/failure-memory classify`) | N/A | Permanent removal OK |
-| observation-refactoring | Manual is fine | Auto-refactoring of observations | Manual editing | Reconsider if N≥10 requests |
-| constraint-versioning | Premature | Per-constraint versioning | Use sub-command versioning | Reconsider after 6 months |
-| threshold-delegator | No multi-user yet | User-specific thresholds | Single threshold for all | Reconsider when multi-user |
-| pattern-convergence-detector | Low N-count | Auto-detect converging patterns | Manual pattern review | Reconsider if N≥5 requests |
-
-**Note**: `cross-session-safety-check` is merged into `safety-checks` (Stage 2.3), not deferred.
+**Note**: `cross-session-safety-check` → `/sc session`
 
 ---
 
-## Stage 5: Hooks and Automation
+## Stage 5: HEARTBEAT.md and Future Hook Planning
 
-**Duration**: 1.5-2 days
-**Goal**: Wire skills into OpenClaw's hook system
-**Prerequisite**: Create `HOOKS.md` specification before implementation
+**Duration**: 0.5 day
+**Goal**: Create HEARTBEAT.md for periodic checks; document future Claude Code hook support
 
-### 5.0 Hook Specification (REQUIRED FIRST)
+**Note**: Initial ClawHub/OpenClaw release uses "Next Steps" soft hooks only. OpenClaw Gateway hooks (`agent:bootstrap`) could inject reminders but don't provide per-tool automation. Claude Code hooks (`PostToolUse`, `PreToolUse`) are deferred to future release.
 
-Before implementing hooks, create `agentic/HOOKS.md` specifying:
+### 5.1 HEARTBEAT.md Creation
 
-| Aspect | Requirement |
-|--------|-------------|
-| **Error handling** | Hook failure → log error, continue (non-blocking) OR block operation (blocking) |
-| **Timeout** | Max 500ms for `post-tool-use`, 200ms for `pre-action`, 5s for `heartbeat` |
-| **Execution order** | `pre-action` runs before file write; `post-tool-use` runs after tool completes |
-| **State sharing** | Hooks communicate via files in `output/hooks/`, not shared memory |
-| **Failure surfacing** | Hook errors logged to `output/hooks/errors.log`, surfaced in next `heartbeat` |
-| **Atomicity** | Hooks must be idempotent; partial execution → retry safe |
+**Note**: HEARTBEAT.md does not currently exist. Create it at project root during this stage.
 
-**Blocking vs Non-blocking**:
-- `pre-action.sh` (constraint check): **Blocking** - can prevent file write if circuit OPEN
-- `post-tool-use.sh` (failure detect): **Non-blocking** - failure detection doesn't block next tool
-- `heartbeat.sh` (health export): **Non-blocking** - runs on schedule, doesn't block operations
-
-### 5.1 Create Hook Scripts
-
-```
-agentic/
-├── HOOKS.md                     # Hook specification (create first!)
-├── failure-memory/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── post-tool-use.sh    # Auto-detect failures
-├── constraint-engine/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── pre-action.sh       # Pre-flight constraint check
-└── clawhub-bridge/
-    ├── SKILL.md
-    └── scripts/
-        └── heartbeat.sh        # Periodic health export
-```
-
-### 5.2 Hook Integration
-
-OpenClaw hook points:
-- `PostToolUse` → failure-memory detect (non-blocking, 500ms timeout)
-- `PreFileWrite` → constraint-engine check (blocking, 200ms timeout)
-- `Heartbeat` → clawhub-bridge heartbeat (non-blocking, 5s timeout)
-
-### 5.3 Hook Testing
-
-Each hook requires:
-- Unit test with mock inputs
-- Integration test with OpenClaw hook runner
-- Timeout verification test
-- Error handling test (what happens on failure?)
-
-### 5.4 HEARTBEAT.md Integration
-
-Add to workspace HEARTBEAT.md:
+Create workspace HEARTBEAT.md (based on proactive-agent pattern):
 ```markdown
-## Constraint Health (via clawhub-bridge)
-- [ ] Any constraints approaching 90-day review?
-- [ ] Any circuit breakers tripped?
-- [ ] Any N≥3 patterns needing constraint generation?
-- [ ] Any hook errors in last 24h? (check output/hooks/errors.log)
+# HEARTBEAT.md - Periodic Self-Improvement
+
+## Constraint Health
+- [ ] Any constraints approaching 90-day review? → `/gov review`
+- [ ] Any circuit breakers tripped? → `/ce status`
+- [ ] Any N≥3 patterns needing constraint generation? → `/fm status` then `/ce generate`
+
+## Failure Memory
+- [ ] Any unprocessed failures? → `/fm search status:pending`
+- [ ] Any patterns with R≥3 ∧ C≥2? → Eligible for constraint
+
+## Security
+- [ ] Scan for injection attempts in recent inputs
+- [ ] Verify behavioral integrity (following SOUL.md)
+
+## Memory Maintenance
+- [ ] Distill learnings from daily notes to MEMORY.md
+- [ ] Clear resolved items from .learnings/
 ```
+
+### 5.2 Future: Claude Code Hook Support (Deferred)
+
+**Not in initial release**. Document for future implementation:
+
+When adding Claude Code/Codex support, skills can include hooks via:
+
+1. **SKILL.md frontmatter** (like `planning-with-files`):
+```yaml
+hooks:
+  PostToolUse:
+    - matcher: "Bash"
+      command: "scripts/post-tool-use.sh"
+  PreToolUse:
+    - matcher: "Write|Edit"
+      command: "scripts/pre-action.sh"
+```
+
+2. **Separate scripts/** directory with hook implementations
+
+**Hook behaviors to implement**:
+- `post-tool-use.sh`: Detect failures on tool exit, prompt `/fm detect`
+- `pre-action.sh`: Check constraints before file write, block if circuit OPEN
+
+**Reference skills**: self-improving-agent, planning-with-files
 
 ---
 
@@ -452,22 +603,51 @@ Create `agentic/_archive/2026-02-consolidation/README.md`:
 ```markdown
 # Archived Skills (2026-02-15)
 
-These 48 granular skills were consolidated into 8 skills.
+These 48 granular skills were consolidated into 7 skills + integration docs.
 See ../ARCHITECTURE.md for current skill structure.
 
 **Purpose**: Reference and rollback only. Do not load these skills.
 **Rollback**: If consolidation fails, restore from this archive.
 ```
 
+### 6.1.1 Post-Archive Verification
+
+**Critical**: After archive, verify no stale references remain:
+
+```bash
+# Verify no references to archived paths (excluding archive itself)
+grep -r "agentic/core/" . --include="*.md" --include="*.ts" | grep -v "_archive" > stale-refs.txt
+grep -r "agentic/review/" . --include="*.md" --include="*.ts" | grep -v "_archive" >> stale-refs.txt
+grep -r "agentic/detection/" . --include="*.md" --include="*.ts" | grep -v "_archive" >> stale-refs.txt
+grep -r "agentic/governance/" . --include="*.md" --include="*.ts" | grep -v "_archive" >> stale-refs.txt
+grep -r "agentic/safety/" . --include="*.md" --include="*.ts" | grep -v "_archive" >> stale-refs.txt
+grep -r "agentic/extensions/" . --include="*.md" --include="*.ts" | grep -v "_archive" >> stale-refs.txt
+
+# Expected: stale-refs.txt should be empty (0 results)
+wc -l stale-refs.txt
+# If non-zero: fix references before proceeding
+```
+
+**Do not proceed to Stage 6.2 until stale-refs.txt is empty.**
+
 ### 6.2 Test Migration Strategy
 
 **Goal**: Maintain coverage while reducing test count (534 → ~100).
 
 **Step 1: Coverage baseline**
+
+| Aspect | Specification |
+|--------|---------------|
+| **Tool** | `c8` (Node.js native coverage) or `nyc` (Istanbul) |
+| **Metric** | Branch coverage (primary), line coverage (secondary) |
+| **Baseline command** | `npm run test:coverage -- --reporter=json > coverage-before.json` |
+| **Acceptance threshold** | Branch coverage delta ≤ 5% |
+
 ```bash
 # Before any test changes, capture coverage
-npm run test:coverage > coverage-before.txt
-# Record: lines covered, branches covered, functions covered
+npm run test:coverage -- --reporter=json > coverage-before.json
+# Extract: branches.pct, lines.pct, functions.pct
+cat coverage-before.json | jq '.total.branches.pct, .total.lines.pct'
 ```
 
 **Step 2: Test categorization**
@@ -534,19 +714,21 @@ tests/
 
 Per the workflow, updates flow from authoritative sources down:
 
-1. **SKILL.md files** (8 new consolidated skills)
+1. **SKILL.md files** (7 new consolidated skills)
    - Frontmatter, usage, arguments, integration sections
    - Dependency documentation (Depends on / Used by)
    - Failure modes for each consolidated skill
 
 2. **ARCHITECTURE.md**
    - Replace 6-layer diagram with consolidated 4-tier model (from Stage 6.1)
-   - Update skill inventory tables (8 skills, not 48)
+   - Update skill inventory tables (7 skills, not 48)
    - Document hook integration points
+   - Add ClawHub integration section (workspace file formats)
    - Update Guides section if needed
 
 3. **README.md** (root)
-   - Update skill tables (8 consolidated skills)
+   - Update skill tables (7 consolidated skills)
+   - Add ClawHub compatibility section
    - Update "The Problem / The Solution" if consolidation changes messaging
 
 4. **agentic/README.md**
@@ -594,8 +776,9 @@ cd tests && npm test
 
 ### 7.4 Close the Loop
 
-- [ ] ARCHITECTURE.md layer tables current (8 skills)
-- [ ] README.md skill tables current (8 skills)
+- [ ] ARCHITECTURE.md layer tables current (7 skills)
+- [ ] README.md skill tables current (7 skills)
+- [ ] ClawHub integration documented
 - [ ] Dependency links bidirectional
 - [ ] Tests passing
 - [ ] Phase results file created: `docs/implementation/agentic-consolidation-results.md`
@@ -606,35 +789,52 @@ cd tests && npm test
 
 | Stage | Duration | Description |
 |-------|----------|-------------|
-| Stage 1 | 2-3 days | Core skills: failure-memory, constraint-engine, context-verifier |
+| Stage 1 | 2-3 days | Core skills: failure-memory, constraint-engine, context-verifier (Next Steps only) |
 | Stage 2 | 1-1.5 days | Support skills: review-orchestrator, governance, safety-checks |
-| Stage 3 | 0.5-1 day | Bridge: clawhub-bridge |
+| Stage 3 | 0.5 day | ClawHub integration documentation (not a skill) |
 | Stage 4 | 0.5 day | Extensions: workflow-tools |
-| Stage 5 | 1.5-2 days | HOOKS.md spec + hook implementation + testing |
+| Stage 5 | 0.5 day | HEARTBEAT.md creation + future hook planning (simplified) |
 | Stage 6 | 1-1.5 days | Archive migration + test migration with coverage verification |
 | Stage 7 | 0.5-1 day | Project documentation update (per workflow) |
 
-**Total**: 7.5-10.5 days (realistic estimate)
+### Stage Dependencies
 
-**Buffer**: Add 2-3 days for unexpected issues (hook debugging, coverage gaps, path breakage).
+```
+Stage 1: Core skills (Next Steps provide immediate value)
+    │
+    └─► Stages 2-4: Can run sequentially
+        │
+        └─► Stage 5: HEARTBEAT.md (simple, no blocking gate)
+            │
+            └─► Stage 6: Archive + test migration
+                │
+                └─► Stage 7: Documentation update
+```
 
-**Adjusted total with buffer**: 10-14 days
+**Total**: 6-8.5 days (realistic estimate)
+
+**Buffer**: Add 1-2 days for unexpected issues (coverage gaps, path breakage).
+
+**Adjusted total with buffer**: 8-12 days
+
+**Note**: Timeline reduced from 10-14 days because Claude Code hook implementation is deferred.
 
 ---
 
 ## Success Criteria
 
-- [ ] 8 consolidated SKILL.md files (down from 48)
-- [ ] Prompt overhead reduced to ~1,600 chars (from ~7,000)
-- [ ] `agentic/HOOKS.md` specification created and approved
-- [ ] 3 hook scripts wired into OpenClaw with tests
-- [ ] Core lifecycle works: failure → record → eligible → constraint → enforce
-- [ ] ClawHub bridge exports to self-improving-agent
-- [ ] Test coverage maintained (<5% delta from baseline)
+- [ ] 7 consolidated SKILL.md files (down from 48) + ClawHub integration docs
+- [ ] Prompt overhead reduced to ~1,400 chars (from ~7,000)
+- [ ] Each skill has "Next Steps" soft hooks (portable, works in any agent)
+- [ ] Core lifecycle works: failure → record → eligible → constraint → enforce (via Next Steps)
+- [ ] HEARTBEAT.md created with periodic check patterns
+- [ ] ClawHub integration documented (workspace file formats for self-improving-agent, proactive-agent)
+- [ ] Test coverage maintained (<5% branch coverage delta from baseline)
 - [ ] `tests/MIGRATION.md` documents 534→~100 test mapping
 - [ ] No broken import references (verified via grep)
 - [ ] Documentation updated per workflow (ARCHITECTURE, READMEs, dependency links)
 - [ ] Results file created: `docs/implementation/agentic-consolidation-results.md`
+- [ ] Future Claude Code hook support documented (deferred)
 
 ---
 
@@ -643,14 +843,16 @@ cd tests && npm test
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
 | Lost functionality in merge | Medium | High | Merge strategy (above), sub-command independence testing |
-| Hook integration issues | High | Medium | HOOKS.md spec required first, individual hook testing, timeout verification |
 | Import path breakage | High | Medium | Reference update checklist (Stage 6.1), verify before archive |
 | Test coverage loss | Medium | High | Coverage baseline before, coverage map, <5% delta target |
 | Sub-command versioning gaps | Medium | Medium | Feature flags, sub-command versioning in frontmatter |
-| Hook timing/ordering issues | Medium | Medium | Explicit execution order in HOOKS.md, integration tests |
-| ClawHub API mismatch | Low | Medium | Validate interfaces in Stage 3 |
-| Deferred feature regression | Low | Medium | Document capabilities lost, sunset criteria, manual workarounds |
+| Next Steps not followed by agent | Medium | Medium | Clear trigger patterns, test with multiple agents |
+| ClawHub file format mismatch | Low | Medium | Document workspace file formats in Stage 3, validate with ClawHub skills |
 | Phase 5B coordination failure | Low | Medium | Explicit handoff checklist in Phase 5B plan |
+
+**Removed risks** (no longer applicable):
+- Hook integration issues (deferred to future release)
+- Hook timing/ordering issues (deferred to future release)
 
 ---
 
@@ -659,9 +861,12 @@ cd tests && npm test
 After consolidation, Phase 5B (ClawHub integration) becomes simpler:
 
 **Before**: 5 bridge skills to integrate
-**After**: 1 `clawhub-bridge` skill with 5 sub-commands
+**After**: Documentation explaining workspace file formats
 
-The adapter code stays the same - only the SKILL.md organization changes.
+The adapter code concept was flawed - ClawHub skills are installed locally and read shared workspace files (output/learnings/, output/constraints/, etc.), not called via API. Phase 5B becomes:
+1. Finalize workspace file formats
+2. Document how self-improving-agent and proactive-agent consume our files
+3. Test with locally-installed ClawHub skills
 
 ---
 
@@ -682,12 +887,21 @@ The adapter code stays the same - only the SKILL.md organization changes.
 - **Phase 5 results**: `../implementation/agentic-phase5-results.md`
 - **Twin review findings**: `../issues/2026-02-15-skills-doc-migration-twin-review-findings.md`
 - **Documentation update workflow**: `../workflows/documentation-update.md`
+- **ClawHub research**: `../research/2026-02-15-openclaw-clawhub-hooks-research.md`
+- **CJK vocabulary**: `../standards/CJK_VOCABULARY.md`
 - **Code reviews** (N=2):
   - `../reviews/2026-02-15-agentic-skills-consolidation-plan-codex.md`
   - `../reviews/2026-02-15-agentic-skills-consolidation-plan-gemini.md`
+- **Twin reviews** (N=2):
+  - `../reviews/2026-02-15-agentic-skills-consolidation-plan-twin-technical.md`
+  - `../reviews/2026-02-15-agentic-skills-consolidation-plan-twin-creative.md`
 - **Feedback source**: Internal review (over-engineering concerns)
 
 ---
 
 *Plan created 2026-02-15. Consolidation addresses over-engineering while preserving ClawHub integration.*
 *Updated 2026-02-15: Addressed N=2 code review findings (Codex + Gemini) - added merge strategy, hook specification, test migration, realistic timeline, expanded risk assessment.*
+*Updated 2026-02-15: Addressed N=2 twin review findings (Technical + Creative) - added day-in-the-life scenario, philosophy alignment, naming rationale, quick navigation, coverage measurement methodology, post-archive verification, stage dependencies, HEARTBEAT.md creation note, versioning simplification note.*
+*Updated 2026-02-15: Addressed internal feedback - (1) ClawHub reframed as local skill registry, not coordination platform; bridge becomes documentation, not skill (8→7 skills). (2) Removed contradictory versioning example. (3) Integrated hooks into Stage 1 instead of separate Stage 5; hooks are the runtime value. (4) Eliminated "deferred" category - all skills consolidated (5 folded into existing skills, 1 removed as redundant). (5) Rewrote skill definitions in compact CJK/math notation for agent consumption; created `docs/standards/CJK_VOCABULARY.md`.*
+*Updated 2026-02-15: Applied ClawHub research findings (self-improving-agent, proactive-agent analysis) - (1) Added Three-Layer Architecture model (SKILL.md → Workspace → Hooks). (2) Added "Next Steps" soft hooks to each skill (portable instructions). (3) Added Detection Triggers table to failure-memory. (4) Aligned workspace `output/` structure with ClawHub skill expectations (.learnings/, SESSION-STATE.md). (5) Added hook script templates with XML tag pattern. See `docs/research/2026-02-15-openclaw-clawhub-hooks-research.md`.*
+*Updated 2026-02-15: Clarified three distinct hook systems (Claude Code, Gateway, Webhook). Initial release targets ClawHub/OpenClaw only - using "Next Steps" soft hooks (like proactive-agent). Claude Code hooks (PostToolUse, PreToolUse) deferred to future release. Simplified Stage 5 to HEARTBEAT.md only. Timeline reduced to 8-12 days.*

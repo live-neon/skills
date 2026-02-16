@@ -233,6 +233,7 @@ clawhub search essence
 - **CONTRIBUTING.md**: Contribution guidelines, DCO sign-off
 - **SECURITY.md**: Vulnerability reporting
 - **.env.example**: ClawHub token template (for optional publishing)
+- **[CJK Vocabulary](../standards/CJK_VOCABULARY.md)**: Skill aliases, sub-commands, math notation (agent-facing)
 
 ---
 

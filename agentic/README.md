@@ -110,6 +110,7 @@ These skills integrate with existing ClawHub skills:
 - **Phase 1 Results**: See `docs/implementation/agentic-phase1-results.md` for implementation status
 - **Specification**: See `[multiverse]/docs/proposals/2026-02-13-agentic-skills-specification.md`
 - **Guides**: See `[multiverse]/artifacts/guides/workflows/AGENTIC_CODING_SYSTEM_*.md`
+- **CJK Vocabulary**: See `docs/standards/CJK_VOCABULARY.md` for skill aliases and math notation
 
 ## Testing
 

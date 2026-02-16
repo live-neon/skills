@@ -774,6 +774,7 @@ Technical guides for skill implementation:
 | Guide | Purpose |
 |-------|---------|
 | [Semantic Similarity](docs/guides/SEMANTIC_SIMILARITY_GUIDE.md) | LLM-based action classification (REQUIRED for safety-critical skills) |
+| [CJK Vocabulary](docs/standards/CJK_VOCABULARY.md) | Skill aliases, sub-commands, math notation (agent-facing) |
 
 **Two-Stage Matching** (default pattern for balancing accuracy and performance):
 1. **Stage 1**: Embedding similarity (<50ms) - fast filter, high recall
