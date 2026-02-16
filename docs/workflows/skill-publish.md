@@ -14,6 +14,8 @@
 - [Update an Existing Skill](#update-an-existing-skill)
 - [Version Bump](#version-bump)
 - [Pre-Publish Checklist](#pre-publish-checklist)
+- [Security Scan Compliance](#security-scan-compliance) - **Required for ClawHub**
+- [ClawHub Publishing](#optional-clawhub-publishing)
 
 ---
 
@@ -55,7 +57,7 @@ Use the OpenClaw format:
 ```markdown
 ---
 name: My New Skill
-description: One-line description of what this skill does.
+description: User-friendly, outcome-focused description (see creating-new-skill.md for guidance).
 homepage: https://github.com/live-neon/skills/tree/main/pbd/my-new-skill
 user-invocable: true
 emoji: ✨
@@ -185,6 +187,103 @@ git status
 
 ---
 
+## Security Scan Compliance
+
+ClawHub performs automated security scanning on published skills. Skills flagged as "Suspicious" or
+"Malicious" may be delisted. Follow these requirements to pass security scans.
+
+### Required Frontmatter Fields
+
+All skills published to ClawHub MUST include these fields:
+
+```yaml
+---
+name: skill-name
+version: 1.0.0
+description: One-line description
+author: Your Name <email@domain.com>
+homepage: https://github.com/org/repo/tree/main/path/to/skill
+repository: username/skill-name
+license: MIT
+tags: [relevant, tags]
+disable-model-invocation: true  # REQUIRED - prevents autonomous execution flags
+config_paths:                   # REQUIRED - declare all config file locations
+  - .openclaw/skill-name.yaml
+  - .claude/skill-name.yaml
+workspace_paths:                # REQUIRED - declare all output directories
+  - output/skill-output/
+---
+```
+
+### Security-Critical Fields
+
+| Field | Required | Purpose |
+|-------|----------|---------|
+| `disable-model-invocation: true` | **YES** | Prevents "autonomous execution" security flags |
+| `config_paths` | **YES** | Declares configuration file locations for transparency |
+| `workspace_paths` | **YES** | Declares output directories for transparency |
+| `homepage` (GitHub URL) | **YES** | Young/unknown domains trigger "Suspicious" flags |
+
+### Data Handling Statements
+
+If your skill handles sensitive data, include a Security Considerations section:
+
+```markdown
+## Security Considerations
+
+### Sensitive File Handling
+
+This skill [detects/reads/processes] files matching patterns like `*.env`, `*secret*`.
+Data handling:
+
+| Aspect | Behavior |
+|--------|----------|
+| LLM invocation | [None / Required for X / Optional for Y] |
+| Data storage | [None / Local only / Configurable] |
+| Trust boundary | Data processed within agent's trust boundary |
+```
+
+**Key language guidelines** (from NEON-SOUL lessons):
+- Say "agent's trust boundary" instead of "never leaves your machine"
+- Accurately describe LLM usage - don't claim "no LLM" if skill uses model features
+- Be specific about what data is stored and where
+
+### Pre-Publish Security Checklist
+
+```bash
+# 1. Check for secrets
+gitleaks detect --source pbd/skill-name -v
+
+# 2. Verify required frontmatter fields
+grep -E "^(disable-model-invocation|config_paths|workspace_paths):" pbd/skill-name/SKILL.md
+
+# 3. Check homepage uses GitHub URL (not young/unknown domains)
+grep "homepage:" pbd/skill-name/SKILL.md
+# Should be: https://github.com/live-neon/skills/tree/main/...
+
+# 4. Verify no sensitive patterns without documentation
+grep -i "secret\|credential\|password\|env" pbd/skill-name/SKILL.md
+# If found, ensure Security Considerations section exists
+```
+
+### Common Security Scan Findings
+
+| Finding | Cause | Fix |
+|---------|-------|-----|
+| "Autonomous execution" | Missing `disable-model-invocation: true` | Add field to frontmatter |
+| "Undeclared file access" | Missing `config_paths`/`workspace_paths` | Declare all paths |
+| "Suspicious domain" | Young domain in `homepage` | Use GitHub URL instead |
+| "Sensitive data handling" | Patterns like `*.env` without docs | Add Security Considerations section |
+| "Misleading claims" | Inaccurate data handling statements | Accurately describe LLM usage |
+
+### Reference
+
+For detailed security scan remediation examples, see:
+- `../neon-soul/docs/issues/2026-02-10-skillmd-llm-wording-false-positive.md` (7-phase fix journey)
+- `agentic/context-verifier/SKILL.md` (example with full security section)
+
+---
+
 ## Optional: ClawHub Publishing
 
 Skills can optionally be published to [ClawHub](https://clawhub.ai) for broader discovery.
@@ -255,13 +354,15 @@ See `scripts/publish-to-clawhub.sh` for the agentic skills batch publisher.
 
 ## Cross-References
 
+- **[creating-new-skill.md](./creating-new-skill.md)**: Complete skill creation workflow (validation, design, implementation)
 - **README.md**: Installation, available skills
 - **CONTRIBUTING.md**: Contribution guidelines, DCO sign-off
 - **SECURITY.md**: Vulnerability reporting
 - **.env.example**: ClawHub token template (for optional publishing)
 - **[CJK Vocabulary](../standards/CJK_VOCABULARY.md)**: Skill aliases, sub-commands, math notation (agent-facing)
 - **[scripts/publish-to-clawhub.sh](../../scripts/publish-to-clawhub.sh)**: Batch publisher with rate limit handling
-- **[Publication Plan](../plans/2026-02-16-agentic-clawhub-publication.md)**: Agentic skills publication tracking
+- **[Publication Plan](../plans/2026-02-16-agentic-clawhub-publication.md)**: Agentic + PBD skills publication tracking (14 skills)
+- **[NEON-SOUL Security Lessons](../../../neon-soul/docs/issues/2026-02-10-skillmd-llm-wording-false-positive.md)**: Security scan remediation case study
 
 ---
 
