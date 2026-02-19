@@ -1,6 +1,6 @@
 ---
 name: safety-checks
-version: 1.0.0
+version: 1.1.0
 description: Verify before you trust — model pinning, fallbacks, and runtime safety validation
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
@@ -14,7 +14,6 @@ disable-model-invocation: true
 config_paths:
   - .openclaw/safety-checks.yaml
   - .claude/safety-checks.yaml
-  - .claude/settings.json
 workspace_paths:
   - .openclaw/cache/
   - output/safety/
@@ -49,10 +48,10 @@ openclaw install leegitw/safety-checks
 **Standalone usage**: Model pinning and cache checks work independently.
 Full integration with constraint enforcement requires constraint-engine.
 
-**Data handling**: This skill operates within your agent's trust boundary. Safety checks
-use your agent's configured model — no external APIs or third-party services are called.
-If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
-as part of normal agent operation. Results are written to `output/safety/` in your workspace.
+**Data handling**: This skill is instruction-only and does NOT invoke AI models itself
+(`disable-model-invocation: true`). It reads configuration files and checks system state.
+No external APIs or third-party services are called. Results are written to `output/safety/`
+in your workspace. The skill only accesses paths declared in its metadata.
 
 ## What This Solves
 
@@ -170,14 +169,17 @@ Prevents use of outdated cached data:
 
 ### Cross-Session State
 
-Detects state leakage between sessions:
+Detects state leakage between sessions within the skill's workspace:
 
 | Check | Detection | Risk |
 |-------|-----------|------|
-| Global variables | `window.*`, `global.*` mutations | State pollution |
-| File locks | Stale `.lock` files | Resource contention |
-| Temp files | Orphaned `/tmp/*` files | Disk exhaustion |
-| Environment | Unexpected env vars | Configuration drift |
+| File locks | Stale `.lock` files in `.openclaw/` or `.claude/` | Resource contention |
+| Workspace temp files | Orphaned files in `output/safety/` | Disk exhaustion |
+| Skill config | Unexpected values in skill config files | Configuration drift |
+
+**Scope**: Checks are limited to the skill's declared workspace paths (`.openclaw/`, `.claude/`,
+`output/safety/`). This skill does NOT scan system-wide directories, environment variables,
+or files outside the workspace.
 
 ## Output
 
@@ -260,11 +262,10 @@ Status: ✓ CLEAN
 
 No cross-session interference detected.
 
-Checks passed:
-  ✓ No stale global state
-  ✓ No orphan file locks
-  ✓ No leaked temp files
-  ✓ Environment clean
+Checks passed (workspace only):
+  ✓ No stale file locks in .openclaw/ or .claude/
+  ✓ No orphan files in output/safety/
+  ✓ Config files valid
 ```
 
 ### /sc session output (interference)
@@ -276,19 +277,14 @@ Status: ✗ INTERFERENCE DETECTED
 Issues found:
 
 1. Stale file lock:
-   File: .openclaw/skills.lock (or .claude/skills.lock)
+   File: .openclaw/skills.lock
    Owner: PID 12345 (not running)
    Action: Remove lock with /sc session --clear-state
 
-2. Orphan temp files (3):
-   /tmp/claude-*
+2. Orphan workspace files (3):
+   output/safety/temp-*.log
    Age: > 24 hours
    Action: Remove with /sc session --clear-state
-
-3. Unexpected env var:
-   PREVIOUS_SESSION_ID=abc123
-   Risk: May affect behavior
-   Action: Clear with /sc session --clear-state
 
 Run /sc session --clear-state to remediate.
 ```
@@ -321,23 +317,25 @@ After invoking this skill:
 
 ## Workspace Files
 
-This skill reads/writes:
+This skill reads/writes only within declared paths:
 
 ```
 .openclaw/
-├── safety-checks.yaml     # Primary config (OpenClaw standard)
+├── safety-checks.yaml     # Primary config (read)
 └── cache/
-    └── staleness.log      # Cache check history
+    └── staleness.log      # Cache check history (read/write)
 
 .claude/
-└── settings.json          # Model pinning config (Claude Code compatibility)
+└── safety-checks.yaml     # Claude Code config (read)
 
 output/
 └── safety/
-    ├── model-checks.log   # Model version history
-    ├── fallback-tests.log # Fallback test results
-    └── session-state.log  # Session interference log
+    ├── model-checks.log   # Model version history (write)
+    ├── fallback-tests.log # Fallback test results (write)
+    └── session-state.log  # Session state log (write)
 ```
+
+**Note**: This skill does NOT read `.claude/settings.json` or any other tool's configuration.
 
 ## HEARTBEAT Integration
 
@@ -355,37 +353,54 @@ These checks should run periodically via HEARTBEAT:
 
 ## Examples
 
-### API Key Rotation Check
+### Model Drift Detection
 
 ```
-/sc session --check-state
-[SESSION CHECK]
-Status: ⚠ ROTATION NEEDED
+/sc model --strict
+[MODEL CHECK]
+Status: ⚠ VERSION DRIFT
 
-API Key Status:
-  ✓ STRIPE_API_KEY: Rotated 15 days ago (OK)
-  ⚠ AWS_ACCESS_KEY: Rotated 85 days ago (rotation due in 5 days)
-  ✗ SENDGRID_KEY: Rotated 95 days ago (overdue)
+Expected: anthropic-opus-4-5-20251101
+Actual:   anthropic-opus-4-5-20260101
 
-Action: Rotate overdue keys before they expire.
+Model version changed. Review CHANGELOG for behavior changes.
 ```
 
-### Dependency Vulnerability Check
+### Cache Cleanup
 
 ```
-/sc fallback --chain dependencies
-[FALLBACK CHECK]
-Status: ⚠ VULNERABILITIES DETECTED
+/sc cache --clear
+[CACHE CHECK]
+Status: ✓ CLEANED
 
-Dependency Chain:
-  ✓ Primary packages - 47 installed
-  ⚠ Known vulnerabilities - 2 found
-    - lodash@4.17.15: Prototype pollution (HIGH)
-    - axios@0.21.0: SSRF vulnerability (MEDIUM)
-  ✓ Fallback: Pinned versions available
-
-Action: Update vulnerable dependencies or document exceptions.
+Removed 14 stale entries from .openclaw/cache/
+Freed: 2.3 MB
 ```
+
+## Security Considerations
+
+**What this skill accesses:**
+- Configuration files in `.openclaw/safety-checks.yaml` and `.claude/safety-checks.yaml`
+- Cache files in `.openclaw/cache/`
+- Its own output directory `output/safety/`
+
+**What this skill does NOT access:**
+- System environment variables
+- Files outside declared workspace paths
+- Other tools' configuration (e.g., `.claude/settings.json`)
+- System directories like `/tmp`
+- Network resources or external APIs
+
+**What this skill does NOT do:**
+- Invoke AI models (instruction-only skill)
+- Send data to external services
+- Modify files outside its workspace
+- Execute arbitrary code
+
+**Data handling:**
+- All checks are read-only except for `--clear` operations on its own cache/output
+- Results are written to `output/safety/` only
+- No data leaves the local machine
 
 ## Acceptance Criteria
 
