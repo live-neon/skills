@@ -1,10 +1,10 @@
 ---
-name: governance
+name: agentic-governance
 version: 1.0.0
 description: Keep your constraints healthy — lifecycle management with automatic staleness detection
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/governance
-repository: leegitw/governance
+repository: leegitw/agentic-governance
 license: MIT
 tags: [agentic, governance, state, lifecycle, review]
 layer: governance
