@@ -67,58 +67,62 @@ clawhub publish agentic/governance --slug governance --name "Governance" --versi
 
 ---
 
-## Issue 3: Failure-Memory Flagged
+## Issue 3: Failure-Memory Flagged (v1.1.0 REPUBLISHED)
 
 **Skill**: `agentic/failure-memory`
-**Status**: Published but flagged
-**VirusTotal**: Suspicious
-**OpenClaw**: Benign (high confidence)
+**Status**: Republished v1.1.0, still flagged
+**VirusTotal**: Pending
+**OpenClaw**: Suspicious (medium confidence)
 
-**Reason for Flag**:
-- Scans tool output, user messages, CI/CD output
-- Mentions "across sessions and projects" which implies broader data access
-- Optional dependency on `leegitw/context-verifier`
+**Original Issues (FIXED in v1.1.0)**:
+- [x] "across sessions and projects" removed - FIXED
+- [x] Clarified workspace-local only - FIXED
+- [x] Security Considerations section added - FIXED
+- [x] Model invocation contradiction fixed - FIXED
 
-**Assessment**: False positive. Local failure-detection and memory tool.
+**New Issues After Republish**:
 
-**Recommendations from Scanner**:
-1. Confirm what agent data streams it will access
-2. Ensure `.learnings/` directory is acceptable
-3. Trust optional dependency before installing
+1. **Auto-detection vs disable-model-invocation conflict**: SKILL.md describes auto-detection triggers (scanning tool outputs, user messages, CI/CD) but `disable-model-invocation: true` prevents autonomous invocation
+   - Scanner asks: "confirm whether the platform or other skills will actually trigger it automatically"
+
+2. **Registry metadata mismatch**: Same as safety-checks - registry doesn't show declared paths
+
+3. **Trigger descriptions imply broader access**: Detection triggers mention "tool output", "CI/CD output", "DB migrations" which may be outside `.learnings/`
+
+**Assessment**: Need to clarify that detection triggers are MANUAL (user must invoke), not AUTO.
 
 **Action Required**:
-- [ ] Clarify data access boundaries in SKILL.md
-- [ ] Make dependency relationship clearer
-- [ ] Submit GitHub issue to ClawHub if flag persists
+- [ ] Clarify detection triggers are invoked by user, not auto-scanning
+- [ ] Remove or reword auto-detection claims that conflict with disable-model-invocation
+- [ ] File GitHub issue about registry metadata mismatch
 
 ---
 
-## Issue 4: Safety-Checks Flagged (NEEDS FIXES)
+## Issue 4: Safety-Checks Flagged (v1.1.0 REPUBLISHED)
 
 **Skill**: `agentic/safety-checks`
-**Status**: Published but flagged
-**VirusTotal**: Suspicious
+**Status**: Republished v1.1.0, still flagged
+**VirusTotal**: Pending
 **OpenClaw**: Suspicious (medium confidence)
 
-**Reason for Flag** (LEGITIMATE CONCERNS):
+**Original Issues (FIXED in v1.1.0)**:
+- [x] Model invocation contradiction - FIXED
+- [x] window.*/global.* checks removed - FIXED
+- [x] Scope narrowed to workspace only - FIXED
+- [x] Security Considerations section added - FIXED
 
-1. **Internal contradiction**: SKILL.md says it "uses your agent's configured model" but registry metadata sets `disable-model-invocation=true`
+**New Issues After Republish**:
 
-2. **Undeclared config paths**: SKILL.md lists `config_paths` that registry metadata did not declare
+1. **Registry metadata mismatch**: SKILL.md frontmatter declares `config_paths` and `workspace_paths`, but ClawHub registry says "no required config paths or workspace access"
+   - This appears to be a ClawHub parsing issue - metadata IS in SKILL.md
 
-3. **Broad instructions**: Scanning environment variables, `/tmp` files, file locks, `global/window` mutations - broader than declared
+2. **Dependency clarification needed**: Doc recommends installing other skills but registry doesn't list formal dependencies
 
-4. **Platform-specific checks**: References to `window.*` and `global.*` appear unrelated to generic safety checker
-
-**Assessment**: LEGITIMATE - Needs fixes before resubmission.
+**Assessment**: May be ClawHub registry bug. The metadata IS declared in SKILL.md frontmatter.
 
 **Action Required**:
-- [ ] **FIX**: Reconcile `disable-model-invocation` contradiction
-- [ ] **FIX**: Align declared config_paths between SKILL.md and registry
-- [ ] **FIX**: Remove or clarify `window.*`/`global.*` checks (platform-specific)
-- [ ] **FIX**: Limit scope of env var and `/tmp` scanning or document clearly
-- [ ] **FIX**: Clarify cross-session scan permissions
-- [ ] Republish after fixes
+- [ ] File GitHub issue asking ClawHub to clarify why registry doesn't show declared metadata
+- [ ] Clarify dependency relationship (optional vs required) in SKILL.md
 
 ---
 
@@ -195,26 +199,29 @@ clawhub publish agentic/constraint-engine --slug constraint-engine --name "Const
 
 ---
 
-## Priority Order (Updated 2026-02-18)
+## Priority Order (Updated 2026-02-18 Evening)
 
-### Completed Fixes
-- [x] **safety-checks** v1.1.0 - Fixed contradictions, narrowed scope
-- [x] **review-orchestrator** v1.1.0 - Fixed metadata mismatch, clarified cognitive modes
-- [x] **context-verifier** v1.1.0 - Fixed model invocation claim
-- [x] **failure-memory** v1.1.0 - Fixed cross-project claim, added Security Considerations
-- [x] **governance** - Renamed slug to `agentic-governance`
-- [x] **constraint-engine** v1.1.0 - Fixed model invocation contradiction
+### Published & Still Flagged (Need Additional Fixes)
+- **safety-checks** v1.1.0 - Registry metadata mismatch (ClawHub bug?)
+- **failure-memory** v1.1.0 - Auto-detection claims conflict with disable-model-invocation
 
 ### Pending Republish (Rate Limited)
-1. `safety-checks` v1.1.0
-2. `review-orchestrator` v1.1.0
-3. `context-verifier` v1.1.0
-4. `failure-memory` v1.1.0
-5. `agentic-governance` v1.0.0
-6. `constraint-engine` v1.1.0
+- `review-orchestrator` v1.1.0
+- `context-verifier` v1.1.0
+- `agentic-governance` v1.0.0
+- `constraint-engine` v1.1.0
 
 ### Monitoring
 - `workflow-tools` - VirusTotal scan pending (OpenClaw: Benign)
+
+### New Pattern Discovered
+ClawHub registry doesn't appear to read `config_paths` and `workspace_paths` from SKILL.md frontmatter.
+Scanner compares SKILL.md instructions against registry metadata, finds mismatch, flags as suspicious.
+
+**Possible solutions:**
+1. File GitHub issue asking how to declare paths so registry recognizes them
+2. Add explicit manifest section that registry parses
+3. Ask ClawHub team for correct metadata format
 
 ---
 
