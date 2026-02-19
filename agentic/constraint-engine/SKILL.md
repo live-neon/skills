@@ -1,6 +1,6 @@
 ---
 name: constraint-engine
-version: 1.0.0
+version: 1.1.0
 description: Learn from consequences, not instructions — generate and enforce constraints from experience
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
@@ -46,10 +46,10 @@ openclaw install leegitw/constraint-engine
 **Standalone usage**: Requires failure-memory for constraint generation from observations.
 For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
 
-**Data handling**: This skill operates within your agent's trust boundary. All constraint
-analysis uses your agent's configured model — no external APIs or third-party services are called.
-If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
-as part of normal agent operation. Results are written to `output/constraints/` in your workspace.
+**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
+It provides constraint templates and enforcement logic but does NOT invoke AI models itself.
+No external APIs or third-party services are called. Results are written to `output/constraints/`
+in your workspace. The skill only accesses paths declared in its metadata.
 
 ## What This Solves
 
@@ -328,6 +328,33 @@ output/
 └── hooks/
     └── blocked.log      # Actions blocked by constraints
 ```
+
+## Security Considerations
+
+**What this skill accesses:**
+- Configuration files in `.openclaw/constraint-engine.yaml` and `.claude/constraint-engine.yaml`
+- Observation data from failure-memory (via `.learnings/` directory)
+- Its own output directories `output/constraints/` and `output/hooks/`
+
+**What this skill does NOT access:**
+- Files outside declared workspace paths
+- System environment variables
+- Network resources or external APIs
+
+**What this skill does NOT do:**
+- Invoke AI models (instruction-only skill)
+- Send data to external services
+- Execute arbitrary code
+- Modify files outside its workspace
+
+**Dependency note:**
+This skill reads observation data from `failure-memory` skill's workspace (`.learnings/`).
+Install `leegitw/failure-memory` for full constraint generation functionality.
+Without failure-memory, constraint generation will have no observation data to process.
+
+**Audit logging:**
+Override actions are logged to `output/hooks/blocked.log` for audit purposes.
+Logs are stored locally in the workspace only.
 
 ## Acceptance Criteria
 
