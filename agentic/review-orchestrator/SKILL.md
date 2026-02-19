@@ -1,6 +1,6 @@
 ---
 name: review-orchestrator
-version: 1.0.0
+version: 1.1.0
 description: Get multiple perspectives on your work — coordinate reviews across cognitive modes
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/review-orchestrator
@@ -47,20 +47,23 @@ openclaw install leegitw/review-orchestrator
 **Standalone usage**: Review orchestration works independently for multi-perspective reviews.
 Integration with failure-memory enables automatic observation recording from review findings.
 
-**Data handling**: This skill operates within your agent's trust boundary. All review analysis
-uses your agent's configured model — no external APIs or third-party services are called.
-If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
-as part of normal agent operation. Review results are written to `docs/reviews/` in your workspace.
+**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
+It provides prompts and structures for review perspectives but does NOT invoke AI models itself.
+No external APIs or third-party services are called. Review results are written to `docs/reviews/`
+in your workspace. The skill only accesses paths declared in its metadata.
 
 ## What This Solves
 
-One perspective has blind spots. This skill coordinates multiple reviewers to catch what single-pass review misses:
+One perspective has blind spots. This skill coordinates multiple review perspectives to catch what single-pass review misses:
 
 1. **Twin review** — technical and creative perspectives for balance
-2. **Cognitive modes** — Opus analyst ("what conflicts"), Opus transformer ("how to restructure"), Sonnet operator ("how to implement")
-3. **External validators** — Codex and Gemini for cross-architecture verification
+2. **Cognitive modes** — analyzer ("what conflicts"), architect ("how to restructure"), implementer ("how to implement")
 
-**The insight**: N=2 catches more than N=1. Different reviewers see different things. Coordinate them systematically.
+**The insight**: N=2 catches more than N=1. Different perspectives see different things. Coordinate them systematically.
+
+> **Note**: "Cognitive modes" are review perspectives with different analytical focus, not
+> external API calls. Mode names (analyzer, architect, implementer) describe the review
+> approach, not specific AI models or services.
 
 ## Usage
 
@@ -379,6 +382,31 @@ docs/reviews/
 ├── [date]-[topic]-cognitive.md
 └── [date]-[topic]-gate-results.md
 ```
+
+## Security Considerations
+
+**What this skill accesses:**
+- Configuration files in `.openclaw/review-orchestrator.yaml` and `.claude/review-orchestrator.yaml`
+- Target files specified by user for review (read-only)
+- Its own output directory `docs/reviews/`
+
+**What this skill does NOT access:**
+- Files outside declared workspace paths
+- System environment variables
+- Network resources or external APIs
+- Other tools' configuration
+
+**What this skill does NOT do:**
+- Invoke AI models directly (instruction-only skill)
+- Call external services (Codex, Gemini, or any third-party API)
+- Send data to external services
+- Modify files outside its workspace (only writes to `docs/reviews/`)
+- Execute arbitrary code
+
+**Cognitive modes clarification:**
+Mode names like "analyzer", "architect", and "implementer" describe review perspectives
+(analytical approaches), NOT external AI services. The skill provides prompts and structure;
+your agent executes the review using its configured model.
 
 ## Acceptance Criteria
 
