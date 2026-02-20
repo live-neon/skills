@@ -1,9 +1,12 @@
 ---
 created: 2026-02-18
+resolved: 2026-02-20
 type: issue
-status: open
+status: resolved
 priority: high
 topic: ClawHub publishing issues for agentic skills
+related:
+  - docs/issues/2026-02-18-code-review-remediation.md
 affects:
   - agentic/governance
   - agentic/context-verifier
@@ -38,6 +41,12 @@ clawhub publish agentic/governance --slug governance --name "Governance" --versi
 - `knowledge-governance`
 - `neon-governance`
 - `mg-governance` (memory-garden)
+
+**Decision**: Use `agentic-governance` as the slug. This follows the pattern of prefixing with the skill category and clearly identifies it as part of the Neon Agentic Suite.
+
+```bash
+clawhub publish agentic/governance --slug agentic-governance --name "Agentic Governance" --version 1.2.0 --tags "agentic,governance,lifecycle,compliance,reviews,adoption"
+```
 
 ---
 
@@ -151,21 +160,28 @@ clawhub publish agentic/governance --slug governance --name "Governance" --versi
 
 ---
 
-## Issue 6: Workflow-Tools Pending
+## Issue 6: Workflow-Tools Flagged
 
 **Skill**: `agentic/workflow-tools`
-**Status**: Scan in progress
-**VirusTotal**: Pending
-**OpenClaw**: Benign (high confidence)
+**Status**: Published but flagged
+**VirusTotal**: Suspicious
+**OpenClaw**: Suspicious (medium confidence)
 
-**Notes from Pre-scan**:
-- Subworkflow feature can invoke other skills (inherits their privileges)
-- Scans directories and reads config files
-- No credentials or install spec required
+**Reason for Flag**:
 
-**Action Required**:
-- [ ] Wait for VirusTotal scan to complete
-- [ ] Address any issues that arise
+1. **Arbitrary path scanning**: `/wt loops` accepts arbitrary directory paths for dependency analysis
+2. **Subworkflow spawning**: `/wt subworkflow` can spawn other skills, inheriting their permissions
+3. **Privilege expansion concern**: Combined with other agentic skills, could expand effective privilege footprint
+
+**Assessment**: Legitimate concerns about capability scope. Documentation already updated.
+
+**Fix Applied** (v1.3.0):
+- [x] Fixed data handling statement (instruction-only language)
+- [x] Added Security Considerations section
+- [x] Updated metadata to correct `metadata.openclaw.requires.*` format
+- [x] Document path scanning scope for `/wt loops`
+- [x] Document subworkflow spawning scope
+- [x] Add provenance note
 
 ---
 
@@ -199,29 +215,266 @@ clawhub publish agentic/constraint-engine --slug constraint-engine --name "Const
 
 ---
 
+## Detailed Security Scan Results (2026-02-19)
+
+### review-orchestrator
+
+**Scan Results**: VirusTotal: Suspicious | OpenClaw: Benign (high confidence)
+
+**Assessment Summary**:
+> The skill is an instruction-only orchestration helper whose requests and metadata are consistent with its stated purpose and it does not ask for extra credentials or install arbitrary code.
+
+**Findings**:
+
+| Category | Status | Details |
+|----------|--------|---------|
+| Purpose & Capability | ✓ | Name/description match manifest and runtime instructions. Required config paths and workspace are reasonable |
+| Instruction Scope | ℹ | Explicit instruction-only with `disable-model-invocation: true`. "Spawn review agents" is orchestration pattern for host agent to follow |
+| Install Mechanism | ✓ | No install spec or binary downloads. Dependencies are other OpenClaw skills via platform |
+| Credentials | ℹ | No env vars declared. Config files could reference API keys in your environment - review before use |
+| Persistence & Privilege | ✓ | always:false, disable-model-invocation:true. Writes only to `docs/reviews/` |
+
+**Scanner Recommendations**:
+1. Inspect `.openclaw/review-orchestrator.yaml` and `.claude/review-orchestrator.yaml` - ensure no API keys or unexpected endpoints
+2. Review optional dependencies (failure-memory, context-verifier) permissions separately
+3. Verify comfort with outputs written to `docs/reviews/`
+4. Note: host agent (or other skills) must perform model calls since `disable-model-invocation=true`
+
+**Action Required**:
+- [x] Add note to SKILL.md that config files contain no credentials by design ✓ (v1.3.0)
+- [x] Document that dependencies are skill references, not code imports ✓ (v1.3.0)
+- [x] Add provenance note ✓ (v1.3.0)
+
+---
+
+### safety-checks
+
+**Scan Results**: VirusTotal: Benign | OpenClaw: Suspicious (medium confidence)
+
+**Assessment Summary**:
+> The skill's stated purpose (runtime safety checks) is plausible, but the instructions leave important gaps about how key checks (especially 'actual' model version) are performed and there's a provenance/metadata mismatch that should be clarified before installation.
+
+**Findings**:
+
+| Category | Status | Details |
+|----------|--------|---------|
+| Purpose & Capability | ! | Verifying model version requires runtime metadata access. SKILL.md disallows model invocation and doesn't declare access to agent runtime config. **Provenance mismatch**: homepage (live-neon) vs repository (leegitw) |
+| Instruction Scope | ! | Does not specify where 'Actual' model version is read from. Unclear how model pinning works in practice |
+| Install Mechanism | ℹ | Instruction-only. References dependencies that would increase footprint |
+| Credentials | ℹ | No env vars. May implicitly require access to agent runtime metadata (not declared) |
+| Persistence & Privilege | ✓ | always:false, disable-model-invocation:true |
+
+**Scanner Recommendations**:
+1. Clarify exactly where/how skill reads 'Actual' model version
+2. Reconcile repository/homepage mismatch (live-neon vs leegitw)
+3. Provide explicit list of files/commands the skill reads
+
+**Action Required**:
+- [x] **FIX**: Add clarification that model version is read from agent's reported model header ✓ (v1.4.0)
+- [x] **FIX**: Add provenance note ✓ (v1.4.0)
+- [x] Document that model pinning validates config expectations ✓ (v1.4.0)
+
+---
+
+### failure-memory
+
+**Scan Results**: VirusTotal: Benign | OpenClaw: Suspicious (medium confidence)
+
+**Assessment Summary**:
+> The skill's stated purpose (recording and searching local failure observations) is plausible, but there are inconsistencies in how it says it will be invoked, where its code/repo comes from, and how/what it will scan — so verify origin and runtime behavior before installing.
+
+**Findings**:
+
+| Category | Status | Details |
+|----------|--------|---------|
+| Purpose & Capability | ℹ | Name/description align. **Minor mismatch**: author/homepage (Live Neon) vs repository (leegitw) |
+| Instruction Scope | ! | Describes 'auto-invoke' but skill is disable-model-invocation:true. Detection implies reading tool outputs/CI/CD beyond `.learnings/` |
+| Install Mechanism | ℹ | Instruction-only. References dependency (context-verifier) |
+| Credentials | ✓ | No env vars or credentials requested |
+| Persistence & Privilege | ✓ | always:false, disable-model-invocation:true |
+
+**Scanner Recommendations**:
+1. Verify skill origin (Live Neon vs leegitw)
+2. Clarify how detection is triggered (manual commands, orchestrator, or other)
+3. Confirm what files/logs are scanned at runtime
+4. Review config files for unexpected endpoints
+
+**Already Fixed in v1.3.0**:
+- [x] Removed "auto-invoke" language - now says "user or orchestrator triggers"
+
+**Action Required**:
+- [x] **FIX**: Add provenance note ✓ (v1.4.0)
+- [x] Clarify that detection patterns describe what to look for, not autonomous scanning ✓ (v1.4.0)
+
+---
+
+### context-verifier
+
+**Scan Results**: VirusTotal: Suspicious | OpenClaw: Suspicious (high confidence)
+
+**Assessment Summary**:
+> The skill's stated purpose (file integrity verification) matches most requirements, but its SKILL.md claims restricted file access while the runtime instructions allow reading arbitrary user-specified files and optionally writing their contents to disk — an inconsistency that could lead to accidental exposure of secrets.
+
+**Findings**:
+
+| Category | Status | Details |
+|----------|--------|---------|
+| Purpose & Capability | ℹ | Name/description align. No binaries/env vars/credentials requested |
+| Instruction Scope | ! | **CONTRADICTION**: Claims "only accesses paths declared in its metadata" but accepts arbitrary user-specified files. `--include-content` writes file contents to disk |
+| Install Mechanism | ✓ | Instruction-only. Lowest install risk |
+| Credentials | ✓ | No credentials requested |
+| Persistence & Privilege | ℹ | always:false. Packets with `--include-content` retained indefinitely |
+
+**Scanner Recommendations**:
+1. Treat `--include-content` as dangerous - never use on secrets
+2. Add `output/context-packets/` to .gitignore
+3. Inspect config files before use
+4. Consider runtime-enforced allowlist for paths
+
+**Action Required**:
+- [x] **FIX**: Remove contradictory claim - added clear note that skill reads user-specified files ✓ (v1.3.0)
+- [x] **FIX**: Strengthen file access warnings in Security Considerations ✓ (v1.3.0)
+- [x] Add provenance note ✓ (v1.3.0)
+
+---
+
+### workflow-tools
+
+**Scan Results**: VirusTotal: Suspicious | OpenClaw: Suspicious (medium confidence)
+
+**Assessment Summary**:
+> The skill's stated purpose (workflow utilities and loop detection) is plausible, but `/wt loops` accepts arbitrary path arguments for directory scanning and `/wt subworkflow` can spawn other skills — capabilities that require careful review before installation.
+
+**Findings**:
+
+| Category | Status | Details |
+|----------|--------|---------|
+| Purpose & Capability | ℹ | Name/description align. **Concern**: `/wt loops` scans arbitrary user-specified directories for dependency cycles |
+| Instruction Scope | ! | `/wt subworkflow` can spawn other skills (inherits their privileges). Arbitrary path scanning capability |
+| Install Mechanism | ✓ | Instruction-only. No binaries or external downloads |
+| Credentials | ✓ | No env vars or credentials requested |
+| Persistence & Privilege | ℹ | always:false, disable-model-invocation:true. Writes to `output/workflow-analysis/` |
+
+**Scanner Recommendations**:
+1. Review what directories `/wt loops` will scan — ensure no sensitive paths
+2. Audit which skills `/wt subworkflow` can spawn and their permissions
+3. Inspect config files for unexpected endpoints
+4. Verify comfort with outputs written to `output/workflow-analysis/`
+
+**Key Concerns**:
+- `/wt loops <path>` accepts arbitrary directory paths for dependency analysis
+- `/wt subworkflow` spawns other skills, inheriting their permission scope
+- Combined with other agentic skills, could expand effective privilege footprint
+
+**Action Required**:
+- [x] Fixed data handling statement (instruction-only language) ✓ (v1.2.0)
+- [x] Added Security Considerations section ✓ (v1.2.0)
+- [x] Document path scanning scope for `/wt loops` ✓ (v1.3.0)
+- [x] Document subworkflow spawning scope ✓ (v1.3.0)
+- [x] Add provenance note ✓ (v1.3.0)
+
+---
+
+## Common Provenance Issue — RESOLVED
+
+All 4 flagged skills had the same provenance mismatch:
+- **Homepage/Author**: Live Neon (`https://github.com/live-neon/skills`)
+- **Repository**: leegitw (`leegitw/skill-name`)
+
+**Root Cause**: Skills were originally developed under `live-neon` organization but published to ClawHub under `leegitw` account.
+
+**Fix Applied**: Option 3 - Added provenance note to each SKILL.md Security Considerations section:
+> "This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
+> to ClawHub under the `leegitw` account. Both refer to the same maintainer."
+
+**Skills Updated**:
+- [x] review-orchestrator v1.3.0
+- [x] safety-checks v1.4.0
+- [x] failure-memory v1.4.0
+- [x] context-verifier v1.3.0
+- [x] workflow-tools v1.4.0
+
+---
+
 ## Priority Order (Updated 2026-02-18 Evening)
 
-### Published & Still Flagged (Need Additional Fixes)
-- **safety-checks** v1.1.0 - Registry metadata mismatch (ClawHub bug?)
-- **failure-memory** v1.1.0 - Auto-detection claims conflict with disable-model-invocation
+### ROOT CAUSE IDENTIFIED & FIXED (2026-02-18 Late Evening)
 
-### Pending Republish (Rate Limited)
-- `review-orchestrator` v1.1.0
-- `context-verifier` v1.1.0
-- `agentic-governance` v1.0.0
-- `constraint-engine` v1.1.0
+**Problem**: ClawHub registry doesn't read top-level `config_paths` and `workspace_paths` from SKILL.md frontmatter.
 
-### Monitoring
-- `workflow-tools` - VirusTotal scan pending (OpenClaw: Benign)
+**Solution**: Use `metadata.openclaw.requires.*` nested format:
 
-### New Pattern Discovered
-ClawHub registry doesn't appear to read `config_paths` and `workspace_paths` from SKILL.md frontmatter.
-Scanner compares SKILL.md instructions against registry metadata, finds mismatch, flags as suspicious.
+```yaml
+# ❌ WRONG - Registry ignores these
+config_paths:
+  - .openclaw/skill.yaml
+workspace_paths:
+  - output/skill-output/
 
-**Possible solutions:**
-1. File GitHub issue asking how to declare paths so registry recognizes them
-2. Add explicit manifest section that registry parses
-3. Ask ClawHub team for correct metadata format
+# ✅ CORRECT - Registry reads these
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/skill.yaml
+      workspace:
+        - output/skill-output/
+```
+
+### All Skills Updated (Post Security Scan Review)
+
+| Skill | Version | Fixes Applied | Status |
+|-------|---------|---------------|--------|
+| constraint-engine | 1.2.0 | metadata format | Ready to republish |
+| governance | 1.2.0 | metadata, data handling, security section | Ready to republish |
+| failure-memory | 1.4.0 | metadata, detection clarification, provenance | Ready to republish |
+| context-verifier | 1.3.0 | metadata, file access clarification, provenance | Ready to republish |
+| safety-checks | 1.4.0 | metadata, model version clarification, provenance | Ready to republish |
+| review-orchestrator | 1.3.0 | metadata, config/dependency notes, provenance | Ready to republish |
+| workflow-tools | 1.4.0 | metadata, data handling, security section, path/subworkflow scope, removed contradictory claim | Ready to republish |
+
+### Workflow Docs Updated
+
+To prevent this issue from recurring, both workflow documents were updated:
+
+**[docs/workflows/creating-new-skill.md](../workflows/creating-new-skill.md)**:
+- Updated "Runtime Dependencies (metadata.openclaw)" section with correct nested YAML format
+- Removed single-line JSON example that was incorrect
+- Updated "Agentic Skills: Additional Required Fields" to use `metadata.openclaw.requires.*`
+- Added warning that registry ignores top-level `config_paths`/`workspace_paths`
+- **Added** instruction-only data handling template (for `disable-model-invocation: true`)
+- **Added** Security Considerations templates for: file access scope, subworkflow spawning, provenance notes, config files, dependencies
+- **Added** anti-patterns: model invocation contradiction, auto-invoke language, undocumented access, provenance mismatch
+- **Added** "Before You Install" section template (HIGH success fix from research)
+- **Added** templates for: external service name confusion, implicit data access, .gitignore guidance
+- **Fixed** data handling template to not claim "only accesses declared paths" (was contradictory)
+
+**[docs/workflows/skill-publish.md](../workflows/skill-publish.md)**:
+- Updated "Required Frontmatter Fields" section with correct format
+- Added warning about registry parser behavior
+- Updated "Security-Critical Fields" table to reference `metadata.openclaw.requires.*`
+- Updated "Pre-Publish Security Checklist" to detect wrong format
+- Added "Metadata mismatch" and "Model invocation contradiction" to Common Security Scan Findings table
+- **Added** slug availability check section (before publishing)
+- **Added** "Auto-invoke language conflict", "Provenance mismatch", "Arbitrary file access", "Privilege expansion" to Common Security Scan Findings
+- **Added** "Additional Security Considerations" section with templates for all new patterns
+- **Added** "External service names", "Implicit data access" to Common Security Scan Findings
+- **Added** templates for: external service name confusion, implicit data access, .gitignore recommendation
+
+### Pending Actions
+- [x] Address code review findings → [2026-02-18-code-review-remediation.md](./2026-02-18-code-review-remediation.md) ✓ RESOLVED
+- [x] Update workflow docs with all lessons learned ✓ RESOLVED
+- [x] Twin review completed ✓ APPROVED (2026-02-20)
+- [ ] Republish all 7 skills with new versions (waiting for rate limit)
+- [ ] Verify registry shows correct metadata after republish
+
+### Code Review Findings (N=2) — RESOLVED
+
+External review by Codex + Gemini identified additional issues. All resolved in **[2026-02-18-code-review-remediation.md](./2026-02-18-code-review-remediation.md)**:
+- ✓ Data handling contradictions in governance and workflow-tools
+- ✓ Missing Security Considerations sections
+- ✓ Auto-detection language conflict in failure-memory
+- ✓ Workspace path scope mismatch in safety-checks
 
 ---
 
@@ -233,15 +486,18 @@ All flagged skills share these characteristics:
 - Mention optional dependencies
 - Cloud LLM data processing warnings (standard for all agent tools)
 
-**Meta-action**: Consider creating a template that ensures SKILL.md and registry metadata are always aligned to avoid future flags.
+**Root cause identified**: ClawHub registry only reads `metadata.openclaw.requires.*` nested blocks.
+Top-level `config_paths` and `workspace_paths` fields are **ignored by the registry parser**.
+
+**Solution applied**: All 7 skills converted to correct format. Workflow docs updated to prevent future issues.
 
 ---
 
 ## Commands Reference
 
 ```bash
-# Publish with different slug
-clawhub publish agentic/governance --slug pattern-governance --name "Pattern Governance" --version 1.0.0 --tags "governance,lifecycle,compliance,reviews,adoption"
+# Publish governance with new slug (original was taken)
+clawhub publish agentic/governance --slug agentic-governance --name "Agentic Governance" --version 1.2.0 --tags "agentic,governance,lifecycle,compliance,reviews,adoption"
 
 # Check skill status
 clawhub info leegitw/<skill-name>
@@ -370,5 +626,42 @@ d) **Reconcile contradictions**:
 
 ---
 
+## Cross-References
+
+### Related Issues
+
+- **[2026-02-18-code-review-remediation.md](./2026-02-18-code-review-remediation.md)** — Code review findings (N=2) with action items
+
+### Code Reviews
+
+- **[2026-02-18-clawhub-publishing-codex.md](../reviews/2026-02-18-clawhub-publishing-codex.md)** — Codex review
+- **[2026-02-18-clawhub-publishing-gemini.md](../reviews/2026-02-18-clawhub-publishing-gemini.md)** — Gemini review
+
+### Standards & Workflow Documentation (Updated)
+
+- **[skill-security-compliance.md](../standards/skill-security-compliance.md)** — **Authoritative** security requirements (extracted from this issue)
+- **[creating-new-skill.md](../workflows/creating-new-skill.md)** — Skill creation workflow, references skill-security-compliance.md
+- **[skill-publish.md](../workflows/skill-publish.md)** — Publishing workflow, references skill-security-compliance.md
+
+### Affected Skills
+
+- [agentic/constraint-engine/SKILL.md](../../agentic/constraint-engine/SKILL.md) — v1.2.0
+- [agentic/governance/SKILL.md](../../agentic/governance/SKILL.md) — v1.2.0
+- [agentic/failure-memory/SKILL.md](../../agentic/failure-memory/SKILL.md) — v1.4.0
+- [agentic/context-verifier/SKILL.md](../../agentic/context-verifier/SKILL.md) — v1.3.0
+- [agentic/safety-checks/SKILL.md](../../agentic/safety-checks/SKILL.md) — v1.4.0
+- [agentic/review-orchestrator/SKILL.md](../../agentic/review-orchestrator/SKILL.md) — v1.3.0
+- [agentic/workflow-tools/SKILL.md](../../agentic/workflow-tools/SKILL.md) — v1.4.0
+
+### External References
+
+- [openclaw/clawhub issues](https://github.com/openclaw/clawhub/issues) — Source of metadata format research
+- [ClawHub Registry](https://clawhub.ai) — Skill registry
+
+---
+
 *Created 2026-02-18 after publishing 6 of 7 agentic skills to ClawHub*
 *Updated with external research from openclaw/clawhub issues*
+*Updated 2026-02-18 late evening with root cause fix and workflow doc updates*
+*Updated 2026-02-19 with detailed security scan results for all flagged skills*
+*Updated 2026-02-20 with comprehensive workflow doc updates (all lessons learned)*
