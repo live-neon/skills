@@ -1,6 +1,6 @@
 ---
 name: workflow-tools
-version: 1.0.0
+version: 1.4.0
 description: Work smarter with loop detection, parallel decisions, and file size analysis
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/workflow-tools
@@ -11,14 +11,17 @@ layer: extensions
 status: active
 alias: wt
 disable-model-invocation: true
-config_paths:
-  - .openclaw/workflow-tools.yaml
-  - .claude/workflow-tools.yaml
-workspace_paths:
-  - output/loops/
-  - output/parallel-decisions/
-  - output/mce-analysis/
-  - output/subworkflows/
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/workflow-tools.yaml
+        - .claude/workflow-tools.yaml
+      workspace:
+        - output/loops/
+        - output/parallel-decisions/
+        - output/mce-analysis/
+        - output/subworkflows/
 ---
 
 # workflow-tools (工具)
@@ -53,10 +56,15 @@ openclaw install leegitw/workflow-tools
 **Standalone usage**: Loop detection, parallel decisions, and MCE analysis work independently.
 Full integration provides constraint-aware workflow recommendations.
 
-**Data handling**: This skill operates within your agent's trust boundary. All workflow
-analysis uses your agent's configured model — no external APIs or third-party services are called.
-If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
-as part of normal agent operation. Results are written to `output/` subdirectories in your workspace.
+**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
+It provides workflow utilities and analysis frameworks but does NOT invoke AI models itself.
+No external APIs or third-party services are called. Results are written to `output/` subdirectories
+in your workspace.
+
+**⚠️ File access**: This skill reads user-specified directories and files for analysis:
+- `/wt loops [path]` scans the specified directory (default: current working directory)
+- `/wt mce <file>` reads the specified file for size analysis
+The metadata declares only config and output paths. See Security Considerations for details.
 
 ## What This Solves
 
@@ -402,6 +410,53 @@ output/
         ├── status.json
         └── results.md
 ```
+
+## Security Considerations
+
+**What this skill accesses:**
+- Configuration files in `.openclaw/workflow-tools.yaml` and `.claude/workflow-tools.yaml`
+- **User-specified directories** via `/wt loops [path]` — scans for patterns (read-only)
+- **User-specified files** via `/wt mce <file>` — reads for size analysis (read-only)
+- Its own output directories (write):
+  - `output/loops/` — loop scan results
+  - `output/parallel-decisions/` — decision records
+  - `output/mce-analysis/` — file analysis results
+  - `output/subworkflows/` — subworkflow outputs
+
+**⚠️ IMPORTANT**: The metadata declares only config and output paths. However, `/wt loops` and
+`/wt mce` read **arbitrary user-specified paths** beyond the declared metadata. This is by
+design — analysis requires reading the files/directories you want to analyze.
+
+**What this skill does NOT access:**
+- System environment variables
+- Network resources or external APIs
+
+**What this skill does NOT do:**
+- Invoke AI models (instruction-only skill)
+- Send data to external services
+- Execute arbitrary code
+- Modify source files (analysis is read-only)
+
+**⚠️ Path scanning (`/wt loops`):**
+The `/wt loops` command accepts an arbitrary directory path argument. It will recursively
+scan the specified directory for loop patterns (TODO, FIXME, etc.). This is a read-only
+operation but can scan any directory you have filesystem access to. The skill does NOT
+restrict which paths can be scanned — use caution with sensitive directories. Consider
+using `--exclude` to skip sensitive paths.
+
+**Subworkflow spawning (`/wt subworkflow`):**
+The `/wt subworkflow` command spawns other ClawHub skills installed in your environment.
+- **Scope**: Can invoke any skill installed via `openclaw install`
+- **Permissions**: Spawned skills execute with their own declared permissions (not elevated)
+- **Categories**: Typically `research-*`, `generate-*`, `validate-*`, `transform-*` skills
+- **Risk**: The effective permission footprint is the union of this skill plus any spawned skills
+
+Review your installed skills (`openclaw list`) to understand the combined permission scope
+when using subworkflow spawning.
+
+**Provenance note:**
+This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
+to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 

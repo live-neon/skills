@@ -1,6 +1,6 @@
 ---
 name: safety-checks
-version: 1.1.0
+version: 1.4.0
 description: Verify before you trust — model pinning, fallbacks, and runtime safety validation
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
@@ -11,12 +11,16 @@ layer: safety
 status: active
 alias: sc
 disable-model-invocation: true
-config_paths:
-  - .openclaw/safety-checks.yaml
-  - .claude/safety-checks.yaml
-workspace_paths:
-  - .openclaw/cache/
-  - output/safety/
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/safety-checks.yaml
+        - .claude/safety-checks.yaml
+      workspace:
+        - .openclaw/
+        - .claude/
+        - output/safety/
 ---
 
 # safety-checks (安全)
@@ -121,6 +125,11 @@ Configuration is loaded from (in order of precedence):
 ### Model Version Pinning
 
 Ensures AI model version matches expected configuration.
+
+**How it works**: This skill compares the model version reported in your agent's session
+metadata (e.g., the model name in API responses or agent headers) against the expected
+version in your config file. It does NOT call the model API to check — it reads the
+version string that your agent runtime already exposes.
 
 **Model version format**: `{provider}-{model}-{version}-{date}`
 
@@ -401,6 +410,15 @@ Freed: 2.3 MB
 - All checks are read-only except for `--clear` operations on its own cache/output
 - Results are written to `output/safety/` only
 - No data leaves the local machine
+
+**Model version clarification:**
+The `/sc model` command compares the expected version in your config against the model
+version string reported by your agent runtime (e.g., in session metadata or API headers).
+It does NOT make API calls to verify the model — it reads information your agent already has.
+
+**Provenance note:**
+This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
+to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 

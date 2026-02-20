@@ -1,6 +1,6 @@
 ---
 name: constraint-engine
-version: 1.1.0
+version: 1.2.0
 description: Learn from consequences, not instructions — generate and enforce constraints from experience
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
@@ -11,12 +11,15 @@ layer: core
 status: active
 alias: ce
 disable-model-invocation: true
-config_paths:
-  - .openclaw/constraint-engine.yaml
-  - .claude/constraint-engine.yaml
-workspace_paths:
-  - output/constraints/
-  - output/hooks/
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/constraint-engine.yaml
+        - .claude/constraint-engine.yaml
+      workspace:
+        - output/constraints/
+        - output/hooks/
 ---
 
 # constraint-engine (制約)

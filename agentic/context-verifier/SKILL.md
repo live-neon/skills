@@ -1,6 +1,6 @@
 ---
 name: context-verifier
-version: 1.1.0
+version: 1.3.0
 description: Know the file you're editing is the file you think it is — verify integrity before you act
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
@@ -11,11 +11,14 @@ layer: foundation
 status: active
 alias: cv
 disable-model-invocation: true
-config_paths:
-  - .openclaw/context-verifier.yaml
-  - .claude/context-verifier.yaml
-workspace_paths:
-  - output/context-packets/
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/context-verifier.yaml
+        - .claude/context-verifier.yaml
+      workspace:
+        - output/context-packets/
 ---
 
 # context-verifier (検証)
@@ -42,7 +45,11 @@ the Neon Agentic Suite.
 **Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
 It computes file hashes and creates context packets but does NOT invoke AI models itself.
 No external APIs or third-party services are called. Results are written to `output/context-packets/`
-in your workspace. The skill only accesses paths declared in its metadata.
+in your workspace.
+
+**File access scope**: This skill reads user-specified files for hash computation. The metadata
+declares config and output paths only — the skill will read ANY file path you provide to
+`/cv hash`, `/cv verify`, or `/cv packet`. Use caution with sensitive files.
 
 ## What This Solves
 
@@ -117,14 +124,18 @@ Configuration is loaded from (in order of precedence):
 **What this skill does NOT do:**
 - Invoke AI models (instruction-only skill)
 - Call external APIs or third-party services
-- Access files outside user-specified paths
 - Send data to external services
-- Modify files (read-only except for writing packets to `output/context-packets/`)
+- Modify source files (only writes to `output/context-packets/`)
 
 **What this skill accesses:**
 - Configuration files in `.openclaw/context-verifier.yaml` and `.claude/context-verifier.yaml`
-- User-specified files for hash computation (read-only)
+- **Any user-specified files** for hash computation (read-only) — the skill reads whatever paths you provide
 - Its own output directory `output/context-packets/` (write)
+
+**⚠️ IMPORTANT**: Unlike other skills in this suite, context-verifier reads arbitrary files that
+you specify. The metadata only declares config/output paths. When you run `/cv hash myfile.go`,
+the skill reads `myfile.go` even though it's not in the metadata. This is by design — verification
+requires reading the files you want to verify.
 
 This skill handles file metadata and optionally file contents. Follow these guidelines:
 
@@ -179,6 +190,11 @@ For sensitive environments, consider:
 1. Restricting `output/` directory permissions
 2. Using encrypted filesystems
 3. Periodic cleanup of old packets
+
+### Provenance
+
+This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
+to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Core Logic
 

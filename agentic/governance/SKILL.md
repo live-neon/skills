@@ -1,6 +1,6 @@
 ---
 name: agentic-governance
-version: 1.0.0
+version: 1.2.0
 description: Keep your constraints healthy — lifecycle management with automatic staleness detection
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/governance
@@ -11,13 +11,16 @@ layer: governance
 status: active
 alias: gov
 disable-model-invocation: true
-config_paths:
-  - .openclaw/governance.yaml
-  - .claude/governance.yaml
-workspace_paths:
-  - output/governance/
-  - output/constraints/
-  - agentic/INDEX.md
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/governance.yaml
+        - .claude/governance.yaml
+      workspace:
+        - output/governance/
+        - output/constraints/
+        - agentic/INDEX.md
 ---
 
 # governance (治理)
@@ -50,10 +53,10 @@ openclaw install leegitw/governance
 **Standalone usage**: Index generation and round-trip verification work independently.
 Full governance features require constraint-engine and failure-memory integration.
 
-**Data handling**: This skill operates within your agent's trust boundary. All governance
-analysis uses your agent's configured model — no external APIs or third-party services are called.
-If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
-as part of normal agent operation. Results are written to `output/governance/` in your workspace.
+**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
+It provides governance templates and review structures but does NOT invoke AI models itself.
+No external APIs or third-party services are called. Results are written to `output/governance/`
+in your workspace. The skill only accesses paths declared in its metadata.
 
 ## What This Solves
 
@@ -370,6 +373,30 @@ output/
 agentic/
 └── INDEX.md                 # Generated skill index
 ```
+
+## Security Considerations
+
+**What this skill accesses:**
+- Configuration files in `.openclaw/governance.yaml` and `.claude/governance.yaml`
+- Constraint data from `output/constraints/` (via constraint-engine)
+- Observation data from `.learnings/` (via failure-memory)
+- Its own output directory `output/governance/`
+- Skill index file `agentic/INDEX.md`
+
+**What this skill does NOT access:**
+- Files outside declared workspace paths
+- System environment variables
+- Network resources or external APIs
+
+**What this skill does NOT do:**
+- Invoke AI models (instruction-only skill)
+- Send data to external services
+- Execute arbitrary code
+- Modify files outside its workspace
+
+**Dependency note:**
+This skill reads data from `constraint-engine` and `failure-memory` skill workspaces.
+Install the full governance stack for complete functionality.
 
 ## Acceptance Criteria
 

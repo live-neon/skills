@@ -1,6 +1,6 @@
 ---
 name: review-orchestrator
-version: 1.1.0
+version: 1.3.0
 description: Get multiple perspectives on your work — coordinate reviews across cognitive modes
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/review-orchestrator
@@ -11,11 +11,14 @@ layer: review
 status: active
 alias: ro
 disable-model-invocation: true
-config_paths:
-  - .openclaw/review-orchestrator.yaml
-  - .claude/review-orchestrator.yaml
-workspace_paths:
-  - docs/reviews/
+metadata:
+  openclaw:
+    requires:
+      config:
+        - .openclaw/review-orchestrator.yaml
+        - .claude/review-orchestrator.yaml
+      workspace:
+        - docs/reviews/
 ---
 
 # review-orchestrator (審査)
@@ -407,6 +410,20 @@ docs/reviews/
 Mode names like "analyzer", "architect", and "implementer" describe review perspectives
 (analytical approaches), NOT external AI services. The skill provides prompts and structure;
 your agent executes the review using its configured model.
+
+**Configuration files:**
+The config files (`.openclaw/review-orchestrator.yaml` and `.claude/review-orchestrator.yaml`)
+contain only local behavior settings (cognitive mode definitions, quality gate thresholds).
+They do NOT contain API keys, tokens, or external service endpoints by design.
+
+**Dependency clarification:**
+References to `failure-memory` and `context-verifier` are skill-level dependencies installed
+via `openclaw install`. These are separate instruction-only skills with their own declared
+permissions — this skill does not grant them additional access or inherit their permissions.
+
+**Provenance note:**
+This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
+to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 
