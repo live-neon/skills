@@ -2,7 +2,7 @@
 status: Active
 observation_file: null
 observation_count: 1
-last_updated: 2026-02-16
+last_updated: 2026-02-20
 ---
 
 # Workflow: Documentation Update
@@ -105,7 +105,7 @@ Classify the change:
 | **New guide** | docs/guides/, ARCHITECTURE.md (guides section), README.md (guides section) |
 | **New workflow** | docs/workflows/, docs/README.md (workflows section), README.md (workflows section) |
 | **New research** | docs/research/, docs/README.md (research section), README.md (documentation table), cross-references in related workflows |
-| **Security compliance update** | creating-new-skill.md, skill-publish.md, SKILL_TEMPLATE.md, affected SKILL.md files |
+| **Security compliance update** | **skill-security-compliance.md (authoritative)**, creating-new-skill.md, skill-publish.md, SKILL_TEMPLATE.md, affected SKILL.md files |
 | **Template update** | SKILL_TEMPLATE.md, possibly existing SKILL.md files |
 | **Test infrastructure** | tests/README.md, package.json |
 | **Phase completion** | docs/implementation/, ARCHITECTURE.md (phase status) |
@@ -261,8 +261,9 @@ cd tests && npm test
 | `docs/guides/*.md` | Technical accuracy, cross-references |
 | `docs/research/*.md` | External research, cross-references to workflows and architecture |
 | `docs/workflows/*.md` | Purpose, triggers, steps, cross-references |
-| `docs/workflows/creating-new-skill.md` | Security compliance in sync with skill-publish.md |
-| `docs/workflows/skill-publish.md` | Security compliance in sync with creating-new-skill.md |
+| `docs/standards/skill-security-compliance.md` | **Authoritative** security requirements for ClawHub publication |
+| `docs/workflows/creating-new-skill.md` | References skill-security-compliance.md (not duplicating) |
+| `docs/workflows/skill-publish.md` | References skill-security-compliance.md (not duplicating) |
 | `docs/standards/CJK_VOCABULARY.md` | Skill aliases, sub-commands, math notation (agent-facing) |
 | `agentic/SKILL_TEMPLATE.md` | Layer guidance, required sections, dependency fields |
 | `agentic/README.md` | Lifecycle diagram, counters, layers |
@@ -338,14 +339,15 @@ cd tests && npm test
 
 ### 9. Security Compliance Drift
 
-**Wrong**: Updating skill-publish.md compliance section but not creating-new-skill.md
-**Right**: Both workflows must stay in sync - they share security compliance requirements
+**Wrong**: Updating security requirements in creating-new-skill.md or skill-publish.md directly
+**Right**: Update `docs/standards/skill-security-compliance.md` (authoritative source); workflows reference it
 
-**Files that must stay in sync**:
-- `docs/workflows/creating-new-skill.md` (Phase 4: Security Compliance)
-- `docs/workflows/skill-publish.md` (Security Scan Compliance section)
-- `agentic/SKILL_TEMPLATE.md` (frontmatter example)
-- `pbd/SKILL_TEMPLATE.md` (frontmatter example)
+**Architecture**:
+- `docs/standards/skill-security-compliance.md` - **Authoritative** security requirements
+- `docs/workflows/creating-new-skill.md` - References skill-security-compliance.md (Phase 4)
+- `docs/workflows/skill-publish.md` - References skill-security-compliance.md (Security Scan Compliance)
+- `agentic/SKILL_TEMPLATE.md` - Frontmatter example (must match standard)
+- `pbd/SKILL_TEMPLATE.md` - Frontmatter example (must match standard)
 
 ### 10. Letting Proposals Drift from Implementation
 
@@ -466,18 +468,22 @@ grep "docs/research/.*topic" docs/workflows/  # Cross-references in workflows
 ### Example: Adding New Security Compliance Requirement
 
 **Files updated** (in order):
-1. `docs/workflows/skill-publish.md` - Add requirement to Security Scan Compliance section
-2. `docs/workflows/creating-new-skill.md` - Add requirement to Phase 4: Security Compliance
-3. `agentic/SKILL_TEMPLATE.md` - Update frontmatter example
-4. `pbd/SKILL_TEMPLATE.md` - Update frontmatter example
-5. Affected `SKILL.md` files - Apply new requirement
+1. `docs/standards/skill-security-compliance.md` - **Authoritative source** - add requirement here first
+2. `agentic/SKILL_TEMPLATE.md` - Update frontmatter example to match
+3. `pbd/SKILL_TEMPLATE.md` - Update frontmatter example to match
+4. Affected `SKILL.md` files - Apply new requirement
+
+> **Note**: `creating-new-skill.md` and `skill-publish.md` reference the standard and typically
+> don't need updates unless the reference sections need restructuring.
 
 **Verification**:
 ```bash
-# Both workflows should mention the new requirement
-grep "NEW_REQUIREMENT" docs/workflows/skill-publish.md docs/workflows/creating-new-skill.md
+# Authoritative standard should have the new requirement
+grep "NEW_REQUIREMENT" docs/standards/skill-security-compliance.md
 # Templates should include new field
 grep "NEW_REQUIREMENT" agentic/SKILL_TEMPLATE.md pbd/SKILL_TEMPLATE.md
+# Workflows should reference the standard (not duplicate content)
+grep "skill-security-compliance.md" docs/workflows/skill-publish.md docs/workflows/creating-new-skill.md
 ```
 
 ### Example: Updating Proposals After Major Architecture Change
@@ -524,7 +530,7 @@ grep "last_aligned:" docs/proposals/2026-02-13-agentic-skills-specification.md
 | One-way dependency links | Breaks AI traversal | Update both "Depends on" and "Used by" |
 | Layer-violating dependencies | Breaks architecture | Dependencies flow upward only |
 | Missing dependency docs | AI can't discover context | Always document Integration section |
-| Security compliance drift | Inconsistent requirements | Sync creating-new-skill.md ↔ skill-publish.md |
+| Security compliance drift | Inconsistent requirements | Update skill-security-compliance.md (authoritative) |
 | Proposal drift | Spec contradicts reality | Run alignment audit after major changes |
 
 ---
@@ -568,6 +574,7 @@ After completing documentation updates, **close the loop**:
 - **[Skill Publishing](skill-publish.md)** - Publishing workflow with security compliance
 - **[Semantic Similarity Guide](../guides/SEMANTIC_SIMILARITY_GUIDE.md)** - LLM-based matching
 - **[CJK Vocabulary](../standards/CJK_VOCABULARY.md)** - Skill aliases, sub-commands, math notation
+- **[Security Compliance](../standards/skill-security-compliance.md)** - Authoritative ClawHub security requirements
 - **[SKILL_TEMPLATE.md](../../agentic/SKILL_TEMPLATE.md)** - New skill template
 - **[Phase Completion](phase-completion.md)** - Phase completion checklist
 - **[Phase 1 Results](../implementation/agentic-phase1-results.md)** - Implementation status

@@ -17,6 +17,7 @@ Documentation for the Live Neon Skills project.
 | `proposals/` | Specifications and architectural proposals |
 | `research/` | External research on hooks, learning theory, and industry patterns |
 | `reviews/` | Code review and twin review outputs |
+| `standards/` | Authoritative standards (CJK vocabulary, security compliance) |
 | `templates/` | Reusable templates (governance alerts) |
 | `workflows/` | Process documentation (skill creation, publishing, documentation updates) |
 
@@ -52,6 +53,13 @@ Documentation for the Live Neon Skills project.
 | [Documentation Update](workflows/documentation-update.md) | Process for updating docs when skills/architecture change |
 | [Phase Completion](workflows/phase-completion.md) | Phase completion checklist |
 | [Batch File Modification](workflows/batch-file-modification.md) | Bulk file changes with verification |
+
+### Standards
+
+| Standard | Purpose |
+|----------|---------|
+| [CJK Vocabulary](standards/CJK_VOCABULARY.md) | Skill aliases, sub-commands, math notation (agent-facing) |
+| [Security Compliance](standards/skill-security-compliance.md) | **Authoritative** ClawHub security requirements |
 
 ### Research
 
