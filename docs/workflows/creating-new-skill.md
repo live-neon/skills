@@ -388,164 +388,40 @@ hooks:
 
 **This phase is REQUIRED for ClawHub publication.**
 
-ClawHub uses [VirusTotal Code Insight](https://openclaw.ai/blog/virustotal-partnership) to scan all published skills.
-Skills flagged as "suspicious" receive warning labels; "malicious" skills are blocked.
+**Full reference**: See **[skill-security-compliance.md](../standards/skill-security-compliance.md)** for complete security requirements, templates, and anti-patterns.
 
-### Required Frontmatter
+### Quick Summary
 
-All skills MUST include:
+1. **Required frontmatter**: `disable-model-invocation: true`, `homepage` (GitHub URL)
 
-```yaml
----
-name: skill-name
-version: 1.0.0
-description: User-friendly, outcome-focused description
-homepage: https://github.com/live-neon/skills/tree/main/category/skill-name
-user-invocable: true
-disable-model-invocation: true  # REQUIRED - prevents autonomous execution flags
-emoji: 🎯
-tags:
-  - relevant
-  - tags
----
-```
+2. **Metadata format** - use nested `metadata.openclaw.requires.*`:
+   ```yaml
+   metadata:
+     openclaw:
+       requires:
+         config:
+           - .openclaw/skill-name.yaml
+         workspace:
+           - output/skill-output/
+   ```
+   ⚠️ Top-level `config_paths`/`workspace_paths` are **ignored by registry**
 
-**Description style** (TR-1 lesson learned):
+3. **Data handling statement** - use "instruction-only" language for `disable-model-invocation: true` skills
 
-Write descriptions that tell users **what problem you solve**, not just what features you have:
+4. **Security Considerations section** - required if skill handles sensitive patterns
 
-| Style | Example | Verdict |
-|-------|---------|---------|
-| Technical (avoid) | "Unified failure tracking, observation recording, and pattern detection" | ❌ |
-| Outcome-focused (prefer) | "Stop making the same mistakes — turn failures into patterns that prevent recurrence" | ✓ |
+5. **Pre-publish checklist** - run gitleaks, verify metadata format, check for contradictions
 
-PBD skills naturally do this well. Agentic skills should follow the same pattern.
+### Common Pitfalls
 
-### Runtime Dependencies (metadata.openclaw)
+| Pitfall | Fix |
+|---------|-----|
+| "Uses your model" + `disable-model-invocation: true` | Use "instruction-only" language |
+| "Auto-invoke" language | Use "user or orchestrator triggers" |
+| "Only accesses declared paths" + user input | Document arbitrary file access |
+| Homepage/repository owner differ | Add provenance note |
 
-If your skill requires environment variables, binaries, or config settings, declare them:
-
-```yaml
----
-# ... base fields above ...
-metadata: {"openclaw":{"requires":{"env":["API_KEY"],"bins":["curl"],"config":["feature.enabled"]},"primaryEnv":"API_KEY","emoji":"🎯"}}
----
-```
-
-**Metadata fields** (single-line JSON required):
-
-| Field | Purpose | Example |
-|-------|---------|---------|
-| `requires.env` | Environment variables needed | `["OPENAI_API_KEY"]` |
-| `requires.bins` | Binaries that must exist on PATH | `["curl", "jq"]` |
-| `requires.config` | Config keys that must be truthy | `["browser.enabled"]` |
-| `primaryEnv` | Primary API key (for UI display) | `"OPENAI_API_KEY"` |
-| `os` | Platform filter | `"darwin"`, `"linux"`, `"win32"` |
-| `install` | Auto-install specs (brew/node/go/uv) | See OpenClaw docs |
-
-**Note**: Use `{baseDir}` in skill instructions to reference the skill folder path.
-
-### Agentic Skills: Additional Required Fields
-
-```yaml
----
-# ... base fields above ...
-author: Live Neon <contact@liveneon.dev>
-repository: leegitw/skill-name
-license: MIT
-layer: [foundation|core|review|governance|safety|extensions]
-status: active
-alias: [short-alias]
-config_paths:
-  - .openclaw/skill-name.yaml
-  - .claude/skill-name.yaml
-workspace_paths:
-  - output/skill-output/
-  - .learnings/  # if applicable
----
-```
-
-### Data Handling Statement
-
-All skills MUST include a data handling statement in the Agent Identity section:
-
-```markdown
-**Data handling**: This skill operates within your agent's trust boundary. All [analysis type]
-uses your agent's configured model — no external APIs or third-party services are called.
-If your agent uses a cloud-hosted LLM (Claude, GPT, etc.), data is processed by that service
-as part of normal agent operation. [Results storage description].
-```
-
-**Key rules**:
-- Say "agent's trust boundary" NOT "never leaves your machine"
-- Accurately describe LLM usage
-- Specify where results are stored (or "does not write files")
-
-### Security Considerations Section
-
-Required if skill handles sensitive patterns:
-
-```markdown
-## Security Considerations
-
-### Sensitive File Handling
-
-This skill [detects/reads/processes] files matching patterns like `*.env`, `*secret*`.
-
-| Aspect | Behavior |
-|--------|----------|
-| Detection vs. Reading | [Detects patterns only / Reads file contents] |
-| Sensitive content in output | [Never included / Included if --flag] |
-| Storage | [None / Local workspace only] |
-
-### Warnings
-
-- **Do not** use `--include-content` with sensitive files
-- **Do** ensure `.gitignore` excludes output directories
-```
-
-### External Endpoints Table
-
-Required if skill makes network requests:
-
-```markdown
-## External Endpoints
-
-| Endpoint | Data Sent | Purpose |
-|----------|-----------|---------|
-| `api.example.com/v1/analyze` | File content (if opted in) | Analysis processing |
-| `api.example.com/v1/status` | Session ID only | Status check |
-```
-
-### VirusTotal Code Insight: What Triggers Flags
-
-[VirusTotal Code Insight](https://blog.virustotal.com/2026/02/from-automation-to-infection-how.html) flags skills for:
-
-| Behavior | Flag Level | How to Avoid |
-|----------|------------|--------------|
-| Download + execute external code | **Malicious** | Never instruct users to run downloaded binaries |
-| Base64-encoded scripts | **Suspicious** | Use plain text; document all scripts |
-| "Paste this into terminal" patterns | **Suspicious** | Use declared `requires.bins` instead |
-| Hardcoded secrets/credentials | **Suspicious** | Use `requires.env` declarations |
-| Obfuscation techniques | **Suspicious** | Write transparent, readable code |
-| Excessive permissions | **Suspicious** | Request only necessary access |
-
-### Script Security Headers (If Including Scripts)
-
-Every script in `scripts/` should have a security header:
-
-```bash
-#!/bin/bash
-# SECURITY MANIFEST
-# Accessed env vars: API_KEY, HOME
-# External endpoints: api.example.com (POST /analyze)
-# File operations: READ ~/.config/skill.yaml, WRITE output/
-# ---
-set -euo pipefail  # Exit on error, undefined vars, pipe failures
-
-# Validate required environment
-: "${API_KEY:?API_KEY environment variable required}"
-```
+**Full details**: [skill-security-compliance.md](../standards/skill-security-compliance.md)
 
 ---
 
@@ -711,6 +587,15 @@ When extending an existing skill:
 | "Paste into terminal" | Security risk pattern | Use proper `requires.bins` |
 | Undeclared dependencies | Skill fails at runtime | Use `metadata.openclaw.requires` |
 | Multi-line metadata | Parser fails | Keep metadata as single-line JSON |
+| "Uses your model" + disable-model-invocation | Contradiction flagged by scanner | Use "instruction-only skill" language |
+| "Auto-invoke" + disable-model-invocation | Implies autonomous behavior | Use "user or orchestrator triggers" |
+| Undocumented arbitrary file access | Scanner flags as undeclared access | Add explicit file access scope warning |
+| "Only accesses declared paths" + user input | Contradiction when skill reads user-specified files/dirs | Remove claim; document that skill reads arbitrary user-provided paths |
+| Undocumented skill spawning | Scanner flags privilege expansion | Document permission inheritance |
+| Provenance mismatch | Homepage/repository owner differ | Add provenance note explaining same maintainer |
+| External service name confusion | Uses "Codex", "Gemini" without clarification | Add note clarifying these are review modes, not API calls |
+| Undocumented implicit access | Reads agent runtime data not in declared paths | Document exactly where/how data is obtained |
+| Missing .gitignore guidance | Output dirs not excluded from version control | Add .gitignore recommendation for output directories |
 
 ---
 
@@ -718,11 +603,13 @@ When extending an existing skill:
 
 ### Internal
 
-- **[skill-publish.md](./skill-publish.md)**: Publishing workflow, security compliance details
+- **[skill-publish.md](./skill-publish.md)**: Publishing workflow
+- **[skill-security-compliance.md](../standards/skill-security-compliance.md)**: Security requirements (authoritative)
 - **[../plans/2026-02-16-agentic-clawhub-publication.md](../plans/2026-02-16-agentic-clawhub-publication.md)**: Publication tracking
 - **[../../agentic/README.md](../../agentic/README.md)**: Agentic suite overview
 - **[../../pbd/README.md](../../pbd/README.md)**: PBD suite overview
 - **[NEON-SOUL Security Lessons](../../../neon-soul/docs/issues/2026-02-10-skillmd-llm-wording-false-positive.md)**: Security scan remediation case study
+- **[ClawHub Publishing Issues](../issues/2026-02-18-clawhub-publishing-issues.md)**: 7-skill remediation with detailed security scan results and lessons learned
 
 ### Research (Hooks & Enforcement)
 

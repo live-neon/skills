@@ -190,97 +190,44 @@ git status
 ## Security Scan Compliance
 
 ClawHub performs automated security scanning on published skills. Skills flagged as "Suspicious" or
-"Malicious" may be delisted. Follow these requirements to pass security scans.
+"Malicious" may be delisted.
 
-### Required Frontmatter Fields
+**Full reference**: See **[skill-security-compliance.md](../standards/skill-security-compliance.md)** for complete security requirements, templates, and anti-patterns.
 
-All skills published to ClawHub MUST include these fields:
-
-```yaml
----
-name: skill-name
-version: 1.0.0
-description: One-line description
-author: Your Name <email@domain.com>
-homepage: https://github.com/org/repo/tree/main/path/to/skill
-repository: username/skill-name
-license: MIT
-tags: [relevant, tags]
-disable-model-invocation: true  # REQUIRED - prevents autonomous execution flags
-config_paths:                   # REQUIRED - declare all config file locations
-  - .openclaw/skill-name.yaml
-  - .claude/skill-name.yaml
-workspace_paths:                # REQUIRED - declare all output directories
-  - output/skill-output/
----
-```
-
-### Security-Critical Fields
-
-| Field | Required | Purpose |
-|-------|----------|---------|
-| `disable-model-invocation: true` | **YES** | Prevents "autonomous execution" security flags |
-| `config_paths` | **YES** | Declares configuration file locations for transparency |
-| `workspace_paths` | **YES** | Declares output directories for transparency |
-| `homepage` (GitHub URL) | **YES** | Young/unknown domains trigger "Suspicious" flags |
-
-### Data Handling Statements
-
-If your skill handles sensitive data, include a Security Considerations section:
-
-```markdown
-## Security Considerations
-
-### Sensitive File Handling
-
-This skill [detects/reads/processes] files matching patterns like `*.env`, `*secret*`.
-Data handling:
-
-| Aspect | Behavior |
-|--------|----------|
-| LLM invocation | [None / Required for X / Optional for Y] |
-| Data storage | [None / Local only / Configurable] |
-| Trust boundary | Data processed within agent's trust boundary |
-```
-
-**Key language guidelines** (from NEON-SOUL lessons):
-- Say "agent's trust boundary" instead of "never leaves your machine"
-- Accurately describe LLM usage - don't claim "no LLM" if skill uses model features
-- Be specific about what data is stored and where
-
-### Pre-Publish Security Checklist
+### Quick Checklist
 
 ```bash
 # 1. Check for secrets
-gitleaks detect --source pbd/skill-name -v
+gitleaks detect --source path/to/skill -v
 
-# 2. Verify required frontmatter fields
-grep -E "^(disable-model-invocation|config_paths|workspace_paths):" pbd/skill-name/SKILL.md
+# 2. Verify metadata format (CORRECT nested format)
+grep -A5 "metadata:" path/to/skill/SKILL.md | grep -E "(openclaw|requires|config|workspace):"
 
-# 3. Check homepage uses GitHub URL (not young/unknown domains)
-grep "homepage:" pbd/skill-name/SKILL.md
-# Should be: https://github.com/live-neon/skills/tree/main/...
+# 3. Check for WRONG format (registry ignores these!)
+grep -E "^config_paths:|^workspace_paths:" path/to/skill/SKILL.md
 
-# 4. Verify no sensitive patterns without documentation
-grep -i "secret\|credential\|password\|env" pbd/skill-name/SKILL.md
-# If found, ensure Security Considerations section exists
+# 4. Verify disable-model-invocation
+grep "disable-model-invocation:" path/to/skill/SKILL.md
 ```
 
-### Common Security Scan Findings
+### Common Findings & Fixes
 
-| Finding | Cause | Fix |
-|---------|-------|-----|
-| "Autonomous execution" | Missing `disable-model-invocation: true` | Add field to frontmatter |
-| "Undeclared file access" | Missing `config_paths`/`workspace_paths` | Declare all paths |
-| "Suspicious domain" | Young domain in `homepage` | Use GitHub URL instead |
-| "Sensitive data handling" | Patterns like `*.env` without docs | Add Security Considerations section |
-| "Misleading claims" | Inaccurate data handling statements | Accurately describe LLM usage |
+| Finding | Fix |
+|---------|-----|
+| "Autonomous execution" | Add `disable-model-invocation: true` |
+| "Metadata mismatch" | Use `metadata.openclaw.requires.*` (not top-level) |
+| "Model invocation contradiction" | Use "instruction-only" language |
+| "Provenance mismatch" | Add provenance note |
+| "Arbitrary file access" | Document file access scope |
+
+**Full list**: [skill-security-compliance.md](../standards/skill-security-compliance.md#common-security-scan-findings)
 
 ### Reference
 
 For detailed security scan remediation examples, see:
-- `../neon-soul/docs/issues/2026-02-10-skillmd-llm-wording-false-positive.md` (7-phase fix journey)
-- `agentic/context-verifier/SKILL.md` (example with full security section)
+- [skill-security-compliance.md](../standards/skill-security-compliance.md) (authoritative security standard)
+- [ClawHub Publishing Issues](../issues/2026-02-18-clawhub-publishing-issues.md) (7-skill remediation case study)
+- [NEON-SOUL Security Lessons](../../../neon-soul/docs/issues/2026-02-10-skillmd-llm-wording-false-positive.md) (7-phase fix journey)
 
 ---
 
@@ -305,6 +252,25 @@ source .env
 clawhub login --token "$CLAWHUB_TOKEN" --no-browser
 clawhub whoami
 ```
+
+### Check Slug Availability
+
+Before publishing, verify your desired slug isn't already taken:
+
+```bash
+# Check if slug exists
+clawhub info username/desired-slug
+# If "Not found" → slug is available
+# If shows skill info → slug is taken, choose another
+
+# Alternative: search for similar names
+clawhub search "desired-slug"
+```
+
+**If slug is taken**, choose an alternative:
+- `neon-skillname` (prefix with your brand)
+- `skillname-v2` (version suffix)
+- `category-skillname` (category prefix)
 
 ### Publish
 
