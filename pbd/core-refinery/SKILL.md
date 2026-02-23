@@ -4,7 +4,6 @@ version: 1.0.1
 description: Find the core that runs through everything — the ideas that survive across all your sources.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/core-refinery
 user-invocable: true
-disable-model-invocation: true
 emoji: 💎
 tags:
   - synthesis
