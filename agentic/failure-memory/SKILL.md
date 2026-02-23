@@ -10,7 +10,6 @@ tags: [agentic, memory, failure, observation, pattern]
 layer: core
 status: active
 alias: fm
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -48,10 +47,9 @@ openclaw install leegitw/failure-memory
 **Standalone usage**: This skill can function independently for basic failure tracking.
 For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
 
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It detects and records failure patterns but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Results are written to `.learnings/`
-in your workspace. The skill only accesses paths declared in its metadata.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for failure detection and pattern recording. No external APIs
+or third-party services are called. Results are written to `.learnings/` in your workspace.
 
 ## What This Solves
 
@@ -294,7 +292,6 @@ This skill reads/writes:
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Send data to external services
 - Access "across sessions and projects" beyond the current workspace
 - Execute arbitrary code or run external commands
@@ -306,10 +303,9 @@ This skill reads/writes:
 - Pattern matching is local to the configured workspace
 
 **Detection trigger clarification:**
-The "Detection Triggers" table describes patterns that indicate when a user or orchestrator
-should invoke `/fm detect`. This skill does NOT autonomously scan for these patterns
-(`disable-model-invocation: true`). The patterns are guidance for when to manually invoke
-the skill, not autonomous behavior.
+The "Detection Triggers" table describes patterns that indicate when this skill should be
+invoked. The agent can auto-invoke `/fm detect` when these patterns are detected, or users
+can invoke manually. This enables true agentic behavior — failures are captured automatically.
 
 **Provenance note:**
 This skill is developed by Live Neon (https://github.com/live-neon/skills) and published

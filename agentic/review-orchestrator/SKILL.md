@@ -10,7 +10,6 @@ tags: [agentic, review, twin, cognitive, orchestration, multi-perspective]
 layer: review
 status: active
 alias: ro
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -50,10 +49,9 @@ openclaw install leegitw/review-orchestrator
 **Standalone usage**: Review orchestration works independently for multi-perspective reviews.
 Integration with failure-memory enables automatic observation recording from review findings.
 
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It provides prompts and structures for review perspectives but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Review results are written to `docs/reviews/`
-in your workspace. The skill only accesses paths declared in its metadata.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for multi-perspective review orchestration. No external APIs
+or third-party services are called. Review results are written to `docs/reviews/` in your workspace.
 
 ## What This Solves
 

@@ -10,7 +10,6 @@ tags: [agentic, safety, verification, model, cache, session]
 layer: safety
 status: active
 alias: sc
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -52,10 +51,9 @@ openclaw install leegitw/safety-checks
 **Standalone usage**: Model pinning and cache checks work independently.
 Full integration with constraint enforcement requires constraint-engine.
 
-**Data handling**: This skill is instruction-only and does NOT invoke AI models itself
-(`disable-model-invocation: true`). It reads configuration files and checks system state.
-No external APIs or third-party services are called. Results are written to `output/safety/`
-in your workspace. The skill only accesses paths declared in its metadata.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for safety verification and state checking. No external APIs
+or third-party services are called. Results are written to `output/safety/` in your workspace.
 
 ## What This Solves
 
@@ -401,7 +399,6 @@ Freed: 2.3 MB
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Send data to external services
 - Modify files outside its workspace
 - Execute arbitrary code

@@ -10,7 +10,6 @@ tags: [agentic, verification, hash, integrity, context]
 layer: foundation
 status: active
 alias: cv
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -42,10 +41,9 @@ openclaw install leegitw/context-verifier
 verification that other skills in the suite depend on. Install this first when adopting
 the Neon Agentic Suite.
 
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It computes file hashes and creates context packets but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Results are written to `output/context-packets/`
-in your workspace.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for hash computation and verification. No external APIs
+or third-party services are called. Results are written to `output/context-packets/` in your workspace.
 
 **File access scope**: This skill reads user-specified files for hash computation. The metadata
 declares config and output paths only — the skill will read ANY file path you provide to
@@ -122,7 +120,6 @@ Configuration is loaded from (in order of precedence):
 ## Security Considerations
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Call external APIs or third-party services
 - Send data to external services
 - Modify source files (only writes to `output/context-packets/`)

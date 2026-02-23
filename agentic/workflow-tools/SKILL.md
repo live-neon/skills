@@ -10,7 +10,6 @@ tags: [agentic, workflow, tools, parallel, mce, loops]
 layer: extensions
 status: active
 alias: wt
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -56,10 +55,9 @@ openclaw install leegitw/workflow-tools
 **Standalone usage**: Loop detection, parallel decisions, and MCE analysis work independently.
 Full integration provides constraint-aware workflow recommendations.
 
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It provides workflow utilities and analysis frameworks but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Results are written to `output/` subdirectories
-in your workspace.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for workflow analysis and decision support. No external APIs
+or third-party services are called. Results are written to `output/` subdirectories in your workspace.
 
 **⚠️ File access**: This skill reads user-specified directories and files for analysis:
 - `/wt loops [path]` scans the specified directory (default: current working directory)
@@ -432,7 +430,6 @@ design — analysis requires reading the files/directories you want to analyze.
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Send data to external services
 - Execute arbitrary code
 - Modify source files (analysis is read-only)
