@@ -33,7 +33,6 @@ homepage: https://github.com/org/repo/tree/main/path/to/skill
 repository: username/skill-name
 license: MIT
 tags: [relevant, tags]
-disable-model-invocation: true  # REQUIRED - prevents autonomous execution flags
 metadata:
   openclaw:
     requires:
@@ -44,6 +43,21 @@ metadata:
         - output/skill-output/
 ---
 ```
+
+### Model Invocation Flag
+
+**IMPORTANT**: The `disable-model-invocation` flag controls whether the agent can auto-invoke the skill:
+
+| Skill Type | Flag Value | Effect |
+|------------|------------|--------|
+| **Agentic skills** | Omit (or `false`) | Agent can auto-invoke based on triggers |
+| **Passive reference** | `true` | Requires explicit user `/command` invocation |
+
+**For agentic skills** (constraint-engine, failure-memory, etc.): Do NOT use `disable-model-invocation: true`.
+This flag excludes the skill from model prompts, preventing autonomous behavior — which defeats the purpose.
+
+**For passive skills** (static reference docs, templates): Use `disable-model-invocation: true` if you want
+to prevent the agent from auto-invoking the skill.
 
 **Description style**: Write descriptions that tell users **what problem you solve**, not just what features you have.
 
@@ -96,26 +110,26 @@ Using the wrong format causes:
 
 All skills MUST include a data handling statement.
 
-**For instruction-only skills** (`disable-model-invocation: true`):
+**For agentic skills** (model-invocable, no `disable-model-invocation`):
 
 ```markdown
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It provides [templates/prompts/structure] but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Results are written to `output/[dir]/`
-in your workspace.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for [analysis type]. No external APIs or third-party
+services are called. Results are written to `output/[dir]/` in your workspace.
 ```
 
-**For skills using agent's model** (no `disable-model-invocation`):
+**For passive reference skills** (`disable-model-invocation: true`):
 
 ```markdown
-**Data handling**: This skill operates within your agent's trust boundary. All [analysis type]
-uses your agent's configured model — no external APIs or third-party services are called.
+**Data handling**: This skill provides [templates/prompts/structure] as reference documentation.
+It requires explicit user invocation via `/command`. No external APIs or third-party services
+are called.
 ```
 
 **Key rules**:
-- If `disable-model-invocation: true`, use "instruction-only" language (NOT "uses your model")
+- Agentic skills: Use "operates within your agent's trust boundary" + "when triggered"
+- Passive skills: Use "requires explicit user invocation" language
 - Say "agent's trust boundary" NOT "never leaves your machine"
-- Never use "auto-invoke" or "auto-detect" language with `disable-model-invocation: true`
 - If skill reads user-specified files, do NOT claim "only accesses declared paths"
 
 ---
@@ -139,7 +153,6 @@ Include ALL applicable subsections:
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Send data to external services
 - Execute arbitrary code
 - Modify files outside its workspace
@@ -229,13 +242,11 @@ your agent runtime.
 
 | Finding | Cause | Fix |
 |---------|-------|-----|
-| "Autonomous execution" | Missing `disable-model-invocation: true` | Add field to frontmatter |
+| "Autonomous execution" | Missing `disable-model-invocation: true` | For agentic skills: this is expected, no fix needed. For passive skills: add flag |
 | "Undeclared file access" | Using top-level `config_paths` | Use `metadata.openclaw.requires.config` |
 | "Metadata mismatch" | SKILL.md mentions paths registry doesn't show | Migrate to `metadata.openclaw.requires.*` |
 | "Suspicious domain" | Young domain in `homepage` | Use GitHub URL |
 | "Sensitive data handling" | Patterns like `*.env` without docs | Add Security Considerations section |
-| "Model invocation contradiction" | Says "uses your model" + `disable-model-invocation: true` | Use "instruction-only" language |
-| "Auto-invoke language conflict" | Says "auto-invoke" + `disable-model-invocation: true` | Use "user or orchestrator triggers" |
 | "Provenance mismatch" | Homepage org differs from repository | Add provenance note |
 | "Arbitrary file access" | Reads user paths beyond declared metadata | Add file access scope warning |
 | "Privilege expansion" | Can spawn other skills | Document permission inheritance |
@@ -251,7 +262,6 @@ your agent runtime.
 gitleaks detect --source path/to/skill -v
 
 # 2. Verify required frontmatter (CORRECT format)
-grep "disable-model-invocation:" path/to/skill/SKILL.md
 grep -A5 "metadata:" path/to/skill/SKILL.md | grep -E "(openclaw|requires|config|workspace):"
 
 # 3. Check for WRONG format (registry ignores these)
@@ -266,9 +276,9 @@ grep "homepage:" path/to/skill/SKILL.md
 grep -i "secret\|credential\|password\|env" path/to/skill/SKILL.md
 # If found, ensure Security Considerations section exists
 
-# 6. Check for contradictory claims
-grep -i "only accesses.*declared\|auto-invoke\|auto-detect" path/to/skill/SKILL.md
-# Review any matches for contradictions with disable-model-invocation
+# 6. For agentic skills, verify disable-model-invocation is NOT present
+grep "disable-model-invocation:" path/to/skill/SKILL.md
+# If found in agentic skill, REMOVE IT - it prevents auto-invocation
 ```
 
 ---
@@ -277,8 +287,7 @@ grep -i "only accesses.*declared\|auto-invoke\|auto-detect" path/to/skill/SKILL.
 
 | Anti-Pattern | Problem | Solution |
 |--------------|---------|----------|
-| "Uses your model" + disable-model-invocation | Contradiction flagged by scanner | Use "instruction-only skill" language |
-| "Auto-invoke" + disable-model-invocation | Implies autonomous behavior | Use "user or orchestrator triggers" |
+| `disable-model-invocation: true` on agentic skills | Prevents agent from auto-invoking based on triggers | Remove the flag; use model-invocable data handling |
 | "Only accesses declared paths" + user input | Contradiction when skill reads user files | Remove claim; document arbitrary access |
 | Undocumented skill spawning | Scanner flags privilege expansion | Document permission inheritance |
 | Provenance mismatch | Homepage/repository owner differ | Add provenance note |

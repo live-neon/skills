@@ -392,9 +392,13 @@ hooks:
 
 ### Quick Summary
 
-1. **Required frontmatter**: `disable-model-invocation: true`, `homepage` (GitHub URL)
+1. **Required frontmatter**: `homepage` (GitHub URL), `metadata.openclaw.requires.*`
 
-2. **Metadata format** - use nested `metadata.openclaw.requires.*`:
+2. **Model invocation** - depends on skill type:
+   - **Agentic skills**: Do NOT use `disable-model-invocation: true` (allows auto-invocation)
+   - **Passive reference skills**: Use `disable-model-invocation: true` (requires explicit `/command`)
+
+3. **Metadata format** - use nested `metadata.openclaw.requires.*`:
    ```yaml
    metadata:
      openclaw:
@@ -406,18 +410,17 @@ hooks:
    ```
    ⚠️ Top-level `config_paths`/`workspace_paths` are **ignored by registry**
 
-3. **Data handling statement** - use "instruction-only" language for `disable-model-invocation: true` skills
+4. **Data handling statement** - use appropriate language for skill type
 
-4. **Security Considerations section** - required if skill handles sensitive patterns
+5. **Security Considerations section** - required if skill handles sensitive patterns
 
-5. **Pre-publish checklist** - run gitleaks, verify metadata format, check for contradictions
+6. **Pre-publish checklist** - run gitleaks, verify metadata format
 
 ### Common Pitfalls
 
 | Pitfall | Fix |
 |---------|-----|
-| "Uses your model" + `disable-model-invocation: true` | Use "instruction-only" language |
-| "Auto-invoke" language | Use "user or orchestrator triggers" |
+| `disable-model-invocation: true` on agentic skill | Remove flag - it prevents auto-invocation |
 | "Only accesses declared paths" + user input | Document arbitrary file access |
 | Homepage/repository owner differ | Add provenance note |
 
@@ -437,8 +440,12 @@ ls category/skill-name/SKILL.md
 gitleaks detect --source category/skill-name -v
 
 # 3. Required frontmatter fields present
-grep -E "^(name|version|description|homepage|disable-model-invocation):" \
+grep -E "^(name|version|description|homepage):" \
   category/skill-name/SKILL.md
+
+# 4. For agentic skills, verify disable-model-invocation is NOT present
+grep "disable-model-invocation:" category/skill-name/SKILL.md
+# If found, REMOVE IT for agentic skills - it prevents auto-invocation
 
 # 4. Homepage uses GitHub URL (not young/suspicious domains)
 grep "homepage:" category/skill-name/SKILL.md | grep "github.com"
@@ -587,8 +594,7 @@ When extending an existing skill:
 | "Paste into terminal" | Security risk pattern | Use proper `requires.bins` |
 | Undeclared dependencies | Skill fails at runtime | Use `metadata.openclaw.requires` |
 | Multi-line metadata | Parser fails | Keep metadata as single-line JSON |
-| "Uses your model" + disable-model-invocation | Contradiction flagged by scanner | Use "instruction-only skill" language |
-| "Auto-invoke" + disable-model-invocation | Implies autonomous behavior | Use "user or orchestrator triggers" |
+| `disable-model-invocation: true` on agentic skill | Prevents agent from auto-invoking | Remove flag; use model-invocable data handling |
 | Undocumented arbitrary file access | Scanner flags as undeclared access | Add explicit file access scope warning |
 | "Only accesses declared paths" + user input | Contradiction when skill reads user-specified files/dirs | Remove claim; document that skill reads arbitrary user-provided paths |
 | Undocumented skill spawning | Scanner flags privilege expansion | Document permission inheritance |

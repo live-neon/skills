@@ -206,17 +206,17 @@ grep -A5 "metadata:" path/to/skill/SKILL.md | grep -E "(openclaw|requires|config
 # 3. Check for WRONG format (registry ignores these!)
 grep -E "^config_paths:|^workspace_paths:" path/to/skill/SKILL.md
 
-# 4. Verify disable-model-invocation
+# 4. For agentic skills, verify disable-model-invocation is NOT present
 grep "disable-model-invocation:" path/to/skill/SKILL.md
+# If found, REMOVE IT for agentic skills - it prevents auto-invocation
 ```
 
 ### Common Findings & Fixes
 
 | Finding | Fix |
 |---------|-----|
-| "Autonomous execution" | Add `disable-model-invocation: true` |
+| "Autonomous execution" | For agentic skills: expected, no fix. For passive: add `disable-model-invocation: true` |
 | "Metadata mismatch" | Use `metadata.openclaw.requires.*` (not top-level) |
-| "Model invocation contradiction" | Use "instruction-only" language |
 | "Provenance mismatch" | Add provenance note |
 | "Arbitrary file access" | Document file access scope |
 
