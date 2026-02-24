@@ -1,6 +1,6 @@
 ---
 name: failure-memory
-version: 1.4.0
+version: 1.5.0
 description: Stop making the same mistakes — turn failures into patterns that prevent recurrence
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/failure-memory

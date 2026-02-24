@@ -1,6 +1,6 @@
 ---
 name: review-orchestrator
-version: 1.3.0
+version: 1.5.0
 description: Get multiple perspectives on your work — coordinate reviews across cognitive modes
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/review-orchestrator
