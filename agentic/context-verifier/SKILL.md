@@ -1,6 +1,6 @@
 ---
 name: context-verifier
-version: 1.5.0
+version: 1.5.1
 description: Know the file you're editing is the file you think it is — verify integrity before you act
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
@@ -41,9 +41,10 @@ openclaw install leegitw/context-verifier
 verification that other skills in the suite depend on. Install this first when adopting
 the Neon Agentic Suite.
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model for hash computation and verification. No external APIs
-or third-party services are called. Results are written to `output/context-packets/` in your workspace.
+**Data handling**: This skill performs local-only operations. Hash computation uses standard
+SHA256 algorithms locally — no file contents are sent to any model, API, or external service.
+Results are written to `output/context-packets/` in your workspace. The skill reads config from
+`.openclaw/context-verifier.yaml` or `.claude/context-verifier.yaml` only.
 
 **File access scope**: This skill reads user-specified files for hash computation. The metadata
 declares config and output paths only — the skill will read ANY file path you provide to
@@ -119,9 +120,13 @@ Configuration is loaded from (in order of precedence):
 
 ## Security Considerations
 
+**Local-only processing**: All hash computation uses standard SHA256 algorithms executed locally.
+No file contents are ever sent to any LLM, API, or external service. The "agent's model" is only
+used to interpret your commands — not to process file contents.
+
 **What this skill does NOT do:**
+- Send file contents to any model or API (hashing is local)
 - Call external APIs or third-party services
-- Send data to external services
 - Modify source files (only writes to `output/context-packets/`)
 
 **What this skill accesses:**

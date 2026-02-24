@@ -1,6 +1,6 @@
 ---
 name: safety-checks
-version: 1.5.0
+version: 1.5.1
 description: Verify before you trust — model pinning, fallbacks, and runtime safety validation
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
@@ -17,8 +17,6 @@ metadata:
         - .openclaw/safety-checks.yaml
         - .claude/safety-checks.yaml
       workspace:
-        - .openclaw/
-        - .claude/
         - output/safety/
 ---
 
@@ -51,9 +49,9 @@ openclaw install leegitw/safety-checks
 **Standalone usage**: Model pinning and cache checks work independently.
 Full integration with constraint enforcement requires constraint-engine.
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model for safety verification and state checking. No external APIs
-or third-party services are called. Results are written to `output/safety/` in your workspace.
+**Data handling**: This skill performs local-only operations. All checks (model version comparison,
+cache age verification, file lock detection) are local file/metadata operations — no data is sent
+to any model, API, or external service. Results are written to `output/safety/` in your workspace.
 
 ## What This Solves
 
@@ -176,17 +174,17 @@ Prevents use of outdated cached data:
 
 ### Cross-Session State
 
-Detects state leakage between sessions within the skill's workspace:
+Detects state leakage between sessions:
 
-| Check | Detection | Risk |
-|-------|-----------|------|
-| File locks | Stale `.lock` files in `.openclaw/` or `.claude/` | Resource contention |
-| Workspace temp files | Orphaned files in `output/safety/` | Disk exhaustion |
-| Skill config | Unexpected values in skill config files | Configuration drift |
+| Check | Exact File Checked | Risk |
+|-------|-------------------|------|
+| File locks | `.openclaw/safety-checks.lock` | Resource contention |
+| Workspace temp files | `output/safety/temp-*` | Disk exhaustion |
+| Skill config | `.openclaw/safety-checks.yaml` values | Configuration drift |
 
-**Scope**: Checks are limited to the skill's declared workspace paths (`.openclaw/`, `.claude/`,
-`output/safety/`). This skill does NOT scan system-wide directories, environment variables,
-or files outside the workspace.
+**Scope**: Checks are limited to this skill's own files only. This skill does NOT scan
+directories, does NOT read other skills' config files, and does NOT access files outside
+the specific paths listed above.
 
 ## Output
 
@@ -269,10 +267,10 @@ Status: ✓ CLEAN
 
 No cross-session interference detected.
 
-Checks passed (workspace only):
-  ✓ No stale file locks in .openclaw/ or .claude/
-  ✓ No orphan files in output/safety/
-  ✓ Config files valid
+Checks passed:
+  ✓ No stale lock file (.openclaw/safety-checks.lock)
+  ✓ No orphan temp files (output/safety/temp-*)
+  ✓ Config file valid (.openclaw/safety-checks.yaml)
 ```
 
 ### /sc session output (interference)
@@ -284,11 +282,11 @@ Status: ✗ INTERFERENCE DETECTED
 Issues found:
 
 1. Stale file lock:
-   File: .openclaw/skills.lock
+   File: .openclaw/safety-checks.lock
    Owner: PID 12345 (not running)
    Action: Remove lock with /sc session --clear-state
 
-2. Orphan workspace files (3):
+2. Orphan temp files (3):
    output/safety/temp-*.log
    Age: > 24 hours
    Action: Remove with /sc session --clear-state
@@ -386,21 +384,30 @@ Freed: 2.3 MB
 
 ## Security Considerations
 
-**What this skill accesses:**
-- Configuration files in `.openclaw/safety-checks.yaml` and `.claude/safety-checks.yaml`
-- Cache files in `.openclaw/cache/`
-- Its own output directory `output/safety/`
+**Local-only processing**: All safety checks are local file and metadata operations. No data is
+sent to any LLM, API, or external service. The "agent's model" is only used to interpret your
+commands — not to process or transmit your data.
+
+**Exact files accessed (read):**
+- `.openclaw/safety-checks.yaml` — your skill configuration
+- `.claude/safety-checks.yaml` — alternate config location
+- `.openclaw/cache/staleness.log` — cache check history (if exists)
+
+**Exact files written:**
+- `output/safety/*.log` — check results and history
+
+This skill does NOT scan directories or read other skills' config files.
 
 **What this skill does NOT access:**
+- Other skills' configuration files
 - System environment variables
-- Files outside declared workspace paths
-- Other tools' configuration (e.g., `.claude/settings.json`)
-- System directories like `/tmp`
+- `.claude/settings.json` or other tool configs
+- Any files outside the three config paths listed above
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Send data to external services
-- Modify files outside its workspace
+- Send data to any model or external service
+- Modify files outside `output/safety/`
 - Execute arbitrary code
 
 **Data handling:**

@@ -294,7 +294,7 @@ clawhub search essence
 **Agentic Skills (7):**
 
 ```bash
-clawhub publish agentic/context-verifier --slug context-verifier --name "Context Verifier" --version 1.5.0 --tags "agentic,verification,integrity,validation,checksums,drift-detection,state,file-verification"
+clawhub publish agentic/context-verifier --slug context-verifier --name "Context Verifier" --version 1.5.1 --tags "agentic,verification,integrity,validation,checksums,drift-detection,state,file-verification"
 ```
 
 ```bash
@@ -306,7 +306,7 @@ clawhub publish agentic/constraint-engine --slug constraint-engine --name "Const
 ```
 
 ```bash
-clawhub publish agentic/safety-checks --slug safety-checks --name "Safety Checks" --version 1.5.0 --tags "agentic,safety,validation,model-pinning,fallback,runtime-verification,cache,guardrails"
+clawhub publish agentic/safety-checks --slug safety-checks --name "Safety Checks" --version 1.5.1 --tags "agentic,safety,validation,model-pinning,fallback,runtime-verification,cache,guardrails"
 ```
 
 ```bash
