@@ -250,7 +250,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Author
 
-Live Neon <contact@liveneon.dev>
+Live Neon <hello@liveneon.ai>
 
 ---
 

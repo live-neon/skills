@@ -2,7 +2,7 @@
 name: constraint-engine
 version: 1.3.0
 description: Learn from consequences, not instructions — generate and enforce constraints from experience
-author: Live Neon <contact@liveneon.dev>
+author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
 repository: leegitw/constraint-engine
 license: MIT

@@ -2,7 +2,7 @@
 name: safety-checks
 version: 1.5.2
 description: Verify before you trust — model pinning, fallbacks, and runtime safety validation
-author: Live Neon <contact@liveneon.dev>
+author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
 repository: leegitw/safety-checks
 license: MIT

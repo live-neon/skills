@@ -105,7 +105,7 @@ All 7 skills have complete ClawHub frontmatter:
 - `name`: Present
 - `version`: 1.0.0
 - `description`: Present
-- `author`: Live Neon <contact@liveneon.dev>
+- `author`: Live Neon <hello@liveneon.ai>
 - `homepage`: https://github.com/live-neon/skills/tree/main/agentic/[skill-name]
 - `repository`: leegitw/[skill-name]
 - `license`: MIT

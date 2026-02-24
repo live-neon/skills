@@ -2,7 +2,7 @@
 name: context-verifier
 version: 1.5.1
 description: Know the file you're editing is the file you think it is — verify integrity before you act
-author: Live Neon <contact@liveneon.dev>
+author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
 repository: leegitw/context-verifier
 license: MIT

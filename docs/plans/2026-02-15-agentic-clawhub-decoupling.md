@@ -533,7 +533,7 @@ done
    - Add `homepage: https://github.com/live-neon/skills/tree/main/agentic/[skill-name]` (GitHub org repo)
    - Add `license: MIT`
    - Add `version: 1.0.0` (all skills start at 1.0.0 post-consolidation)
-   - Add `author: Live Neon <contact@liveneon.dev>`
+   - Add `author: Live Neon <hello@liveneon.ai>`
 
    > **Note**: Skills are hosted on GitHub at `live-neon/skills` (org repo) but published
    > to ClawHub under the `leegitw` username. The `repository` field is for ClawHub,
