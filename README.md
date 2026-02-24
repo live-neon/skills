@@ -99,6 +99,18 @@ Skills for failure detection, constraint enforcement, and memory operations. See
 
 **Consolidated architecture** — 7 skills (from 48 granular). See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
 
+### Creative (Synthesis & Artifact Generation)
+
+Skills for transforming technical work into creative artifacts for reflection and knowledge transfer.
+
+| Skill | Alias | Description |
+|-------|-------|-------------|
+| [insight-song](creative/insight-song/) | `/song` | Create original Suno-ready songs from insights |
+| [song-remix](creative/song-remix/) | `/remix` | Transform existing songs (Twin Remix method) |
+| [visual-concept](creative/visual-concept/) | `/vc` | Transform insights into visual concept guides |
+| [ted-talk](creative/ted-talk/) | `/ted` | Transform insights into full TED talks |
+| [side-quests](creative/side-quests/) | `/sq` | **Combo**: song + visual + TED talk |
+
 ## Usage
 
 After installation, invoke skills in Claude Code:
