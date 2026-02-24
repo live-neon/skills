@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/governance
 repository: leegitw/agentic-governance
 license: MIT
-tags: [agentic, governance, state, lifecycle, review]
+tags: [agentic, governance, lifecycle, maintenance, health-checks, observability, compliance, staleness]
 layer: governance
 status: active
 alias: gov

@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
 repository: leegitw/context-verifier
 license: MIT
-tags: [agentic, verification, hash, integrity, context]
+tags: [agentic, verification, integrity, validation, checksums, drift-detection, state, file-verification]
 layer: foundation
 status: active
 alias: cv

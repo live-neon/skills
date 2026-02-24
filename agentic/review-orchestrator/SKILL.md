@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/review-orchestrator
 repository: leegitw/review-orchestrator
 license: MIT
-tags: [agentic, review, twin, cognitive, orchestration, multi-perspective]
+tags: [agentic, review, orchestration, multi-perspective, code-review, quality, twin-review, feedback]
 layer: review
 status: active
 alias: ro

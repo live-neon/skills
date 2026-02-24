@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
 repository: leegitw/constraint-engine
 license: MIT
-tags: [agentic, constraint, enforcement, circuit-breaker, lifecycle]
+tags: [agentic, guardrails, enforcement, rules, circuit-breaker, self-improving, prevention, validation]
 layer: core
 status: active
 alias: ce

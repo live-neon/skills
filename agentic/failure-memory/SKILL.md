@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/failure-memory
 repository: leegitw/failure-memory
 license: MIT
-tags: [agentic, memory, failure, observation, pattern]
+tags: [agentic, memory, learning, self-improving, error-tracking, observability, patterns, adaptive, feedback]
 layer: core
 status: active
 alias: fm

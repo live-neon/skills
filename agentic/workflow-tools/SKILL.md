@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/workflow-tools
 repository: leegitw/workflow-tools
 license: MIT
-tags: [agentic, workflow, tools, parallel, mce, loops]
+tags: [agentic, workflow, automation, orchestration, parallel, decision-making, loops, task-management]
 layer: extensions
 status: active
 alias: wt

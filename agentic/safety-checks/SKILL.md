@@ -6,7 +6,7 @@ author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
 repository: leegitw/safety-checks
 license: MIT
-tags: [agentic, safety, verification, model, cache, session]
+tags: [agentic, safety, validation, model-pinning, fallback, runtime-verification, cache, guardrails]
 layer: safety
 status: active
 alias: sc
