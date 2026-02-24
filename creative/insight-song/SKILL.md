@@ -104,7 +104,7 @@ You must be able to answer:
 **Title**: [Song Name]
 
 **Suno.ai Style Tags**:
-[Exactly 500 characters describing musical style, mood, instrumentation]
+[300-500 characters describing musical style, mood, instrumentation]
 
 [Verse 1]
 [Lyrics conveying the problem/pain]
@@ -181,7 +181,7 @@ Can't debug what you've never seen before
 ### Step 4: Format for Suno
 
 - Add title
-- Write exactly 500-character style tags
+- Write 300-500 character style tags
 - Add section markers: `[Verse 1]`, `[Chorus]`, `[Bridge]`, etc.
 
 ## Example
@@ -281,7 +281,7 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 ## Acceptance Criteria
 
 - [ ] `/song` synthesizes conversation into Suno-ready format
-- [ ] Output includes title, 500-char style tags, sectioned lyrics
+- [ ] Output includes title, 300-500 char style tags, sectioned lyrics
 - [ ] Lyrics convey technical insight through metaphor
 - [ ] Emotional arc matches the technical journey
 - [ ] Output written to `output/songs/`

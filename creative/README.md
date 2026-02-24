@@ -76,6 +76,15 @@ rather than creating from technical insights.
 | ted-talk | `output/ted-talks/` |
 | side-quests | `output/side-quests/` |
 
+## CJK Naming Convention
+
+Each skill uses a CJK character indicating focus:
+- 歌 (song) — insight-song
+- 混 (mix) — song-remix
+- 映 (reflect/project) — visual-concept
+- 話 (speak/talk) — ted-talk
+- 遊 (play/quest) — side-quests
+
 ## Related Categories
 
 - **agentic/**: Agent behavior skills (verification, memory, constraints)

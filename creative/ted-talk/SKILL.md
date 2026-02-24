@@ -229,6 +229,8 @@ hasn't told you yet.
 
 [... continues for full 50 minutes ...]
 
+*Note: Full TED talk outputs are 40-50 minutes of content. This excerpt demonstrates the opening sections.*
+
 ### Q&A Preparation
 
 **Q: "This seems like overkill for small projects."**

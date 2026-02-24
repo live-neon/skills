@@ -170,22 +170,25 @@ Each side quest produces a single markdown file with three sections:
 ### Opening (0:00-2:00)
 [Hook with relatable problem]
 
-### Setup (2:00-6:00)
-[Why this matters]
+### Setup: Why This Matters (2:00-6:00)
+[Why this matters, stakes]
 
-### Core Concept (6:00-20:00)
+### The Problem (6:00-12:00)
+[Deep dive into the pain point]
+
+### Core Concept (12:00-25:00)
 [Explain thoroughly]
 
-### Examples (20:00-35:00)
-[Concrete, specific details]
+### Real-World Examples (25:00-38:00)
+[Concrete, specific details from real work]
 
-### Implications (35:00-45:00)
-[Broader impact]
+### Broader Implications (38:00-45:00)
+[Connect to broader context]
 
 ### Closing (45:00-48:00)
 [Call to action]
 
-### Q&A Preparation
+### Q&A Preparation (48:00-50:00)
 [Address objections]
 ```
 
