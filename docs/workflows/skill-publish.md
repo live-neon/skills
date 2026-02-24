@@ -277,7 +277,7 @@ clawhub search "desired-slug"
 Example (one-liner format for easy copy/paste):
 
 ```bash
-clawhub publish pbd/essence-distiller --slug essence-distiller --name "Essence Distiller" --version 1.0.1 --tags "summarization,distillation,clarity,simplification,tldr,key-points,extraction,writing,analysis,openclaw"
+clawhub publish pbd/essence-distiller --slug essence-distiller --name "Essence Distiller" --version 1.0.2 --tags "summarization,distillation,clarity,simplification,tldr,key-points,extraction,writing,analysis,openclaw"
 ```
 
 ### Verify
@@ -298,23 +298,23 @@ clawhub publish agentic/context-verifier --slug context-verifier --name "Context
 ```
 
 ```bash
-clawhub publish agentic/failure-memory --slug failure-memory --name "Failure Memory" --version 1.4.0 --tags "agentic,memory,learning,self-improving,error-tracking,observability,patterns,adaptive,feedback"
+clawhub publish agentic/failure-memory --slug failure-memory --name "Failure Memory" --version 1.5.0 --tags "agentic,memory,learning,self-improving,error-tracking,observability,patterns,adaptive,feedback"
 ```
 
 ```bash
-clawhub publish agentic/constraint-engine --slug constraint-engine --name "Constraint Engine" --version 1.2.0 --tags "agentic,guardrails,enforcement,rules,circuit-breaker,self-improving,prevention,validation"
+clawhub publish agentic/constraint-engine --slug constraint-engine --name "Constraint Engine" --version 1.3.0 --tags "agentic,guardrails,enforcement,rules,circuit-breaker,self-improving,prevention,validation"
 ```
 
 ```bash
-clawhub publish agentic/safety-checks --slug safety-checks --name "Safety Checks" --version 1.4.0 --tags "agentic,safety,validation,model-pinning,fallback,runtime-verification,cache,guardrails"
+clawhub publish agentic/safety-checks --slug safety-checks --name "Safety Checks" --version 1.5.0 --tags "agentic,safety,validation,model-pinning,fallback,runtime-verification,cache,guardrails"
 ```
 
 ```bash
-clawhub publish agentic/review-orchestrator --slug review-orchestrator --name "Review Orchestrator" --version 1.3.0 --tags "agentic,review,orchestration,multi-perspective,code-review,quality,twin-review,feedback"
+clawhub publish agentic/review-orchestrator --slug review-orchestrator --name "Review Orchestrator" --version 1.5.0 --tags "agentic,review,orchestration,multi-perspective,code-review,quality,twin-review,feedback"
 ```
 
 ```bash
-clawhub publish agentic/governance --slug agentic-governance --name "Agentic Governance" --version 1.2.0 --tags "agentic,governance,lifecycle,maintenance,health-checks,observability,compliance,staleness"
+clawhub publish agentic/governance --slug agentic-governance --name "Agentic Governance" --version 1.3.0 --tags "agentic,governance,lifecycle,maintenance,health-checks,observability,compliance,staleness"
 ```
 
 ```bash
@@ -324,11 +324,11 @@ clawhub publish agentic/workflow-tools --slug workflow-tools --name "Workflow To
 **PBD Skills (7):**
 
 ```bash
-clawhub publish pbd/essence-distiller --slug essence-distiller --name "Essence Distiller" --version 1.0.1 --tags "summarization,distillation,clarity,simplification,tldr,key-points,extraction,writing,analysis,openclaw"
+clawhub publish pbd/essence-distiller --slug essence-distiller --name "Essence Distiller" --version 1.0.2 --tags "summarization,distillation,clarity,simplification,tldr,key-points,extraction,writing,analysis,openclaw"
 ```
 
 ```bash
-clawhub publish pbd/pbe-extractor --slug pbe-extractor --name "PBE Extractor" --version 1.0.1 --tags "extraction,principles,methodology,best-practices,summarization,knowledge-management,documentation,analysis,openclaw"
+clawhub publish pbd/pbe-extractor --slug pbe-extractor --name "PBE Extractor" --version 1.0.2 --tags "extraction,principles,methodology,best-practices,summarization,knowledge-management,documentation,analysis,openclaw"
 ```
 
 ```bash
@@ -336,19 +336,19 @@ clawhub publish pbd/pattern-finder --slug pattern-finder --name "Pattern Finder"
 ```
 
 ```bash
-clawhub publish pbd/principle-comparator --slug principle-comparator --name "Principle Comparator" --version 1.0.1 --tags "comparison,principles,common-ground,agreement,diff,analysis,alignment,synthesis,openclaw"
+clawhub publish pbd/principle-comparator --slug principle-comparator --name "Principle Comparator" --version 1.0.2 --tags "comparison,principles,common-ground,agreement,diff,analysis,alignment,synthesis,openclaw"
 ```
 
 ```bash
-clawhub publish pbd/principle-synthesizer --slug principle-synthesizer --name "Principle Synthesizer" --version 1.0.1 --tags "synthesis,principles,multi-source,consolidation,canonical,merging,knowledge-management,documentation,openclaw"
+clawhub publish pbd/principle-synthesizer --slug principle-synthesizer --name "Principle Synthesizer" --version 1.0.2 --tags "synthesis,principles,multi-source,consolidation,canonical,merging,knowledge-management,documentation,openclaw"
 ```
 
 ```bash
-clawhub publish pbd/core-refinery --slug core-refinery --name "Core Refinery" --version 1.0.1 --tags "synthesis,multi-source,consolidation,merging,knowledge-management,summarization,analysis,openclaw"
+clawhub publish pbd/core-refinery --slug core-refinery --name "Core Refinery" --version 1.0.4 --tags "synthesis,multi-source,consolidation,merging,knowledge-management,summarization,analysis,openclaw"
 ```
 
 ```bash
-clawhub publish pbd/golden-master --slug golden-master --name "Golden Master" --version 1.0.1 --tags "documentation,source-of-truth,freshness,staleness,validation,technical-writing,docs,file-tracking,openclaw"
+clawhub publish pbd/golden-master --slug golden-master --name "Golden Master" --version 1.0.3 --tags "documentation,source-of-truth,freshness,staleness,validation,technical-writing,docs,file-tracking,openclaw"
 ```
 
 ---
