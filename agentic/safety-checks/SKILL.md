@@ -1,6 +1,6 @@
 ---
 name: safety-checks
-version: 1.5.1
+version: 1.5.2
 description: Verify before you trust — model pinning, fallbacks, and runtime safety validation
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/safety-checks
@@ -92,8 +92,10 @@ AI systems can silently degrade — model versions drift, caches go stale, sessi
 
 | Argument | Required | Description |
 |----------|----------|-------------|
-| --chain | No | Specific fallback chain to check |
-| --test | No | Test fallback by triggering it |
+| --chain | No | Specific fallback chain to check in config |
+
+**Note**: This command validates that fallback configurations exist in your config file.
+It does NOT make network calls or test actual connectivity. It's a config file audit.
 
 ### /sc cache
 
@@ -149,18 +151,22 @@ model:
 
 ### Fallback Chain Validation
 
-Verifies backup systems are available:
+**Config audit only** — verifies fallback entries exist in your config file. This does NOT
+make network calls or test actual connectivity.
 
-```
-Primary → Fallback 1 → Fallback 2 → Safe Default
-   ✓          ✓            ✓            ✓
+Checks that your `safety-checks.yaml` declares fallback configurations:
+
+```yaml
+# Example config entries this command validates exist:
+fallbacks:
+  model: ["primary-model", "fallback-model", "cached"]
+  storage: ["primary-path", "backup-path"]
 ```
 
-| Chain | Components | Purpose |
-|-------|------------|---------|
-| API | Primary API → Backup API → Offline mode | External calls |
-| Model | Primary model → Fallback model → Cached response | AI responses |
-| Storage | Primary (cloud) → Secondary (local disk) → Tertiary (memory) | Data persistence |
+| Check | What It Validates |
+|-------|-------------------|
+| Model fallbacks | Config lists alternative models |
+| Storage fallbacks | Config lists backup paths |
 
 ### Cache Staleness Detection
 
@@ -219,23 +225,15 @@ Action: Update expected version in settings, or investigate change.
 
 ```
 [FALLBACK CHECK]
-Status: ✓ SAFE
+Status: ✓ CONFIGURED
 
-Chains verified:
+Config file: .openclaw/safety-checks.yaml
 
-API Chain:
-  ✓ Primary API (api.example.com) - responding
-  ✓ Backup API (backup.example.com) - responding
-  ✓ Offline mode - available
+Fallback entries found:
+  ✓ model.fallbacks: 3 entries defined
+  ✓ storage.fallbacks: 2 entries defined
 
-Model Chain:
-  ✓ Primary model - available
-  ✓ Fallback model - available
-  ✓ Cached response - 47 entries
-
-Storage Chain:
-  ✓ Primary (cloud) - connected
-  ✓ Secondary (local disk) - 12GB free
+Note: This validates config entries exist, not actual connectivity.
   ✓ Tertiary (memory) - 4GB free
 ```
 
@@ -428,8 +426,7 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 - [ ] `/sc model` verifies model version matches config
 - [ ] `/sc model` warns or fails on version drift based on strict setting
-- [ ] `/sc fallback` verifies all fallback chains have available backups
-- [ ] `/sc fallback --test` actually triggers fallback to verify it works
+- [ ] `/sc fallback` verifies fallback config entries exist in config file
 - [ ] `/sc cache` detects entries older than TTL
 - [ ] `/sc cache --clear` removes stale entries
 - [ ] `/sc session` detects cross-session state leakage

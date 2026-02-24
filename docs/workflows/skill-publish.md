@@ -306,7 +306,7 @@ clawhub publish agentic/constraint-engine --slug constraint-engine --name "Const
 ```
 
 ```bash
-clawhub publish agentic/safety-checks --slug safety-checks --name "Safety Checks" --version 1.5.1 --tags "agentic,safety,validation,model-pinning,fallback,runtime-verification,cache,guardrails"
+clawhub publish agentic/safety-checks --slug safety-checks --name "Safety Checks" --version 1.5.2 --tags "agentic,safety,validation,model-pinning,fallback,runtime-verification,cache,guardrails"
 ```
 
 ```bash
