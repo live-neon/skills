@@ -1,6 +1,6 @@
 ---
 name: Essence Distiller
-version: 1.0.1
+version: 1.0.2
 description: Find what actually matters in your content — the ideas that survive any rephrasing.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/essence-distiller
 user-invocable: true
