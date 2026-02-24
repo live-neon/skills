@@ -294,7 +294,7 @@ clawhub search essence
 **Agentic Skills (7):**
 
 ```bash
-clawhub publish agentic/context-verifier --slug context-verifier --name "Context Verifier" --version 1.3.0 --tags "agentic,verification,integrity,validation,checksums,drift-detection,state,file-verification"
+clawhub publish agentic/context-verifier --slug context-verifier --name "Context Verifier" --version 1.5.0 --tags "agentic,verification,integrity,validation,checksums,drift-detection,state,file-verification"
 ```
 
 ```bash
@@ -318,7 +318,7 @@ clawhub publish agentic/governance --slug agentic-governance --name "Agentic Gov
 ```
 
 ```bash
-clawhub publish agentic/workflow-tools --slug workflow-tools --name "Workflow Tools" --version 1.4.0 --tags "agentic,workflow,automation,orchestration,parallel,decision-making,loops,task-management"
+clawhub publish agentic/workflow-tools --slug workflow-tools --name "Workflow Tools" --version 1.5.0 --tags "agentic,workflow,automation,orchestration,parallel,decision-making,loops,task-management"
 ```
 
 **PBD Skills (7):**

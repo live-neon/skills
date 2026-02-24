@@ -1,6 +1,6 @@
 ---
 name: context-verifier
-version: 1.3.0
+version: 1.5.0
 description: Know the file you're editing is the file you think it is — verify integrity before you act
 author: Live Neon <contact@liveneon.dev>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/context-verifier
