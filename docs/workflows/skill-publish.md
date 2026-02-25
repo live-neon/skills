@@ -366,11 +366,11 @@ clawhub publish creative/visual-concept --slug visual-concept --name "Visual Con
 ```
 
 ```bash
-clawhub publish creative/ted-talk --slug ted-talk --name "TED Talk" --version 1.0.1 --tags "creative,presentation,speaking,storytelling,teaching,synthesis,reflection,knowledge-transfer"
+clawhub publish creative/ted-talk --slug ted-talk --name "TED Talk" --version 1.0.2 --tags "creative,presentation,speaking,storytelling,teaching,synthesis,reflection,knowledge-transfer"
 ```
 
 ```bash
-clawhub publish creative/side-quests --slug side-quests --name "Side Quests" --version 1.0.1 --tags "creative,synthesis,songwriting,storytelling,ted-talk,visual-guide,reflection,knowledge-transfer,suno,learning"
+clawhub publish creative/side-quests --slug side-quests --name "Side Quests" --version 1.0.2 --tags "creative,synthesis,songwriting,storytelling,ted-talk,visual-guide,reflection,knowledge-transfer,suno,learning"
 ```
 
 ---

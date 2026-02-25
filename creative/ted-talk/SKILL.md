@@ -1,6 +1,6 @@
 ---
 name: ted-talk
-version: 1.0.1
+version: 1.0.2
 description: Transform technical insights into full 40-50 minute TED-style talks with concrete examples and Q&A
 author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/creative/ted-talk
@@ -69,7 +69,7 @@ Before creating a TED talk, ensure:
 1. **Sufficient conversation depth** — Surface-level topics make shallow talks
 2. **Clear narrative arc** — Problem → Discovery → Solution → Impact
 3. **Main work documented** — Save current progress first if mid-task
-4. **Concrete examples available** — Real files, real decisions, real problems
+4. **Concrete context available** — Real problems, real decisions, real outcomes
 
 ### Context Understanding Checklist
 
@@ -80,7 +80,7 @@ You must be able to answer:
 | Core insight? | Not "we talked about X" but "we discovered X solves Y" |
 | Problem solved? | The pain point, not just the topic |
 | Why, not just what? | The reasoning, not just the outcome |
-| Concrete examples? | Specific files, decisions, metrics from actual work |
+| Concrete examples? | Specific details from the context provided |
 | Broader implications? | Why does this matter beyond the immediate context? |
 
 ### Red Flags (Don't Create)
@@ -129,7 +129,7 @@ You must be able to answer:
 |------|-------------|
 | Full 40-50 minutes | NOT a summary — comprehensive content |
 | Hook with problem | Start with relatable pain, not abstract concept |
-| Concrete examples | Specific files, real decisions, actual metrics |
+| Concrete examples | Specific, real details — not hypothetical scenarios |
 | Address objections | Q&A section anticipates pushback |
 | No filler | Every section should teach something |
 | Accessible but not condescending | Technical depth without jargon overload |
@@ -154,7 +154,7 @@ You must be able to answer:
 - Read full conversation context
 - Identify key decisions, "aha" moments
 - Extract core insight or pattern
-- Collect concrete examples (files, metrics, decisions)
+- Note concrete details from the context provided
 
 ### Step 2: Identify Narrative Arc
 
@@ -177,13 +177,15 @@ For each section:
 - Closing: What should they do with this knowledge?
 - Q&A: What will skeptics ask?
 
-### Step 4: Include Concrete Details
+### Step 4: Ground in Reality
 
-TED talks get specific. Include:
-- Actual file names (`internal/gemini/client.go`)
-- Real decisions made (`300s timeout, not 30s`)
-- Specific metrics (`2.3 second p99 latency`)
-- Actual problems encountered (`3 AM debugging session`)
+TED talks resonate when they're specific, not hypothetical. Draw from:
+- Real problems encountered (not abstract scenarios)
+- Actual decisions and their reasoning
+- Specific outcomes and what changed
+- Stories with concrete details the audience can visualize
+
+Use what the user provides — don't invent specifics or assume access to files.
 
 ## Example
 
@@ -254,7 +256,7 @@ when your anomaly detection stops alerting on normal behavior.
 | Condition | Behavior |
 |-----------|----------|
 | Insufficient context | Ask clarifying questions first |
-| No concrete examples | Decline, explain need for specifics |
+| No concrete context | Ask for specific details before proceeding |
 | Surface-level insight | Suggest deeper exploration first |
 | No broader implications | Suggest finding wider relevance |
 
@@ -274,8 +276,8 @@ when your anomaly detection stops alerting on normal behavior.
 This skill returns the full TED talk directly to the invoking agent. The agent can then
 display, save, or pass the result to another skill as needed.
 
-**Note on concrete examples**: The skill will use examples from user-supplied input or
-conversation context only. It does not read workspace files. Review output before sharing
+**Note on concrete details**: The skill uses only what the user provides in the conversation
+or as explicit input. It does not access workspace files. Review output before sharing
 externally to ensure no sensitive information is included.
 
 **Provenance note:**
@@ -287,7 +289,7 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 - [ ] Can explain core insight in one sentence
 - [ ] Opening hooks with relatable problem
 - [ ] Full 40-50 minutes of substantial content
-- [ ] Concrete examples from actual work included
+- [ ] Concrete details from provided context included
 - [ ] Broader implications explored
 - [ ] Q&A addresses likely objections
 - [ ] No filler or generic padding
@@ -298,7 +300,7 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 - [ ] `/ted` synthesizes input or conversation into full-length talk
 - [ ] Output includes all sections (opening through Q&A)
 - [ ] Talk is 40-50 minutes of substantial content
-- [ ] Concrete examples from input/conversation included
+- [ ] Concrete details from input/conversation included
 - [ ] Q&A section addresses common objections
 - [ ] Result returned to invoking agent
 

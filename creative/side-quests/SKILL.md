@@ -1,6 +1,6 @@
 ---
 name: side-quests
-version: 1.0.1
+version: 1.0.2
 description: Full creative synthesis — combine song, visual concept, and TED talk from a single technical insight
 author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/creative/side-quests
@@ -174,7 +174,7 @@ Each side quest produces a single markdown file with three sections:
 [Explain thoroughly]
 
 ### Real-World Examples (25:00-38:00)
-[Concrete, specific details from real work]
+[Concrete, specific details from context provided]
 
 ### Broader Implications (38:00-45:00)
 [Connect to broader context]
@@ -188,7 +188,7 @@ Each side quest produces a single markdown file with three sections:
 
 **TED Talk Rules**:
 - Full 40-50 minutes, NOT a summary
-- Include concrete examples (file names, metrics, decisions)
+- Ground in reality with specific details from provided context
 - Address likely objections in Q&A
 
 ## Core Logic
@@ -216,9 +216,9 @@ The skill generates each component sequentially:
 2. **Visual Concept**: Core metaphor → symbolic elements → color arc
 3. **TED Talk**: Hook → explanation → examples → implications → Q&A
 
-### Step 4: Write Combined Artifact
+### Step 4: Return Combined Artifact
 
-Save to: `output/side-quests/topic-name.md`
+Return the complete artifact (song + visual concept + TED talk) to the invoking agent.
 
 ## Example
 
@@ -301,8 +301,8 @@ are embedded inline within this skill.
 This skill returns the combined artifact (song + visual concept + TED talk) directly to the
 invoking agent. The agent can then display, save, or pass the result to another skill as needed.
 
-**Note on TED talks**: TED talks include concrete details from your work
-(file names, metrics, decisions). Review before sharing externally.
+**Note on TED talks**: TED talks use concrete details from the context you provide.
+Review before sharing externally to ensure no sensitive information is included.
 
 **Provenance note:**
 This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
