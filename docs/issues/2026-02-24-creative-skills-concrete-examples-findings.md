@@ -124,7 +124,7 @@ Search for and soften any language that implies accessing workspace files:
 - [x] Apply same fixes to side-quests TED talk section
 - [x] Verify no other "files, metrics, decisions" patterns remain
 - [x] Bump versions to 1.0.2
-- [ ] Commit changes
+- [x] Commit changes (1e44d21)
 - [ ] Republish to ClawHub
 - [ ] Verify security scans pass
 
