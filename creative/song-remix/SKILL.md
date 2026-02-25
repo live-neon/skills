@@ -1,6 +1,6 @@
 ---
 name: song-remix
-version: 1.0.0
+version: 1.0.1
 description: Transform existing songs with the Twin Remix method — produce Respectful and Viral versions with Suno v4.5 sliders and visual guides
 author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/creative/song-remix

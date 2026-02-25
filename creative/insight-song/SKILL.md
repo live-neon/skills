@@ -1,6 +1,6 @@
 ---
 name: insight-song
-version: 1.0.0
+version: 1.0.1
 description: Transform technical insights into Suno-ready songs with lyrics, style tags, and emotional arc
 author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/creative/insight-song

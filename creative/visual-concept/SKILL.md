@@ -1,6 +1,6 @@
 ---
 name: visual-concept
-version: 1.0.0
+version: 1.0.1
 description: Transform technical insights into visual concept guides — symbolic imagery, color arcs, and creative direction for video
 author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/creative/visual-concept

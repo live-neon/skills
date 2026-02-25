@@ -354,23 +354,23 @@ clawhub publish pbd/golden-master --slug golden-master --name "Golden Master" --
 **Creative Skills (5):**
 
 ```bash
-clawhub publish creative/insight-song --slug insight-song --name "Insight Song" --version 1.0.0 --tags "creative,songwriting,suno,lyrics,music,synthesis,reflection,learning,technical-writing"
+clawhub publish creative/insight-song --slug insight-song --name "Insight Song" --version 1.0.1 --tags "creative,songwriting,suno,lyrics,music,synthesis,reflection,learning,technical-writing"
 ```
 
 ```bash
-clawhub publish creative/song-remix --slug song-remix --name "Song Remix" --version 1.0.0 --tags "creative,remix,suno,songwriting,viral,tiktok,music,transformation,rewrite"
+clawhub publish creative/song-remix --slug song-remix --name "Song Remix" --version 1.0.1 --tags "creative,remix,suno,songwriting,viral,tiktok,music,transformation,rewrite"
 ```
 
 ```bash
-clawhub publish creative/visual-concept --slug visual-concept --name "Visual Concept" --version 1.0.0 --tags "creative,visual,video,concept-art,storyboard,direction,synthesis,reflection,imagery"
+clawhub publish creative/visual-concept --slug visual-concept --name "Visual Concept" --version 1.0.1 --tags "creative,visual,video,concept-art,storyboard,direction,synthesis,reflection,imagery"
 ```
 
 ```bash
-clawhub publish creative/ted-talk --slug ted-talk --name "TED Talk" --version 1.0.0 --tags "creative,presentation,speaking,storytelling,teaching,synthesis,reflection,knowledge-transfer"
+clawhub publish creative/ted-talk --slug ted-talk --name "TED Talk" --version 1.0.1 --tags "creative,presentation,speaking,storytelling,teaching,synthesis,reflection,knowledge-transfer"
 ```
 
 ```bash
-clawhub publish creative/side-quests --slug side-quests --name "Side Quests" --version 1.0.0 --tags "creative,synthesis,songwriting,storytelling,ted-talk,visual-guide,reflection,knowledge-transfer,suno,learning"
+clawhub publish creative/side-quests --slug side-quests --name "Side Quests" --version 1.0.1 --tags "creative,synthesis,songwriting,storytelling,ted-talk,visual-guide,reflection,knowledge-transfer,suno,learning"
 ```
 
 ---

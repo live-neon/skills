@@ -1,6 +1,6 @@
 ---
 name: side-quests
-version: 1.0.0
+version: 1.0.1
 description: Full creative synthesis — combine song, visual concept, and TED talk from a single technical insight
 author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/creative/side-quests
