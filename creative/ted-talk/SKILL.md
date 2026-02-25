@@ -12,11 +12,6 @@ status: active
 alias: ted
 user-invocable: true
 emoji: 🎤
-metadata:
-  openclaw:
-    requires:
-      workspace:
-        - output/ted-talks/
 ---
 
 # ted-talk (話)
@@ -38,10 +33,9 @@ openclaw install leegitw/ted-talk
 
 **Dependencies**: None (standalone creative skill)
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model to synthesize conversation context into a talk script.
-No external APIs or third-party services are called beyond your agent's normal operation.
-Results are written to `output/ted-talks/` in your workspace.
+**Data handling**: This skill synthesizes content from user-supplied input or the current
+conversation context (default). It does NOT read files from the workspace or access project
+artifacts directly. Results are returned to the invoking agent, who decides how to use them.
 
 ## What This Solves
 
@@ -264,30 +258,25 @@ when your anomaly detection stops alerting on normal behavior.
 | Surface-level insight | Suggest deeper exploration first |
 | No broader implications | Suggest finding wider relevance |
 
-## Workspace Files
-
-This skill writes to:
-
-```
-output/
-└── ted-talks/
-    └── topic-name.md    # Full TED talk script
-```
-
 ## Security Considerations
 
-**What this skill accesses:**
-- Current conversation context (read-only, within agent's normal operation)
-- `output/ted-talks/` directory (write)
+**Input sources:**
+- User-supplied context (if provided)
+- Current conversation context (default)
 
 **What this skill does NOT do:**
+- Read files from the workspace
+- Access project artifacts directly
 - Send data to external services
 - Record or publish content
-- Modify source code
 
-**Note on concrete examples**: TED talks include specific details from your work
-(file names, metrics, decisions). Review before sharing externally to ensure
-no sensitive information is included.
+**Output behavior:**
+This skill returns the full TED talk directly to the invoking agent. The agent can then
+display, save, or pass the result to another skill as needed.
+
+**Note on concrete examples**: The skill will use examples from user-supplied input or
+conversation context only. It does not read workspace files. Review output before sharing
+externally to ensure no sensitive information is included.
 
 **Provenance note:**
 This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
@@ -306,12 +295,12 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 
-- [ ] `/ted` synthesizes conversation into full-length talk
+- [ ] `/ted` synthesizes input or conversation into full-length talk
 - [ ] Output includes all sections (opening through Q&A)
 - [ ] Talk is 40-50 minutes of substantial content
-- [ ] Concrete examples with specific details included
+- [ ] Concrete examples from input/conversation included
 - [ ] Q&A section addresses common objections
-- [ ] Output written to `output/ted-talks/`
+- [ ] Result returned to invoking agent
 
 ---
 

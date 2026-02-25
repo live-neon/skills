@@ -12,11 +12,6 @@ status: active
 alias: vc
 user-invocable: true
 emoji: 🎬
-metadata:
-  openclaw:
-    requires:
-      workspace:
-        - output/visual-concepts/
 ---
 
 # visual-concept (映)
@@ -38,10 +33,9 @@ openclaw install leegitw/visual-concept
 
 **Dependencies**: None (standalone creative skill)
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model to synthesize conversation context into visual concepts.
-No external APIs or third-party services are called beyond your agent's normal operation.
-Results are written to `output/visual-concepts/` in your workspace.
+**Data handling**: This skill synthesizes content from user-supplied input or the current
+conversation context (default). It does NOT read files from the workspace or access project
+artifacts directly. Results are returned to the invoking agent, who decides how to use them.
 
 ## What This Solves
 
@@ -263,26 +257,21 @@ Include:
 | No clear narrative arc | Decline, explain what's missing |
 | Purely procedural insight | Suggest finding visual angle first |
 
-## Workspace Files
-
-This skill writes to:
-
-```
-output/
-└── visual-concepts/
-    └── topic-name.md    # Visual concept guide
-```
-
 ## Security Considerations
 
-**What this skill accesses:**
-- Current conversation context (read-only, within agent's normal operation)
-- `output/visual-concepts/` directory (write)
+**Input sources:**
+- User-supplied context (if provided)
+- Current conversation context (default)
 
 **What this skill does NOT do:**
+- Read files from the workspace
+- Access project artifacts directly
 - Send data to external services
 - Call image generation APIs
-- Modify source code
+
+**Output behavior:**
+This skill returns the visual concept guide directly to the invoking agent. The agent can then
+display, save, or pass the result to another skill as needed.
 
 **Provenance note:**
 This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
@@ -300,11 +289,11 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 
-- [ ] `/vc` synthesizes conversation into visual concept guide
+- [ ] `/vc` synthesizes input or conversation into visual concept guide
 - [ ] Output includes core concept, themes, symbols, color arc
 - [ ] Guide is inspirational, not prescriptive
 - [ ] Technical concepts translated to visual metaphors
-- [ ] Output written to `output/visual-concepts/`
+- [ ] Result returned to invoking agent
 
 ---
 

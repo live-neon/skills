@@ -12,11 +12,6 @@ status: active
 alias: sq
 user-invocable: true
 emoji: 🎭
-metadata:
-  openclaw:
-    requires:
-      workspace:
-        - output/side-quests/
 ---
 
 # side-quests (遊)
@@ -40,10 +35,9 @@ openclaw install leegitw/side-quests
 - `leegitw/visual-concept` — Visual guide component (can be used standalone)
 - `leegitw/ted-talk` — TED talk component (can be used standalone)
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model to synthesize conversation context into creative
-artifacts. No external APIs or third-party services are called beyond your agent's
-normal operation. Results are written to `output/side-quests/` in your workspace.
+**Data handling**: This skill synthesizes content from user-supplied input or the current
+conversation context (default). It does NOT read files from the workspace or access project
+artifacts directly. Results are returned to the invoking agent, who decides how to use them.
 
 ## What This Solves
 
@@ -199,16 +193,6 @@ Each side quest produces a single markdown file with three sections:
 
 ## Core Logic
 
-### Step 0: Document Work State
-
-Before starting, save main work progress:
-
-```
-docs/plans/YYYY-MM-DD-topic-name.md
-```
-
-Include: What building, decisions made, current state, next step, why matters.
-
 ### Step 1: Synthesize Conversation
 
 - Read full conversation context
@@ -294,21 +278,6 @@ Use individual components when you only need one format:
 | Surface-level topic | Suggest deeper exploration first |
 | Main work not documented | Prompt to save progress first |
 
-## Workspace Files
-
-This skill writes to:
-
-```
-output/
-└── side-quests/
-    └── topic-name.md    # Combined artifact (song + visual + TED)
-```
-
-Component skills write to their own directories:
-- `output/songs/` — insight-song output
-- `output/visual-concepts/` — visual-concept output
-- `output/ted-talks/` — ted-talk output
-
 ## Security Considerations
 
 **Orchestration Note:**
@@ -316,15 +285,21 @@ This skill implements combined logic directly. It does NOT spawn or invoke other
 skills (`insight-song`, `visual-concept`, `ted-talk`). The component skill instructions
 are embedded inline within this skill.
 
-**What this skill accesses:**
-- Current conversation context (read-only, within agent's normal operation)
-- `output/side-quests/` directory (write)
+**Input sources:**
+- User-supplied context (if provided)
+- Current conversation context (default)
 
 **What this skill does NOT do:**
+- Read files from the workspace
+- Access project artifacts directly
 - Send data to external services
 - Call external APIs
 - Modify source code
 - Spawn other skills (all logic is inline)
+
+**Output behavior:**
+This skill returns the combined artifact (song + visual concept + TED talk) directly to the
+invoking agent. The agent can then display, save, or pass the result to another skill as needed.
 
 **Note on TED talks**: TED talks include concrete details from your work
 (file names, metrics, decisions). Review before sharing externally.
@@ -335,7 +310,6 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Quality Checklist
 
-- [ ] Main work documented with resumable context
 - [ ] Can explain core insight in one sentence
 - [ ] Understand why, not just what
 - [ ] Song tells story with emotional arc
@@ -349,7 +323,7 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 - [ ] Song formatted for Suno.ai (title, tags, sections)
 - [ ] Visual guide is conceptual, not prescriptive
 - [ ] TED talk is full length with concrete examples
-- [ ] Combined output written to `output/side-quests/`
+- [ ] Result returned to invoking agent
 - [ ] Individual components also available via `/song`, `/vc`, `/ted`
 
 ---

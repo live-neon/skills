@@ -66,15 +66,11 @@ rather than creating from technical insights.
 - Concepts without depth or nuance
 - No clear narrative arc
 
-## Output Locations
+## Output Behavior
 
-| Skill | Output Directory |
-|-------|-----------------|
-| insight-song | `output/songs/` |
-| song-remix | `output/remixes/` |
-| visual-concept | `output/visual-concepts/` |
-| ted-talk | `output/ted-talks/` |
-| side-quests | `output/side-quests/` |
+All creative skills return results directly to the invoking agent. The agent can then
+display, save to a file, or pass the result to another skill as needed. This provides
+maximum flexibility for different use cases.
 
 ## CJK Naming Convention
 

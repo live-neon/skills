@@ -12,11 +12,6 @@ status: active
 alias: song
 user-invocable: true
 emoji: 🎵
-metadata:
-  openclaw:
-    requires:
-      workspace:
-        - output/songs/
 ---
 
 # insight-song (歌)
@@ -38,10 +33,9 @@ openclaw install leegitw/insight-song
 
 **Dependencies**: None (standalone creative skill)
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model to synthesize conversation context into song lyrics.
-No external APIs or third-party services are called beyond your agent's normal operation.
-Results are written to `output/songs/` in your workspace.
+**Data handling**: This skill synthesizes content from user-supplied input or the current
+conversation context (default). It does NOT read files from the workspace or access project
+artifacts directly. Results are returned to the invoking agent, who decides how to use them.
 
 ## What This Solves
 
@@ -243,26 +237,21 @@ Now we know what normal's called
 | No clear narrative arc | Decline, explain what's missing |
 | Surface-level topic | Suggest deeper exploration first |
 
-## Workspace Files
-
-This skill writes to:
-
-```
-output/
-└── songs/
-    └── topic-name.md    # Song artifact
-```
-
 ## Security Considerations
 
-**What this skill accesses:**
-- Current conversation context (read-only, within agent's normal operation)
-- `output/songs/` directory (write)
+**Input sources:**
+- User-supplied context (if provided)
+- Current conversation context (default)
 
 **What this skill does NOT do:**
-- Send data to external services (Suno.ai formatting is local)
+- Read files from the workspace
+- Access project artifacts directly
+- Send data to external services
 - Call external APIs
-- Modify source code
+
+**Output behavior:**
+This skill returns the song directly to the invoking agent. The agent can then display,
+save, or pass the result to another skill as needed.
 
 **Provenance note:**
 This skill is developed by Live Neon (https://github.com/live-neon/skills) and published
@@ -280,11 +269,11 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 
-- [ ] `/song` synthesizes conversation into Suno-ready format
+- [ ] `/song` synthesizes input or conversation into Suno-ready format
 - [ ] Output includes title, 300-500 char style tags, sectioned lyrics
 - [ ] Lyrics convey technical insight through metaphor
 - [ ] Emotional arc matches the technical journey
-- [ ] Output written to `output/songs/`
+- [ ] Result returned to invoking agent
 
 ---
 

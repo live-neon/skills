@@ -12,11 +12,6 @@ status: active
 alias: remix
 user-invocable: true
 emoji: 🔄
-metadata:
-  openclaw:
-    requires:
-      workspace:
-        - output/remixes/
 ---
 
 # song-remix (混)
@@ -39,10 +34,9 @@ openclaw install leegitw/song-remix
 
 **Dependencies**: None (standalone creative skill)
 
-**Data handling**: This skill operates within your agent's trust boundary. When triggered,
-it uses your agent's configured model to transform lyrics. No external APIs or third-party
-services are called beyond your agent's normal operation. Results are written to
-`output/remixes/` in your workspace.
+**Data handling**: This skill **requires user-supplied lyrics** as input (existing song to remix).
+It does NOT read files from the workspace or access project artifacts. Results are returned
+to the invoking agent, who decides how to use them.
 
 ## What This Solves
 
@@ -435,26 +429,20 @@ Echo... echo...
 | Unclear genre | Ask for genre preference or infer from content |
 | Requested single version | Provide both anyway unless `--viral-only` |
 
-## Workspace Files
-
-This skill writes to:
-
-```
-output/
-└── remixes/
-    └── song-name-remix.md    # Both remix versions
-```
-
 ## Security Considerations
 
-**What this skill accesses:**
-- User-provided lyrics (read-only input)
-- `output/remixes/` directory (write)
+**Input sources:**
+- User-supplied lyrics (**required** - this skill always needs existing song content)
 
 **What this skill does NOT do:**
+- Read files from the workspace
+- Access project artifacts directly
 - Send data to Suno or any external service
 - Access copyrighted material databases
-- Modify source files
+
+**Output behavior:**
+This skill returns both remix versions directly to the invoking agent. The agent can then
+display, save, or pass the results to another skill as needed.
 
 **Copyright note**: This skill transforms user-provided content. Ensure you have
 rights to remix any copyrighted material. The skill provides formatting for Suno
@@ -479,13 +467,14 @@ to ClawHub under the `leegitw` account. Both refer to the same maintainer.
 
 ## Acceptance Criteria
 
+- [ ] `/remix` requires user-supplied lyrics as input
 - [ ] `/remix` transforms input into two versions
 - [ ] Remix 1 includes Respectful version with maintained complexity
 - [ ] Remix 2 includes Viral version with simplified hooks
 - [ ] Both include slider recommendations (Weirdness, Style, Audio)
 - [ ] Both include visual guides for video generation
 - [ ] Formatting follows Suno v4.5 conventions
-- [ ] Output written to `output/remixes/`
+- [ ] Result returned to invoking agent
 
 ---
 
