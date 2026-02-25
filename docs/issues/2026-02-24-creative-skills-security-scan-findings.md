@@ -121,9 +121,9 @@ Added to all skills:
 - [x] Mark song-remix as always requiring user input
 - [x] Update Security Considerations in all skills
 - [x] Update creative/README.md
-- [x] Commit changes (d865db5)
-- [ ] Republish all 5 skills to ClawHub
-- [ ] Verify security scans pass
+- [x] Commit changes (d865db5, b175aff)
+- [x] Republish all 5 skills to ClawHub (v1.0.1)
+- [x] Verify security scans pass
 
 ---
 
