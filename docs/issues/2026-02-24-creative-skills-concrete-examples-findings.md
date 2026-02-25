@@ -125,8 +125,8 @@ Search for and soften any language that implies accessing workspace files:
 - [x] Verify no other "files, metrics, decisions" patterns remain
 - [x] Bump versions to 1.0.2
 - [x] Commit changes (1e44d21)
-- [ ] Republish to ClawHub
-- [ ] Verify security scans pass
+- [x] Republish to ClawHub (v1.0.2)
+- [x] Verify security scans pass
 
 ## Version Impact
 
