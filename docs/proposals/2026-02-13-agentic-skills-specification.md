@@ -148,7 +148,7 @@ as the authority on failure-anchored learning for AI-assisted development.
 **Research foundation**: See `projects/live-neon/neon-soul/docs/research/hierarchical-principles-architecture.md`
 for the reusable soul schema (5 axioms + 11 principles + priority hierarchy + meta-pattern) that
 informs constraint organization, severity classification, and the priority hierarchy
-(安>誠>正>助>効: Safety > Honesty > Correctness > Helpfulness > Efficiency).
+(誠>正>安>助>効: Honesty > Correctness > Safety > Helpfulness > Efficiency).
 
 ### Semantic Classification Over Pattern Matching
 
