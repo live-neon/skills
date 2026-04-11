@@ -40,6 +40,26 @@ or guides change.
 
 ---
 
+## Defense in Depth for Documentation Changes
+
+When refactoring or consolidating documentation (not just adding new docs), apply the same safety principles as code refactoring. See [N=8 Refactoring Workflow](../../../../docs/observations/n1-pattern-identification-refactoring-workflow.md) learnings #22-23.
+
+**Two-layer verification:**
+
+| Layer | Purpose | When |
+|-------|---------|------|
+| **WHY table** | Document why each doc exists | Before consolidating/removing |
+| **Link verification** | Check all cross-references still work | After changes |
+
+**Before removing or consolidating docs, ask:**
+- WHY does this doc exist separately?
+- What nuanced information might be lost?
+- Are there incoming links that will break?
+
+See also: [metrics-trap-coverage-not-understanding.md](../../../../docs/observations/metrics-trap-coverage-not-understanding.md)
+
+---
+
 ## Documentation Hierarchy
 
 Updates flow from authoritative sources down:
@@ -591,6 +611,12 @@ After completing documentation updates, **close the loop**:
 
 - **[Proposal Alignment Plan](../plans/2026-02-16-proposal-alignment.md)** - Stage 0 alignment audit pattern
 - **Pattern Source**: memory-garden/docs/plans/010-architecture-documentation-hub.md (cross-project reference)
+
+### Defense in Depth References
+
+- **[N=8 Refactoring Workflow](../../../../docs/observations/n1-pattern-identification-refactoring-workflow.md)** - Defense in depth principles (learnings #22-23)
+- **[Metrics Trap](../../../../docs/observations/metrics-trap-coverage-not-understanding.md)** - WHY table approach for understanding before changing
+- **[Observations Workflow](../../../../docs/workflows/observations.md)** - When to create observations from documentation work
 
 ---
 
