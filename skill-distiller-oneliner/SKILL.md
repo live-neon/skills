@@ -1,10 +1,16 @@
 ---
 name: skill-distiller-oneliner
 version: 0.1.0
-description: Compress skills while preserving functionality (one-liner reference)
+description: Compress skills while preserving functionality (quick reference, ~100 tokens)
+homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-oneliner
 user-invocable: true
+disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
-tags: [compression, skills, optimization, openclaw]
+tags:
+  - compression
+  - skills
+  - optimization
+  - openclaw
 ---
 
 # Skill Distiller (One-Liner)
@@ -14,3 +20,11 @@ tags: [compression, skills, optimization, openclaw]
 **ACTION**: Parse skill into sections (TRIGGER/INSTRUCTION/EXAMPLE/etc), score importance via LLM, remove low-value sections while preserving protected patterns (YAML name/description, N-count tracking, task creation)
 
 **RESULT**: Compressed skill markdown with functionality score (0-100%), token reduction stats, and list of removed/kept sections
+
+---
+
+## Related
+
+- [skill-distiller](../skill-distiller/) — Full variant (~2,500 tokens)
+- [skill-distiller-compressed](../skill-distiller-compressed/) — Prose variant (~975 tokens)
+- [skill-distiller-formula](../skill-distiller-formula/) — Math notation (~400 tokens)

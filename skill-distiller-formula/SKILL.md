@@ -1,15 +1,22 @@
 ---
 name: skill-distiller-formula
 version: 0.1.0
-description: Compress skills using legend + math notation (executable cheat sheet)
+description: Compress skills using legend + math notation (executable cheat sheet, ~400 tokens)
+homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-formula
 user-invocable: true
+disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
-tags: [compression, skills, optimization, openclaw, formula]
+tags:
+  - compression
+  - skills
+  - optimization
+  - openclaw
+  - formula
 ---
 
 # Skill Distiller (Formula)
 
-Assumes foundation from `SKILL.md`. Use for edge cases and quick execution.
+Assumes foundation from `skill-distiller`. Use for edge cases and quick execution.
 
 ## Legend
 
@@ -92,3 +99,11 @@ prune while preserving sentence structure
 | `skill = ∅` | "No content" |
 | `¬∃ yaml.name` | "Add frontmatter" |
 | `n < min_tokens` | "Summarizing..." |
+
+---
+
+## Related
+
+- [skill-distiller](../skill-distiller/) — Full variant (~2,500 tokens)
+- [skill-distiller-compressed](../skill-distiller-compressed/) — Prose variant (~975 tokens)
+- [skill-distiller-oneliner](../skill-distiller-oneliner/) — Quick reference (~100 tokens)

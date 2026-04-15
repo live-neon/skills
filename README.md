@@ -105,7 +105,10 @@ Skills for operating on other skills.
 
 | Skill | Description |
 |-------|-------------|
-| [skill-distiller](skill-distiller/) | Compress skills while preserving functionality. Reduces context window usage. |
+| [skill-distiller](skill-distiller/) | Compress skills (~2,500 tokens, 91% functionality) |
+| [skill-distiller-compressed](skill-distiller-compressed/) | Compressed variant (~975 tokens, 88% functionality) |
+| [skill-distiller-formula](skill-distiller-formula/) | Math notation variant (~400 tokens, 89% functionality) |
+| [skill-distiller-oneliner](skill-distiller-oneliner/) | Quick reference (~100 tokens, 72% functionality) |
 
 ### Creative (Synthesis & Artifact Generation)
 

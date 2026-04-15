@@ -173,15 +173,20 @@ To improve calibration, report actual outcomes:
 - [skill-distiller-llm.md](../../go-pbd/docs/plans/2026-04-14-skill-distiller-llm.md) - Implementation plan (Complete)
 - [skill-compression-support.md](../../go-pbd/docs/plans/2026-04-14-skill-compression-support.md) - CLI-based compression (Option B, Draft)
 
-## Files
+## Files & Variants
 
+| Directory | Purpose | ClawHub |
+|-----------|---------|---------|
+| `skill-distiller/` | Full skill (~2,500 tokens) | `leegitw/skill-distiller` |
+| `skill-distiller-compressed/` | Compressed variant (~975 tokens) | `leegitw/skill-distiller-compressed` |
+| `skill-distiller-formula/` | Math notation (~400 tokens) | `leegitw/skill-distiller-formula` |
+| `skill-distiller-oneliner/` | Quick reference (~100 tokens) | `leegitw/skill-distiller-oneliner` |
+
+**Local Files**:
 | File | Purpose |
 |------|---------|
-| `SKILL.md` | Full skill (~2,500 tokens) |
-| `SKILL.compressed.md` | Self-compressed variant (~975 tokens) |
-| `SKILL.formula.md` | Legend + math notation (~400 tokens) |
-| `SKILL.oneliner.md` | Prose summary (~100 tokens) |
 | `test_integration.sh` | Ollama-based integration tests |
+| `testdata/` | Test fixtures |
 | `.learnings/skill-distiller/calibration.jsonl` | Compression calibration data |
 
 ## License

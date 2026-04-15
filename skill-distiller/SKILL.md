@@ -4,6 +4,7 @@ version: 0.1.0
 description: Compress skills while preserving functionality. Reduces context window usage by identifying and removing low-importance sections.
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
 user-invocable: true
+disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
 tags:
   - compression

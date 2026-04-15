@@ -1,9 +1,10 @@
 ---
-name: skill-distiller
+name: skill-distiller-compressed
 version: 0.1.0
-description: Compress skills while preserving functionality. Reduces context window usage by identifying and removing low-importance sections.
-homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
+description: Compress skills while preserving functionality (compressed variant, ~975 tokens)
+homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-compressed
 user-invocable: true
+disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
 tags:
   - compression
@@ -12,7 +13,9 @@ tags:
   - openclaw
 ---
 
-# Skill Distiller
+# Skill Distiller (Compressed)
+
+Self-compressed variant of skill-distiller (~975 tokens vs ~2,500). Same functionality, smaller context footprint.
 
 ## Agent Identity
 
@@ -150,3 +153,11 @@ Parallel/serial decisions, performance hints, caching guidance. No score penalty
 | No content | Provide SKILL.md path or pipe via stdin |
 | No frontmatter | Add `---` block with `name`/`description` |
 | LLM unavailable | Run `ollama serve` or set GEMINI_API_KEY |
+
+---
+
+## Related
+
+- [skill-distiller](../skill-distiller/) — Full variant (~2,500 tokens)
+- [skill-distiller-formula](../skill-distiller-formula/) — Math notation (~400 tokens)
+- [skill-distiller-oneliner](../skill-distiller-oneliner/) — Quick reference (~100 tokens)
