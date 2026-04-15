@@ -76,9 +76,18 @@ fi
 # Test 8: Error Handling (malformed)
 echo "Test 8: Error Handling (malformed)"
 if [[ -f "$TESTDATA/malformed.md" ]]; then
-  # Check malformed fixture has expected issues
-  grep -q "frontmatter" "$TESTDATA/malformed.md" || true
-  echo "  PASS: malformed.md fixture exists"
+  # Verify malformed fixture contains expected issues for error testing
+  ISSUES=0
+  grep -q "Missing Frontmatter" "$TESTDATA/malformed.md" && ((ISSUES++)) || true
+  grep -q "Unclosed code block" "$TESTDATA/malformed.md" && ((ISSUES++)) || true
+  grep -q "Broken Header" "$TESTDATA/malformed.md" && ((ISSUES++)) || true
+  if [[ $ISSUES -ge 2 ]]; then
+    echo "  PASS: malformed.md has $ISSUES/3 expected error patterns"
+  else
+    echo "  FAIL: malformed.md missing expected error patterns ($ISSUES/3)"
+  fi
+  # Note: Full error handling validation requires skill invocation (SKIP)
+  # Manual test: /skill-distiller testdata/malformed.md should report errors
 else
   echo "  FAIL: malformed.md fixture not found"
 fi
