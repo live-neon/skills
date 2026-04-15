@@ -31,12 +31,18 @@ openclaw install leegitw/context-verifier
 openclaw install leegitw/failure-memory
 openclaw install leegitw/constraint-engine
 # See agentic/README.md for full installation order
+
+# Skill-distiller uses neon- prefix (base slug was taken)
+openclaw install neon-skill-distiller
 ```
 
 **Manual (Claude Code users)**:
 ```bash
 # Clone to your Claude Code skills directory
 git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
+
+# Or symlink specific skills
+ln -s /path/to/skills/skill-distiller ~/.claude/skills/skill-distiller
 ```
 
 ## Getting Started
@@ -109,6 +115,14 @@ Skills for operating on other skills.
 | [skill-distiller-compressed](skill-distiller-compressed/) | Compressed variant (~975 tokens, 88% functionality) |
 | [skill-distiller-formula](skill-distiller-formula/) | Math notation variant (~400 tokens, 89% functionality) |
 | [skill-distiller-oneliner](skill-distiller-oneliner/) | Quick reference (~100 tokens, 72% functionality) |
+
+**Install skill-distiller** (uses `neon-` prefix on ClawHub):
+```bash
+openclaw install neon-skill-distiller              # Full (~2,500 tokens)
+openclaw install neon-skill-distiller-compressed   # Compressed (~975 tokens)
+openclaw install neon-skill-distiller-formula      # Math notation (~400 tokens)
+openclaw install neon-skill-distiller-oneliner     # Quick reference (~100 tokens)
+```
 
 ### Creative (Synthesis & Artifact Generation)
 
