@@ -4,7 +4,6 @@ version: 1.0.1
 description: Discover what two sources agree on — find the signal in the noise.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/pattern-finder
 user-invocable: true
-disable-model-invocation: true
 emoji: 🧭
 tags:
   - comparison

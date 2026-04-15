@@ -1,10 +1,9 @@
 ---
 name: PBE Extractor
-version: 1.0.1
+version: 1.0.2
 description: Extract invariant principles from any text — find the ideas that survive rephrasing.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/pbe-extractor
 user-invocable: true
-disable-model-invocation: true
 emoji: 📐
 tags:
   - extraction

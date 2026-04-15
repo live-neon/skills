@@ -1,16 +1,15 @@
 ---
 name: agentic-governance
-version: 1.2.0
+version: 1.3.0
 description: Keep your constraints healthy — lifecycle management with automatic staleness detection
-author: Live Neon <contact@liveneon.dev>
+author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/governance
 repository: leegitw/agentic-governance
 license: MIT
-tags: [agentic, governance, state, lifecycle, review]
+tags: [agentic, governance, lifecycle, maintenance, health-checks, observability, compliance, staleness]
 layer: governance
 status: active
 alias: gov
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -53,10 +52,9 @@ openclaw install leegitw/governance
 **Standalone usage**: Index generation and round-trip verification work independently.
 Full governance features require constraint-engine and failure-memory integration.
 
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It provides governance templates and review structures but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Results are written to `output/governance/`
-in your workspace. The skill only accesses paths declared in its metadata.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for governance analysis and review. No external APIs
+or third-party services are called. Results are written to `output/governance/` in your workspace.
 
 ## What This Solves
 
@@ -389,7 +387,6 @@ agentic/
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Send data to external services
 - Execute arbitrary code
 - Modify files outside its workspace

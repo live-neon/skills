@@ -1,16 +1,15 @@
 ---
 name: constraint-engine
-version: 1.2.0
+version: 1.3.0
 description: Learn from consequences, not instructions — generate and enforce constraints from experience
-author: Live Neon <contact@liveneon.dev>
+author: Live Neon <hello@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/agentic/constraint-engine
 repository: leegitw/constraint-engine
 license: MIT
-tags: [agentic, constraint, enforcement, circuit-breaker, lifecycle]
+tags: [agentic, guardrails, enforcement, rules, circuit-breaker, self-improving, prevention, validation]
 layer: core
 status: active
 alias: ce
-disable-model-invocation: true
 metadata:
   openclaw:
     requires:
@@ -49,10 +48,9 @@ openclaw install leegitw/constraint-engine
 **Standalone usage**: Requires failure-memory for constraint generation from observations.
 For full lifecycle management, install the complete suite (see [Neon Agentic Suite](../README.md)).
 
-**Data handling**: This skill is instruction-only (`disable-model-invocation: true`).
-It provides constraint templates and enforcement logic but does NOT invoke AI models itself.
-No external APIs or third-party services are called. Results are written to `output/constraints/`
-in your workspace. The skill only accesses paths declared in its metadata.
+**Data handling**: This skill operates within your agent's trust boundary. When triggered,
+it uses your agent's configured model for constraint checking and generation. No external APIs
+or third-party services are called. Results are written to `output/constraints/` in your workspace.
 
 ## What This Solves
 
@@ -345,7 +343,6 @@ output/
 - Network resources or external APIs
 
 **What this skill does NOT do:**
-- Invoke AI models (instruction-only skill)
 - Send data to external services
 - Execute arbitrary code
 - Modify files outside its workspace

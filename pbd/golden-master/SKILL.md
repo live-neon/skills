@@ -1,10 +1,9 @@
 ---
 name: Golden Master
-version: 1.0.1
+version: 1.0.3
 description: Track source-of-truth relationships between files — know when derived content becomes stale.
 homepage: https://github.com/live-neon/skills/tree/main/pbd/golden-master
 user-invocable: true
-disable-model-invocation: true
 emoji: 🏆
 tags:
   - documentation

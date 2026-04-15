@@ -6,6 +6,25 @@ All notable changes to the agentic skills are documented here.
 > SKILL.md frontmatter shows `version: 1.0.0` which is the ClawHub publication version.
 > The first ClawHub release (1.0.0) corresponds to internal version 2.0.1 (post-consolidation + decoupling).
 
+## [2.0.4] - 2026-02-23
+
+### Agentic Workflow Fix (All 14 Skills)
+
+Removed `disable-model-invocation: true` from all skills. This flag was incorrectly preventing
+the OpenClaw agent from auto-invoking skills, defeating the entire purpose of agentic workflows.
+
+**What was wrong:**
+- `disable-model-invocation: true` excludes skills from model prompts
+- Agent couldn't see or auto-invoke skills based on triggers
+- Users had to manually type `/ce check`, `/fm detect`, etc.
+- Skills were effectively passive documentation, not agentic tools
+
+**What changed:**
+- Removed `disable-model-invocation: true` from all 14 skills
+- Updated data handling statements from "instruction-only" to "model-invocable" language
+- Removed "Invoke AI models (instruction-only skill)" from Security Considerations
+- Skills can now be auto-invoked when triggers are detected
+
 ## [2.0.3] - 2026-02-16
 
 ### Security Compliance (All 14 Skills)
