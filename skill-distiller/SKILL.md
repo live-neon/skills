@@ -1,6 +1,6 @@
 ---
 name: Skill Distiller
-version: 0.1.0
+version: 0.2.0
 description: Fit more skills in your context window — compress without losing what matters.
 author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
