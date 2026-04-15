@@ -99,6 +99,14 @@ Skills for failure detection, constraint enforcement, and memory operations. See
 
 **Consolidated architecture** — 7 skills (from 48 granular). See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
 
+### Utility (Meta-Skills)
+
+Skills for operating on other skills.
+
+| Skill | Description |
+|-------|-------------|
+| [skill-distiller](skill-distiller/) | Compress skills while preserving functionality. Reduces context window usage. |
+
 ## Usage
 
 After installation, invoke skills in Claude Code:
