@@ -50,7 +50,7 @@ Activate this skill when the user asks:
 | `--tokens` | - | Target token count (for tokens mode) |
 | `--provider` | `auto` | LLM provider: auto, ollama, gemini, openai |
 | `--model` | - | Specific model (e.g., llama3.2, gemini-2.0-flash) |
-| `--with-ci` | `false` | Calculate confidence interval (3x LLM calls, v2) |
+| `--with-ci` | `false` | Calculate confidence interval (3x LLM calls) — **planned, not yet implemented** |
 | `--verbose` | `false` | Show section-by-section analysis |
 | `--dry-run` | `false` | Analyze without outputting compressed skill |
 | `--debug-stages` | `false` | Show intermediate stage outputs |

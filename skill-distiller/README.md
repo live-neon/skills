@@ -85,7 +85,7 @@ git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
 | `--provider` | `auto` | LLM provider: ollama, gemini, openai |
 | `--verbose` | `false` | Show section-by-section analysis |
 | `--dry-run` | `false` | Analyze without outputting compressed skill |
-| `--with-ci` | `false` | Calculate confidence interval (v2 feature) |
+| `--with-ci` | `false` | Calculate confidence interval — **planned, not yet implemented** |
 
 ## Compression Modes
 
