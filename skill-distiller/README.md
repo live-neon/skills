@@ -1,19 +1,25 @@
 # Skill Distiller
 
-Compress skills while preserving functionality. Reduces context window usage by removing low-importance sections (examples, explanations) while keeping triggers and core instructions.
+**Compress skills by 50-90%** while preserving functionality. Reduces context window usage by removing low-importance sections (examples, explanations) while keeping triggers and core instructions. Stop hitting context limits.
 
-**This skill practices what it preaches** — the main `SKILL.md` ships in formula notation (~400 tokens, ~89% functionality). Full human-readable version available in `SKILL.reference.md`.
+**This skill practices what it preaches** — the main `SKILL.md` ships in formula notation (~400 tokens, ~90% functionality). Full human-readable version available in `SKILL.reference.md`.
 
 ## Skill Variants
 
 | Variant | Path | Tokens | Functionality | Use When |
 |---------|------|--------|---------------|----------|
-| **Default** | `SKILL.md` | ~400 | ~89% | Formula notation — ships by default |
-| **Compressed** | `compressed/SKILL.md` | ~975 | ~88% | Prose variant, more readable |
-| **One-liner** | `oneliner/SKILL.md` | ~100 | ~72% | Quick reference only |
-| **Reference** | `SKILL.reference.md` | ~2,500 | ~91% | Full docs, human reading |
+| **Default** | `SKILL.md` | ~400 | ~90% | Formula notation — ships by default |
+| **Compressed** | `compressed/SKILL.md` | ~975 | ~90% | Prose variant, more readable |
+| **One-liner** | `oneliner/SKILL.md` | ~100 | ~70% | Quick reference only |
+| **Reference** | `SKILL.reference.md` | ~2,500 | ~90% | Full docs, human reading |
 
-*Token counts use 4 chars/token heuristic (+/-20%). Functionality scores are LLM-estimated.*
+*Token counts are estimates using 4 chars/token heuristic — actual counts vary by model tokenizer. Functionality scores are LLM-estimated, not empirically validated.*
+
+## Prerequisites
+
+- **Agent host**: Claude Code, Cursor, or any Agent Skills-compatible tool
+- **For local inference**: `ollama serve` running with llama3.2 or similar
+- **For cloud inference**: `GEMINI_API_KEY` or `OPENAI_API_KEY` environment variable set
 
 ## Quick Start (30 seconds)
 
@@ -25,9 +31,9 @@ Compress skills while preserving functionality. Reduces context window usage by 
 ```
 $ /skill-distiller my-skill/SKILL.md --threshold=0.9
 
-Functionality preserved: 90% (uncalibrated)
-Tokens: 2000 -> 1800 (10% reduction)
-Removed: 3 examples, 2 edge cases
+Functionality preserved: ~90% (LLM-estimated)
+Tokens: 2500 -> 1000 (60% reduction)
+Removed: 5 examples, 3 edge cases, 2 verbose sections
 Kept: all triggers, core instructions, constraints
 
 [Compressed skill output follows...]
@@ -85,6 +91,8 @@ git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
 | `--provider` | `auto` | LLM provider: ollama, gemini, openai |
 | `--verbose` | `false` | Show section-by-section analysis |
 | `--dry-run` | `false` | Analyze without outputting compressed skill |
+
+**Note**: `--threshold` sets the preservation target (default 0.9). `--mode=threshold` is implicit when using `--threshold`. Use `--mode=tokens` or `--mode=oneliner` for other modes.
 
 ## Compression Modes
 
@@ -189,11 +197,11 @@ The formula notation has been validated with:
 | Model | Status | Notes |
 |-------|--------|-------|
 | Claude (Opus 4.5, Sonnet 4) | Tested | Formula notation understood and executed correctly |
-| GPT-4 / GPT-5 | Not tested | Should work (MetaGlyph paper validates math notation) |
-| Llama 3.2 | Not tested | Used for integration tests, formula not specifically validated |
-| Gemini 2.5 Pro | Not tested | Should work (supports math notation) |
+| GPT-4 / GPT-5 | Community feedback welcome | Should work (MetaGlyph paper validates math notation) |
+| Llama 3.2 | Community feedback welcome | Used for integration tests, formula not specifically validated |
+| Gemini 2.5 Pro | Community feedback welcome | Should work (supports math notation) |
 
-If you encounter issues with a specific model, please report via GitHub issues.
+**Help us improve**: If you test with a model not listed, please report results via GitHub issues.
 
 ## Manual Testing
 

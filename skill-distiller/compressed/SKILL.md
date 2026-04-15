@@ -21,7 +21,7 @@ tags:
 
 # Skill Distiller (Compressed)
 
-Self-compressed prose variant (~975 tokens, ~88% functionality, LLM-estimated). Full reference: `../SKILL.reference.md`.
+Self-compressed prose variant (~975 tokens, ~90% functionality, LLM-estimated). Full reference: `../SKILL.reference.md`.
 
 ## Agent Identity
 
@@ -168,10 +168,10 @@ Parallel/serial decisions, performance hints, caching guidance. No score penalty
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| [skill-distiller](../) (main) | ~400 | ~89% (formula) |
-| **compressed** (this) | ~975 | ~88% (prose) |
-| [oneliner](../oneliner/) | ~100 | ~72% |
+| [skill-distiller](../) (main) | ~400 | ~90% (formula) |
+| **compressed** (this) | ~975 | ~90% (prose) |
+| [oneliner](../oneliner/) | ~100 | ~70% |
 
-Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens, ~91%)
+Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens, ~90%)
 
 *Token counts use 4 chars/token heuristic (+/-20%). Functionality scores are LLM-estimated.*

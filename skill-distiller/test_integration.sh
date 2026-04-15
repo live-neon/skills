@@ -17,6 +17,11 @@ MODEL="${OLLAMA_MODEL:-llama3.2}"
 
 echo "=== Integration Tests (Ollama: $MODEL) ==="
 echo "Skills path: $SKILLS"
+echo ""
+echo "Test Categories:"
+echo "  - Tests 1,3,4,7,8,9: Run without skill deployment"
+echo "  - Tests 2,5,6: SKIP - require '/skill-distiller' command (post-deployment)"
+echo ""
 
 # Test 1: Section Classification (using real skill)
 echo "Test 1: Section Classification"

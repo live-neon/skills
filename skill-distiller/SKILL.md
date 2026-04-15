@@ -20,7 +20,10 @@ tags:
 
 # Skill Distiller
 
-Compress verbose skills to reduce context window usage. This skill is self-compressed using formula notation (~400 tokens, ~89% functionality, LLM-estimated). Full reference version: `SKILL.reference.md`.
+Compress verbose skills to reduce context window usage. This skill is self-compressed using formula notation (~400 tokens, ~90% functionality, LLM-estimated). Full reference version: `SKILL.reference.md`.
+
+> **Note**: This skill uses formula notation — the LLM executes these operations directly.
+> You don't need to understand the math. For prose explanation, see [SKILL.reference.md](./SKILL.reference.md).
 
 ## Legend
 
@@ -111,10 +114,10 @@ prune while preserving sentence structure
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| **main** (this) | ~400 | ~89% (formula) |
-| [compressed](./compressed/) | ~975 | ~88% (prose) |
-| [oneliner](./oneliner/) | ~100 | ~72% |
+| **main** (this) | ~400 | ~90% (formula) |
+| [compressed](./compressed/) | ~975 | ~90% (prose) |
+| [oneliner](./oneliner/) | ~100 | ~70% |
 
-Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens, ~91%)
+Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens, ~90%)
 
 *Token counts use 4 chars/token heuristic (+/-20%). Functionality scores are LLM-estimated.*

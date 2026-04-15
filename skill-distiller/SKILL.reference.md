@@ -6,6 +6,9 @@ author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
 repository: live-neon/skills
 license: MIT
+# Note: This reference document intentionally exceeds the 300-line MCE guideline.
+# As the canonical source for all compressed variants, comprehensiveness is prioritized
+# over brevity. The compressed variants (SKILL.md, compressed/SKILL.md) are MCE-compliant.
 user-invocable: true
 disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
@@ -476,6 +479,8 @@ This skill can compress itself (meta-recursive).
 - **Manual verification**: Require human approval
 
 **Why 0.95 threshold**: The distiller must remain fully functional to distill other skills. Capability loss compounds (0.95 x 0.95 = 0.90 at next level).
+
+**Enforcement**: The 0.95 threshold is a documented guardrail, not an automated check. When compressing skill-distiller variants, manually verify you're using `--threshold=0.95` or higher. The formula variant (`SKILL.md`) should never be the input for self-compression.
 
 ---
 

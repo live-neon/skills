@@ -12,6 +12,8 @@ Stores calibration data for skill-distiller functionality estimates.
 
 Each JSONL entry contains:
 
+**Note**: Calibration IDs (c1, c2, ...) are monotonically increasing but may have gaps if entries were removed during development or testing.
+
 ```json
 {
   "id": "c1",                           // Unique entry ID
