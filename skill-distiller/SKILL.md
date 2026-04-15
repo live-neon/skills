@@ -103,21 +103,29 @@ Classify each section using LLM:
 
 ### 4. Apply Compression
 
+**All modes use MetaGlyph native symbols** (see §Symbol Reference below):
+- Replace "results in" → `→`
+- Replace "implies" → `⇒`
+- Replace "for all" → `∀`
+- Replace "not" → `¬`
+
 **Threshold Mode** (default):
 1. Sort sections by importance (descending)
 2. Include sections until functionality target reached
-3. Generate compressed markdown
+3. Apply symbol substitutions
+4. Generate compressed markdown
 
 **Token-Target Mode**:
 1. Calculate minimum tokens (triggers + core)
 2. If target < minimum: attempt LLM summarization
 3. Add sections by importance until target
+4. Apply symbol substitutions
 
 **One-Liner Mode**:
 1. Extract trigger conditions
 2. Extract core action
 3. Extract expected result
-4. Format as 3-line summary
+4. Format as 3-line summary with symbols
 
 ### 5. Measure Functionality
 
@@ -211,6 +219,13 @@ ACTION: [core behavior]
 RESULT: [expected output]
 ```
 
+**Example with MetaGlyph symbols**:
+```
+TRIGGER: user asks "compress skill" ∨ "distill" ∨ "reduce context"
+ACTION: parse → classify sections → score importance → ¬low-value → output
+RESULT: compressed skill ∧ functionality% ∧ token reduction stats
+```
+
 ---
 
 ## Compression Modes
@@ -287,6 +302,27 @@ Advisory patterns removed are **warned** but don't penalize the functionality sc
 
 ---
 
+## Symbol Reference (MetaGlyph)
+
+Native mathematical symbols LLMs understand from pre-training. Zero legend overhead.
+
+| Symbol | Replaces | Example |
+|--------|----------|---------|
+| `→` | results in, leads to, produces | `trigger → action` |
+| `⇒` | implies, therefore, thus | `condition ⇒ behavior` |
+| `∈` | belongs to, is in, member of | `value ∈ {a, b, c}` |
+| `∀` | for all, for every, for each | `∀ files: validate` |
+| `¬` | not, doesn't, isn't | `¬empty → process` |
+| `∃` | there exists, there is | `∃ config → load` |
+| `∧` | and, also, plus | `valid ∧ safe → proceed` |
+| `∨` | or, either | `error ∨ timeout → retry` |
+
+**Application**: Symbols replace verbose phrases in compressed output. No legend needed in output—LLMs comprehend natively.
+
+**Research**: Based on MetaGlyph (arXiv:2601.07354) - 62-81% compression with native symbols.
+
+---
+
 ## Calibration
 
 **Storage**: `.learnings/skill-distiller/calibration.jsonl`
@@ -351,5 +387,6 @@ This skill can compress itself (meta-recursive).
 
 ## Related
 
+- [LLM Compression Research](../go-pbd/docs/research/2026-04-14-llm-compression-approaches.md) - MetaGlyph, LLMLingua, and 11 other techniques surveyed
 - [skill-compression-support.md](../go-pbd/docs/plans/2026-04-14-skill-compression-support.md) - CLI-based compression (Option B)
 - [Agent Skills Spec](https://agentskills.io/specification) - Required fields, size constraints
