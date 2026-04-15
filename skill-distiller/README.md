@@ -6,11 +6,9 @@ Compress skills while preserving functionality. Reduces context window usage by 
 
 ## Skill Variants
 
-All variants in `skill-distiller/`:
-
 | Variant | Path | Tokens | Functionality | Use When |
 |---------|------|--------|---------------|----------|
-| **Main** | `SKILL.md` | ~400 | 89% | Default — formula notation |
+| **Default** | `SKILL.md` | ~400 | 89% | Formula notation — ships by default |
 | **Compressed** | `compressed/SKILL.md` | ~975 | 88% | Prose variant, more readable |
 | **One-liner** | `oneliner/SKILL.md` | ~100 | 72% | Quick reference only |
 | **Reference** | `SKILL.reference.md` | ~2,500 | 91% | Full docs, human reading |
@@ -170,13 +168,10 @@ To improve calibration, report actual outcomes:
 
 ```
 skill-distiller/
-├── SKILL.md              # Main (formula, ~400 tokens)
-├── SKILL.reference.md    # Full reference (~2,500 tokens)
-├── README.md             # This file
-├── compressed/
-│   └── SKILL.md          # Prose variant (~975 tokens)
-├── oneliner/
-│   └── SKILL.md          # Minimal variant (~100 tokens)
+├── SKILL.md              # Default (formula, ~400 tokens, 89%)
+├── SKILL.reference.md    # Full reference (~2,500 tokens, 91%)
+├── compressed/SKILL.md   # Prose variant (~975 tokens, 88%)
+├── oneliner/SKILL.md     # Minimal variant (~100 tokens, 72%)
 ├── test_integration.sh   # Ollama-based integration tests
 └── testdata/             # Test fixtures
 ```

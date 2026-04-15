@@ -109,16 +109,17 @@ Skills for failure detection, constraint enforcement, and memory operations. See
 
 Skills for operating on other skills.
 
-| Skill | Path | Description |
-|-------|------|-------------|
-| [skill-distiller](skill-distiller/) | `skill-distiller/SKILL.md` | Main (formula, ~400 tokens, 89%) |
-| [compressed](skill-distiller/compressed/) | `skill-distiller/compressed/` | Prose variant (~975 tokens, 88%) |
-| [oneliner](skill-distiller/oneliner/) | `skill-distiller/oneliner/` | Quick reference (~100 tokens, 72%) |
-| reference | `skill-distiller/SKILL.reference.md` | Full docs (~2,500 tokens, 91%) |
+| Skill | Tokens | Description |
+|-------|--------|-------------|
+| [skill-distiller](skill-distiller/) | ~400 | Default (formula notation, 89% functionality) |
+| [compressed](skill-distiller/compressed/) | ~975 | Prose variant (88% functionality) |
+| [oneliner](skill-distiller/oneliner/) | ~100 | Quick reference (72% functionality) |
+
+Full reference: `skill-distiller/SKILL.reference.md` (~2,500 tokens, 91%)
 
 **Install**: `openclaw install neon-skill-distiller`
 
-**Manual** (Claude Code users):
+**Manual**:
 ```bash
 ln -s /path/to/skills/skill-distiller ~/.claude/skills/skill-distiller
 ```
