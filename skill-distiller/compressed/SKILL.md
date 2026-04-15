@@ -1,6 +1,6 @@
 ---
 name: Skill Distiller (Compressed)
-version: 0.2.0
+version: 0.2.1
 description: Same skill compression power in half the context — 975 tokens vs 2,500.
 author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller/compressed

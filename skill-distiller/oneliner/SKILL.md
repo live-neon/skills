@@ -1,6 +1,6 @@
 ---
 name: Skill Distiller (One-Liner)
-version: 0.2.0
+version: 0.2.1
 description: Skill compression reminder in 100 tokens — just trigger, action, result.
 author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller/oneliner

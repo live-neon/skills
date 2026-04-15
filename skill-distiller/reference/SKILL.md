@@ -1,14 +1,11 @@
 ---
-name: Skill Distiller
+name: Skill Distiller (Reference)
 version: 0.2.1
-description: Fit more skills in your context window — compress without losing what matters.
+description: Complete skill compression documentation — all options, modes, and calibration details (~2,500 tokens).
 author: Live Neon <lee@liveneon.ai>
-homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
+homepage: https://github.com/live-neon/skills/tree/main/skill-distiller/reference
 repository: live-neon/skills
 license: MIT
-# Note: This reference document intentionally exceeds the 300-line MCE guideline.
-# As the canonical source for all compressed variants, comprehensiveness is prioritized
-# over brevity. The compressed variants (SKILL.md, compressed/SKILL.md) are MCE-compliant.
 user-invocable: true
 disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
@@ -18,10 +15,19 @@ tags:
   - optimization
   - context-window
   - token-reduction
+  - reference
+  - documentation
   - openclaw
 ---
 
-# Skill Distiller
+# Skill Distiller (Reference)
+
+Full reference documentation (~2,500 tokens, ~90% functionality, LLM-estimated). This is the canonical source for all compressed variants.
+
+> **Note**: This reference document intentionally exceeds the 300-line MCE guideline.
+> As the canonical source for all compressed variants, comprehensiveness is prioritized
+> over brevity. For compact variants, see the main [SKILL.md](../SKILL.md) (~400 tokens, formula)
+> or [compressed](../compressed/SKILL.md) (~975 tokens, prose).
 
 ## Agent Identity
 
@@ -508,6 +514,17 @@ Planned features not yet implemented:
 ---
 
 ## Related
+
+| Variant | Tokens | Functionality |
+|---------|--------|---------------|
+| [skill-distiller](../) (main) | ~400 | ~90% (formula) |
+| [compressed](../compressed/) | ~975 | ~90% (prose) |
+| [oneliner](../oneliner/) | ~100 | ~70% |
+| **reference** (this) | ~2,500 | ~90% |
+
+*Token counts are estimates using 4 chars/token heuristic. Functionality scores are LLM-estimated.*
+
+---
 
 - [LLM Compression Research](../go-pbd/docs/research/2026-04-14-llm-compression-approaches.md) - MetaGlyph, LLMLingua, and 11 other techniques surveyed
 - [skill-compression-support.md](../go-pbd/docs/plans/2026-04-14-skill-compression-support.md) - CLI-based compression (Option B)
