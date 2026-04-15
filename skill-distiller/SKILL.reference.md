@@ -1,6 +1,6 @@
 ---
 name: Skill Distiller
-version: 0.1.0
+version: 0.2.0
 description: Fit more skills in your context window — compress without losing what matters.
 author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
@@ -50,7 +50,6 @@ Activate this skill when the user asks:
 | `--tokens` | - | Target token count (for tokens mode) |
 | `--provider` | `auto` | LLM provider: auto, ollama, gemini, openai |
 | `--model` | - | Specific model (e.g., llama3.2, gemini-2.0-flash) |
-| `--with-ci` | `false` | Calculate confidence interval (3x LLM calls) — **planned, not yet implemented** |
 | `--verbose` | `false` | Show section-by-section analysis |
 | `--dry-run` | `false` | Analyze without outputting compressed skill |
 | `--debug-stages` | `false` | Show intermediate stage outputs |
@@ -490,6 +489,16 @@ This skill can compress itself (meta-recursive).
 | Token target impossible | Use --mode=oneliner for extreme compression |
 | LLM unavailable | Run 'ollama serve' for local, or set GEMINI_API_KEY |
 | Already minimal | No compression possible at threshold Y |
+
+---
+
+## Future
+
+Planned features not yet implemented:
+
+| Flag | Description | Status |
+|------|-------------|--------|
+| `--with-ci` | Calculate confidence interval (3x LLM calls) | Planned |
 
 ---
 

@@ -21,7 +21,7 @@ tags:
 
 # Skill Distiller (Compressed)
 
-Self-compressed prose variant (~975 tokens, 88% functionality). Full reference: `../SKILL.reference.md`.
+Self-compressed prose variant (~975 tokens, ~88% functionality, LLM-estimated). Full reference: `../SKILL.reference.md`.
 
 ## Agent Identity
 
@@ -53,6 +53,8 @@ Activate when the user asks:
 | `--provider` | `auto` | ollama, gemini, openai (auto-detects) |
 | `--verbose` | `false` | Show section-by-section analysis |
 | `--dry-run` | `false` | Analyze without outputting |
+
+*Full options (--model, --debug-stages, --with-ci): see [SKILL.reference.md](../SKILL.reference.md)*
 
 **Threshold = semantic capability, not size ratio.** A 0.9 threshold means 90% of *agent behavior* preserved, not 90% of lines kept. Judge by understanding, not metrics.
 
@@ -166,8 +168,10 @@ Parallel/serial decisions, performance hints, caching guidance. No score penalty
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| [skill-distiller](../) (main) | ~400 | 89% (formula) |
-| **compressed** (this) | ~975 | 88% (prose) |
-| [oneliner](../oneliner/) | ~100 | 72% |
+| [skill-distiller](../) (main) | ~400 | ~89% (formula) |
+| **compressed** (this) | ~975 | ~88% (prose) |
+| [oneliner](../oneliner/) | ~100 | ~72% |
 
-Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens)
+Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens, ~91%)
+
+*Token counts use 4 chars/token heuristic (+/-20%). Functionality scores are LLM-estimated.*

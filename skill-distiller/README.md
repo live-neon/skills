@@ -2,16 +2,18 @@
 
 Compress skills while preserving functionality. Reduces context window usage by removing low-importance sections (examples, explanations) while keeping triggers and core instructions.
 
-**This skill practices what it preaches** — the main `SKILL.md` ships in formula notation (~400 tokens, 89% functionality). Full human-readable version available in `SKILL.reference.md`.
+**This skill practices what it preaches** — the main `SKILL.md` ships in formula notation (~400 tokens, ~89% functionality). Full human-readable version available in `SKILL.reference.md`.
 
 ## Skill Variants
 
 | Variant | Path | Tokens | Functionality | Use When |
 |---------|------|--------|---------------|----------|
-| **Default** | `SKILL.md` | ~400 | 89% | Formula notation — ships by default |
-| **Compressed** | `compressed/SKILL.md` | ~975 | 88% | Prose variant, more readable |
-| **One-liner** | `oneliner/SKILL.md` | ~100 | 72% | Quick reference only |
-| **Reference** | `SKILL.reference.md` | ~2,500 | 91% | Full docs, human reading |
+| **Default** | `SKILL.md` | ~400 | ~89% | Formula notation — ships by default |
+| **Compressed** | `compressed/SKILL.md` | ~975 | ~88% | Prose variant, more readable |
+| **One-liner** | `oneliner/SKILL.md` | ~100 | ~72% | Quick reference only |
+| **Reference** | `SKILL.reference.md` | ~2,500 | ~91% | Full docs, human reading |
+
+*Token counts use 4 chars/token heuristic (+/-20%). Functionality scores are LLM-estimated.*
 
 ## Quick Start (30 seconds)
 
@@ -83,7 +85,6 @@ git clone https://github.com/live-neon/skills.git ~/.claude/skills/liveneon
 | `--provider` | `auto` | LLM provider: ollama, gemini, openai |
 | `--verbose` | `false` | Show section-by-section analysis |
 | `--dry-run` | `false` | Analyze without outputting compressed skill |
-| `--with-ci` | `false` | Calculate confidence interval — **planned, not yet implemented** |
 
 ## Compression Modes
 
@@ -143,6 +144,7 @@ These patterns are **never removed** even if they look verbose:
 | Task creation | Compaction resilience |
 | N-count tracking | Observation workflow |
 | Checkpoint/state | State recovery |
+| BEFORE/AFTER markers | Self-calibration |
 
 If a protected pattern is removed, the functionality score is penalized (-10% per pattern).
 
@@ -172,13 +174,50 @@ skill-distiller/
 ├── SKILL.reference.md    # Full reference (~2,500 tokens, 91%)
 ├── compressed/SKILL.md   # Prose variant (~975 tokens, 88%)
 ├── oneliner/SKILL.md     # Minimal variant (~100 tokens, 72%)
-├── test_integration.sh   # Ollama-based integration tests
+├── test_integration.sh   # Ollama-based tests (3/9 SKIP - require skill deployment)
 └── testdata/             # Test fixtures
 ```
 
 **ClawHub**: `openclaw install neon-skill-distiller`
 
 **Calibration data**: `.learnings/skill-distiller/calibration.jsonl`
+
+## Model Compatibility
+
+The formula notation has been validated with:
+
+| Model | Status | Notes |
+|-------|--------|-------|
+| Claude (Opus 4.5, Sonnet 4) | Tested | Formula notation understood and executed correctly |
+| GPT-4 / GPT-5 | Not tested | Should work (MetaGlyph paper validates math notation) |
+| Llama 3.2 | Not tested | Used for integration tests, formula not specifically validated |
+| Gemini 2.5 Pro | Not tested | Should work (supports math notation) |
+
+If you encounter issues with a specific model, please report via GitHub issues.
+
+## Manual Testing
+
+Since integration tests require deployed skill invocation (3/9 SKIP), use this manual procedure:
+
+```bash
+# 1. Test basic compression
+/skill-distiller testdata/minimal.md --threshold=0.9
+
+# 2. Verify protected patterns are kept
+/skill-distiller testdata/minimal.md --verbose | grep -i "protected"
+
+# 3. Test one-liner mode
+/skill-distiller testdata/minimal.md --mode=oneliner
+
+# 4. Verify JSONL is written
+cat .learnings/skill-distiller/calibration.jsonl | tail -1 | jq .
+```
+
+**Expected results**:
+- Compression achieves 10-50% token reduction
+- Protected patterns (yaml.name, N-count) are preserved
+- One-liner produces TRIGGER/ACTION/RESULT format
+- Calibration entry is appended with `actual: null`
 
 ## License
 

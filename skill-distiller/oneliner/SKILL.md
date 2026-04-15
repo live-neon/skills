@@ -22,7 +22,7 @@ tags:
 
 # Skill Distiller (One-Liner)
 
-Minimal reference variant (~100 tokens, 72% functionality). Full reference: `../SKILL.reference.md`.
+Minimal reference variant (~100 tokens, ~72% functionality, LLM-estimated). Full reference: `../SKILL.reference.md`.
 
 **TRIGGER**: User asks to compress, distill, or reduce a skill's context usage
 
@@ -36,8 +36,10 @@ Minimal reference variant (~100 tokens, 72% functionality). Full reference: `../
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| [skill-distiller](../) (main) | ~400 | 89% (formula) |
-| [compressed](../compressed/) | ~975 | 88% (prose) |
-| **oneliner** (this) | ~100 | 72% |
+| [skill-distiller](../) (main) | ~400 | ~89% (formula) |
+| [compressed](../compressed/) | ~975 | ~88% (prose) |
+| **oneliner** (this) | ~100 | ~72% |
 
-Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens)
+Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens, ~91%)
+
+*Functionality scores are LLM-estimated.*

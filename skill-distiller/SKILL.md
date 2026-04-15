@@ -20,14 +20,14 @@ tags:
 
 # Skill Distiller
 
-Compress verbose skills to reduce context window usage. This skill is self-compressed using formula notation (~400 tokens, 89% functionality). Full reference version: `SKILL.reference.md`.
+Compress verbose skills to reduce context window usage. This skill is self-compressed using formula notation (~400 tokens, ~89% functionality, LLM-estimated). Full reference version: `SKILL.reference.md`.
 
 ## Legend
 
 ```
 S = {TRIGGER, CORE, CONSTRAINT, OUTPUT, EXAMPLE, EDGE, EXPLAIN, VERBOSE}
 I(s) ∈ [0,1]        # importance score
-P = {yaml.name, yaml.desc, N-count, task-create, checkpoint}  # protected
+P = {yaml.name, yaml.desc, N-count, task-create, checkpoint, BEFORE/AFTER}  # protected
 θ ∈ [0,1]           # threshold (default 0.9)
 n ∈ ℕ               # target tokens
 ```
@@ -40,6 +40,7 @@ n ∈ ℕ               # target tokens
 s ∈ P ⇒ I(s) := max(I(s), 0.85)
 keep = {s | I(s) ≥ θ ∨ s ∈ P}
 output = (skill[keep], Σ I(keep)/|S|, |skill| - |keep|)
+# Score divides by |S| (8 types), not |keep| — rewards diverse section coverage
 ```
 
 ### compress_tokens(skill, n)
@@ -110,8 +111,10 @@ prune while preserving sentence structure
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| **main** (this) | ~400 | 89% (formula) |
-| [compressed](./compressed/) | ~975 | 88% (prose) |
-| [oneliner](./oneliner/) | ~100 | 72% |
+| **main** (this) | ~400 | ~89% (formula) |
+| [compressed](./compressed/) | ~975 | ~88% (prose) |
+| [oneliner](./oneliner/) | ~100 | ~72% |
 
-Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens, 91%)
+Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens, ~91%)
+
+*Token counts use 4 chars/token heuristic (+/-20%). Functionality scores are LLM-estimated.*
