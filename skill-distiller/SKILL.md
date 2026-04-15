@@ -121,21 +121,53 @@ Classify each section using LLM:
 
 ### 5. Measure Functionality
 
-LLM evaluates preservation:
-```
-Original: [full skill]
-Compressed: [compressed skill]
+**Evaluate by semantic understanding, NOT metrics.**
 
-Score 0-100: What percentage of capabilities are preserved?
+| Wrong (Metrics) | Right (Semantic) |
+|-----------------|------------------|
+| "60% line reduction is too aggressive" | "Can an agent still execute this skill?" |
+| "Token count exceeds target" | "Are all triggers and actions preserved?" |
+| "Ratio doesn't match threshold" | "Would an agent behave the same way?" |
 
-Consider:
+LLM evaluates preservation by asking:
 - Can all original triggers still activate?
 - Are all core actions still specified?
 - Are critical constraints preserved?
 - Would an agent behave the same way?
+
+**Score 0-100** reflects semantic capability preservation, not line/token ratios. A skill compressed to 40% of original size can still preserve 95% functionality if the removed content was verbose explanation, redundant examples, or non-essential formatting.
+
+### 6. Save Calibration
+
+After compression, save entry to `.learnings/skill-distiller/calibration.jsonl`:
+
+```json
+{
+  "id": "c[N]",
+  "timestamp": "[ISO 8601]",
+  "skill": "[skill name from frontmatter]",
+  "mode": "[threshold|tokens|oneliner]",
+  "threshold": 0.9,
+  "input_tokens": 1800,
+  "output_tokens": 1100,
+  "reduction_pct": 39,
+  "sections_total": 14,
+  "sections_kept": 9,
+  "sections_removed": 5,
+  "classification_confidence_mean": 0.90,
+  "functionality_score": 90,
+  "protected_patterns_found": ["n-count"],
+  "protected_patterns_preserved": ["n-count"],
+  "advisory_patterns_found": [],
+  "advisory_patterns_removed": [],
+  "expected": {"functionality": 90},
+  "actual": null
+}
 ```
 
-### 6. Output Result
+**File rotation**: If entries > 1000, truncate oldest 100 before appending.
+
+### 7. Output Result
 
 Return compressed skill with metadata.
 
@@ -191,7 +223,17 @@ Preserve X% of functionality, compress as much as possible.
 /skill-distiller path/to/skill.md --threshold=0.9
 ```
 
-**Why 0.9 default**: Skill functionality is normally distributed across sections. Wide tails mean some "low importance" sections occasionally carry critical value for edge cases. At 0.9, you preserve more of the tail while still achieving meaningful compression (typically 10-20% token reduction).
+**Understanding thresholds**: The threshold (0.9 = 90%) refers to **semantic functionality**, not token/line ratios.
+
+| Threshold | Meaning | NOT |
+|-----------|---------|-----|
+| 0.95 | 95% of *capabilities* preserved | 95% of *lines* kept |
+| 0.90 | 90% of *semantic function* | 90% of *tokens* |
+| 0.80 | 80% of *agent behavior* | 80% of *bytes* |
+
+A 0.9 threshold can result in 50%+ line reduction if the removed content was verbose examples, redundant explanations, or formatting. **Judge quality by semantic analysis, not size ratios.**
+
+**Why 0.9 default**: Skill functionality is normally distributed across sections. Wide tails mean some "low importance" sections occasionally carry critical value for edge cases. At 0.9, you preserve more of the tail while still achieving meaningful compression.
 
 ### Mode 2: Token Target
 
@@ -247,27 +289,35 @@ Advisory patterns removed are **warned** but don't penalize the functionality sc
 
 ## Calibration
 
-### First Run (N=0)
+**Storage**: `.learnings/skill-distiller/calibration.jsonl`
 
-```
-Functionality preserved: 90% (uncalibrated - first 5 compressions build baseline)
-```
+Each compression run is logged with expected functionality score. User feedback updates the `actual` field, enabling calibration over time.
 
-No historical data exists. Estimate uses LLM-only scoring.
+### Calibration Stages
 
-### After 5+ Compressions
-
-```
-Functionality preserved: 88% +/- 4% (calibrated, N=12)
-```
-
-Historical data narrows confidence interval.
+| N-count | Output | Meaning |
+|---------|--------|---------|
+| N < 5 | `90% (uncalibrated - first 5 compressions build baseline)` | LLM-only estimate |
+| N = 5-10 | `88% (building baseline, N=7)` | Gathering data |
+| N > 10 | `88% +/- 4% (calibrated, N=12)` | Historical data informs CI |
 
 ### Feedback Recording
 
-To improve calibration, report actual outcomes:
+After using a compressed skill, report actual outcome to improve future estimates:
+
 ```bash
 /skill-distiller feedback --id=c1 --actual=85 --outcome="worked"
+```
+
+**Outcome values**: `worked`, `partial`, `failed`
+
+This updates the calibration entry, enabling the system to learn from real-world usage.
+
+### Viewing Calibration Data
+
+```bash
+cat .learnings/skill-distiller/calibration.jsonl | jq -s 'length'  # Count entries
+cat .learnings/skill-distiller/calibration.jsonl | jq -s 'map(select(.actual != null))' # Entries with feedback
 ```
 
 ---
