@@ -22,6 +22,8 @@ tags:
 
 # Skill Distiller (One-Liner)
 
+Minimal reference variant (~100 tokens, 72% functionality). Full reference: `SKILL.reference.md`.
+
 **TRIGGER**: User asks to compress, distill, or reduce a skill's context usage
 
 **ACTION**: Parse skill into sections (TRIGGER/INSTRUCTION/EXAMPLE/etc), score importance via LLM, remove low-value sections while preserving protected patterns (YAML name/description, N-count tracking, task creation)
@@ -32,6 +34,10 @@ tags:
 
 ## Related
 
-- [skill-distiller](../skill-distiller/) — Full variant (~2,500 tokens)
-- [skill-distiller-compressed](../skill-distiller-compressed/) — Prose variant (~975 tokens)
-- [skill-distiller-formula](../skill-distiller-formula/) — Math notation (~400 tokens)
+| Variant | Tokens | Functionality |
+|---------|--------|---------------|
+| [skill-distiller](../skill-distiller/) (main) | ~400 | 89% (formula) |
+| [skill-distiller-compressed](../skill-distiller-compressed/) | ~975 | 88% (prose) |
+| **skill-distiller-oneliner** (this) | ~100 | 72% |
+
+Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens)

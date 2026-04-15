@@ -21,7 +21,7 @@ tags:
 
 # Skill Distiller (Compressed)
 
-Self-compressed variant of skill-distiller (~975 tokens vs ~2,500). Same functionality, smaller context footprint.
+Self-compressed prose variant (~975 tokens, 88% functionality). Full reference: `SKILL.reference.md`.
 
 ## Agent Identity
 
@@ -164,6 +164,10 @@ Parallel/serial decisions, performance hints, caching guidance. No score penalty
 
 ## Related
 
-- [skill-distiller](../skill-distiller/) — Full variant (~2,500 tokens)
-- [skill-distiller-formula](../skill-distiller-formula/) — Math notation (~400 tokens)
-- [skill-distiller-oneliner](../skill-distiller-oneliner/) — Quick reference (~100 tokens)
+| Variant | Tokens | Functionality |
+|---------|--------|---------------|
+| [skill-distiller](../skill-distiller/) (main) | ~400 | 89% (formula) |
+| **skill-distiller-compressed** (this) | ~975 | 88% (prose) |
+| [skill-distiller-oneliner](../skill-distiller-oneliner/) | ~100 | 72% |
+
+Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens)

@@ -22,7 +22,8 @@ tags:
 
 # Skill Distiller (Formula)
 
-Assumes foundation from `skill-distiller`. Use for edge cases and quick execution.
+> **DEPRECATED**: The main `skill-distiller` now ships in formula notation. Use `/skill-distiller` instead.
+> This variant is kept for users who explicitly installed `neon-skill-distiller-formula`.
 
 ## Legend
 
@@ -110,6 +111,10 @@ prune while preserving sentence structure
 
 ## Related
 
-- [skill-distiller](../skill-distiller/) — Full variant (~2,500 tokens)
-- [skill-distiller-compressed](../skill-distiller-compressed/) — Prose variant (~975 tokens)
-- [skill-distiller-oneliner](../skill-distiller-oneliner/) — Quick reference (~100 tokens)
+> **Use [skill-distiller](../skill-distiller/) instead** — main skill now uses formula notation.
+
+| Variant | Tokens | Functionality |
+|---------|--------|---------------|
+| [skill-distiller](../skill-distiller/) (main) | ~400 | 89% (formula) |
+| [skill-distiller-compressed](../skill-distiller-compressed/) | ~975 | 88% (prose) |
+| [skill-distiller-oneliner](../skill-distiller-oneliner/) | ~100 | 72% |
