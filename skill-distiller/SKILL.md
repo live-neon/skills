@@ -166,10 +166,27 @@ For EXAMPLE sections, use extractive + abstractive compression:
 
 **Phase 1: Extractive Selection** (preferred)
 1. Score each example for pattern coverage, uniqueness, clarity
-2. Select top 1-2 examples covering ≥80% of patterns
-3. If coverage ≥ 0.8 → use selected examples
+2. Select top 1-2 examples (keep full detail)
+3. Compress remaining examples to one-liners (don't discard)
+4. If coverage ≥ 0.8 → use selected + one-liners
 
-**Phase 2: Abstractive Fallback** (if extractive < 0.8)
+**Phase 1.5: One-Liner Compression** (for non-selected examples)
+Instead of discarding, compress to: `{trigger} → {result}`
+- Use MetaGlyph symbols
+- Preserves coverage, reduces tokens
+- Group under "### One-liners:" heading
+
+**Output structure:**
+```markdown
+### Full (selected):
+[Detailed example with steps...]
+
+### One-liners (compressed):
+- `--mode=tokens` → hard token limit
+- `--verbose` → section-by-section analysis
+```
+
+**Phase 2: Abstractive Fallback** (if extractive + one-liners < 0.8)
 1. Generate summary example combining key patterns
 2. Format: `{generalized_pattern} → {expected_result}`
 3. Preserve specific values where critical
@@ -197,7 +214,7 @@ Format: "When X → Do Y → Expect Z"
 {examples}
 ```
 
-**Output shows:** `Examples: 5 → 2 (extractive)` or `Examples: 5 → 1 (abstractive)`
+**Output shows:** `Examples: 5 → 2 full + 3 one-liners (extractive)` or `Examples: 5 → 1 (abstractive)`
 
 ### 5. Measure Functionality
 
@@ -275,7 +292,7 @@ Section Analysis:
   ## When to Use: TRIGGER (1.0, confidence: 0.95) → KEPT
   ## Process: CORE_INSTRUCTION (1.0, confidence: 0.92) → KEPT
   ## Examples: EXAMPLE (0.5, confidence: 0.88) → RECOMP
-    └─ Examples: 5 → 2 (extractive, coverage: 0.85)
+    └─ Examples: 5 → 2 full + 3 one-liners (coverage: 0.95)
   ## Edge Cases: EDGE_CASE (0.4, confidence: 0.85) → SUMMARIZED
   ## Technical Details: VERBOSE_DETAIL (0.2) → TOKEN-SCORED
     └─ Tokens: 150 → 45 (redundant phrases removed)
@@ -286,8 +303,9 @@ Token-level analysis:
 
 RECOMP example analysis:
   Original examples: 5
-  Selected: [0, 2] (basic usage, error handling)
-  Coverage: 0.85
+  Full (selected): [0, 4] (basic usage, error handling)
+  One-liners: [1, 2, 3] (threshold, tokens, verbose options)
+  Coverage: 0.95 (full + one-liners)
   Mode: extractive
 
 Protected patterns found: none
