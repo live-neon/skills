@@ -2,6 +2,19 @@
 
 Compress skills while preserving functionality. Reduces context window usage by removing low-importance sections (examples, explanations) while keeping triggers and core instructions.
 
+## Skill Variants
+
+This skill is available in four variants for different use cases:
+
+| Variant | Command | Tokens | Functionality | Use When |
+|---------|---------|--------|---------------|----------|
+| **Full** | `/skill-distiller` | ~2,500 | 91% | Complete documentation, RECOMP + token-scoring |
+| **Compressed** | `/skill-distiller-compressed` | ~975 | 88% | Working skill, smaller context |
+| **Formula** | `/skill-distiller-formula` | ~400 | 89% | Math notation, LLM executes formulas |
+| **One-liner** | `/skill-distiller-oneliner` | ~100 | 72% | Quick reference only |
+
+**Key insight**: Formula variant achieves same output quality as compressed (89% vs 88%) with 60% fewer skill tokens loaded.
+
 ## Quick Start (30 seconds)
 
 1. **Install**: `openclaw install leegitw/skill-distiller`
@@ -111,6 +124,24 @@ ACTION: [core behavior]
 RESULT: [expected output]
 ```
 
+### Formula Mode (via `/skill-distiller-formula`)
+
+Uses legend + math notation instead of prose. The LLM reads the formulas and executes them.
+
+```
+## Legend
+S = {TRIGGER, CORE, CONSTRAINT, EXAMPLE, VERBOSE}
+I(s) = importance, P = protected, θ = threshold
+
+## Compress
+keep = {s | I(s) ≥ θ ∨ s ∈ P} → output(skill[keep], score, Δtokens)
+```
+
+**Benefits**:
+- ~400 tokens (vs ~975 for compressed prose)
+- Mathematically precise — no ambiguity
+- Executable — formula IS the algorithm
+
 ## Protected Patterns
 
 These patterns are **never removed** even if they look verbose:
@@ -139,7 +170,19 @@ To improve calibration, report actual outcomes:
 ## Related
 
 - [Agent Skills Spec](https://agentskills.io/specification) - Required fields, size constraints
-- [skill-compression-support.md](../go-pbd/docs/plans/2026-04-14-skill-compression-support.md) - CLI-based compression (Option B)
+- [skill-distiller-llm.md](../../go-pbd/docs/plans/2026-04-14-skill-distiller-llm.md) - Implementation plan (Complete)
+- [skill-compression-support.md](../../go-pbd/docs/plans/2026-04-14-skill-compression-support.md) - CLI-based compression (Option B, Draft)
+
+## Files
+
+| File | Purpose |
+|------|---------|
+| `SKILL.md` | Full skill (~2,500 tokens) |
+| `SKILL.compressed.md` | Self-compressed variant (~975 tokens) |
+| `SKILL.formula.md` | Legend + math notation (~400 tokens) |
+| `SKILL.oneliner.md` | Prose summary (~100 tokens) |
+| `test_integration.sh` | Ollama-based integration tests |
+| `.learnings/skill-distiller/calibration.jsonl` | Compression calibration data |
 
 ## License
 
