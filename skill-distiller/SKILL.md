@@ -101,6 +101,39 @@ Classify each section using LLM:
 - Checkpoint/state recovery
 - BEFORE/AFTER markers
 
+### 3.5. Token-Level Importance (LLMLingua/Selective Context)
+
+For compressible sections (EXAMPLE, EDGE_CASE, EXPLANATION, VERBOSE_DETAIL), apply token-level scoring based on self-information theory:
+
+**Principle:** `self_info(token) = -log(P(token|context))`
+- HIGH self-information = surprising/important → KEEP
+- LOW self-information = predictable/removable → PRUNE
+
+**Scoring Prompt:**
+```
+Analyze this section for compression. Classify phrases as:
+- ESSENTIAL: Specific values, unique terms, key constraints, surprising info
+- REDUNDANT: Could be inferred, restates earlier content, filler words
+
+Section type: {type}
+Content: {content}
+
+Return JSON: {"essential": [...], "redundant": [...], "compression_potential": 0.0-1.0}
+```
+
+**Pruning Rules:**
+1. Never prune ESSENTIAL tokens
+2. Remove REDUNDANT phrases while preserving sentence structure
+3. If >50% is REDUNDANT, consider removing entire section
+4. Preserve specific values (numbers, thresholds, error codes)
+
+**Example:**
+```
+Input:  "The system will then proceed to process the input data and return the results"
+Output: "process input data → return results"
+Removed: "The system will then proceed to", "and"
+```
+
 ### 4. Apply Compression
 
 **All modes use MetaGlyph native symbols** (see §Symbol Reference below):
@@ -126,6 +159,45 @@ Classify each section using LLM:
 2. Extract core action
 3. Extract expected result
 4. Format as 3-line summary with symbols
+
+### 4.1. Example Compression (RECOMP)
+
+For EXAMPLE sections, use extractive + abstractive compression:
+
+**Phase 1: Extractive Selection** (preferred)
+1. Score each example for pattern coverage, uniqueness, clarity
+2. Select top 1-2 examples covering ≥80% of patterns
+3. If coverage ≥ 0.8 → use selected examples
+
+**Phase 2: Abstractive Fallback** (if extractive < 0.8)
+1. Generate summary example combining key patterns
+2. Format: `{generalized_pattern} → {expected_result}`
+3. Preserve specific values where critical
+
+**Selection Prompt:**
+```
+Select the 1-2 BEST examples that cover the most patterns with minimum redundancy.
+
+Examples:
+{numbered_list}
+
+Return JSON: {
+  "selected": [indices],
+  "coverage": 0.0-1.0,
+  "rationale": "..."
+}
+```
+
+**Synthesis Prompt** (if coverage < 0.8):
+```
+Compress these examples into 1-2 summary examples.
+Preserve: specific values, key patterns, expected outcomes.
+Format: "When X → Do Y → Expect Z"
+
+{examples}
+```
+
+**Output shows:** `Examples: 5 → 2 (extractive)` or `Examples: 5 → 1 (abstractive)`
 
 ### 5. Measure Functionality
 
@@ -202,8 +274,21 @@ Kept: all triggers, core instructions, constraints
 Section Analysis:
   ## When to Use: TRIGGER (1.0, confidence: 0.95) → KEPT
   ## Process: CORE_INSTRUCTION (1.0, confidence: 0.92) → KEPT
-  ## Examples: EXAMPLE (0.5, confidence: 0.88) → REMOVED (3 items)
+  ## Examples: EXAMPLE (0.5, confidence: 0.88) → RECOMP
+    └─ Examples: 5 → 2 (extractive, coverage: 0.85)
   ## Edge Cases: EDGE_CASE (0.4, confidence: 0.85) → SUMMARIZED
+  ## Technical Details: VERBOSE_DETAIL (0.2) → TOKEN-SCORED
+    └─ Tokens: 150 → 45 (redundant phrases removed)
+
+Token-level analysis:
+  VERBOSE_DETAIL sections: 3 analyzed, 67% average compression
+  Phrases removed: "The system will then", "proceed to", "in order to"
+
+RECOMP example analysis:
+  Original examples: 5
+  Selected: [0, 2] (basic usage, error handling)
+  Coverage: 0.85
+  Mode: extractive
 
 Protected patterns found: none
 Advisory patterns found: parallel-decision → removed (no score penalty)
