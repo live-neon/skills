@@ -2,18 +2,18 @@
 
 Compress skills while preserving functionality. Reduces context window usage by removing low-importance sections (examples, explanations) while keeping triggers and core instructions.
 
-## Skill Variants
+**This skill practices what it preaches** — the main `SKILL.md` ships in formula notation (~400 tokens, 89% functionality). Full human-readable version available in `SKILL.reference.md`.
 
-This skill is available in four variants for different use cases:
+## Skill Variants
 
 | Variant | Command | Tokens | Functionality | Use When |
 |---------|---------|--------|---------------|----------|
-| **Full** | `/skill-distiller` | ~2,500 | 91% | Complete documentation, RECOMP + token-scoring |
-| **Compressed** | `/skill-distiller-compressed` | ~975 | 88% | Working skill, smaller context |
-| **Formula** | `/skill-distiller-formula` | ~400 | 89% | Math notation, LLM executes formulas |
+| **Main** | `/skill-distiller` | ~400 | 89% | Default — formula notation, self-compressed |
+| **Compressed** | `/skill-distiller-compressed` | ~975 | 88% | Prose variant, more readable |
 | **One-liner** | `/skill-distiller-oneliner` | ~100 | 72% | Quick reference only |
+| **Reference** | `SKILL.reference.md` | ~2,500 | 91% | Full docs, human reading |
 
-**Key insight**: Formula variant achieves same output quality as compressed (89% vs 88%) with 60% fewer skill tokens loaded.
+**Note**: `skill-distiller-formula` is now redundant — the main skill uses formula notation by default.
 
 ## Quick Start (30 seconds)
 
@@ -124,23 +124,16 @@ ACTION: [core behavior]
 RESULT: [expected output]
 ```
 
-### Formula Mode (via `/skill-distiller-formula`)
+### Formula Mode (default)
 
-Uses legend + math notation instead of prose. The LLM reads the formulas and executes them.
-
-```
-## Legend
-S = {TRIGGER, CORE, CONSTRAINT, EXAMPLE, VERBOSE}
-I(s) = importance, P = protected, θ = threshold
-
-## Compress
-keep = {s | I(s) ≥ θ ∨ s ∈ P} → output(skill[keep], score, Δtokens)
-```
+The main skill uses formula notation — legend + math that the LLM executes directly.
 
 **Benefits**:
 - ~400 tokens (vs ~975 for compressed prose)
 - Mathematically precise — no ambiguity
 - Executable — formula IS the algorithm
+
+See `SKILL.md` for the formula, `SKILL.reference.md` for full prose documentation.
 
 ## Protected Patterns
 
@@ -177,14 +170,17 @@ To improve calibration, report actual outcomes:
 
 | Directory | Purpose | ClawHub |
 |-----------|---------|---------|
-| `skill-distiller/` | Full skill (~2,500 tokens) | `neon-skill-distiller` |
-| `skill-distiller-compressed/` | Compressed variant (~975 tokens) | `neon-skill-distiller-compressed` |
-| `skill-distiller-formula/` | Math notation (~400 tokens) | `neon-skill-distiller-formula` |
+| `skill-distiller/` | Main skill (formula, ~400 tokens) | `neon-skill-distiller` |
+| `skill-distiller-compressed/` | Prose variant (~975 tokens) | `neon-skill-distiller-compressed` |
 | `skill-distiller-oneliner/` | Quick reference (~100 tokens) | `neon-skill-distiller-oneliner` |
+
+**Note**: `skill-distiller-formula/` is deprecated — main skill now uses formula notation.
 
 **Local Files**:
 | File | Purpose |
 |------|---------|
+| `SKILL.md` | Formula-compressed skill (~400 tokens) |
+| `SKILL.reference.md` | Full human-readable version (~2,500 tokens) |
 | `test_integration.sh` | Ollama-based integration tests |
 | `testdata/` | Test fixtures |
 | `.learnings/skill-distiller/calibration.jsonl` | Compression calibration data |
