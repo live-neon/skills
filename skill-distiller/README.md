@@ -6,14 +6,14 @@ Compress skills while preserving functionality. Reduces context window usage by 
 
 ## Skill Variants
 
-| Variant | Command | Tokens | Functionality | Use When |
-|---------|---------|--------|---------------|----------|
-| **Main** | `/skill-distiller` | ~400 | 89% | Default — formula notation, self-compressed |
-| **Compressed** | `/skill-distiller-compressed` | ~975 | 88% | Prose variant, more readable |
-| **One-liner** | `/skill-distiller-oneliner` | ~100 | 72% | Quick reference only |
-| **Reference** | `SKILL.reference.md` | ~2,500 | 91% | Full docs, human reading |
+All variants in `skill-distiller/`:
 
-**Note**: `skill-distiller-formula` is now redundant — the main skill uses formula notation by default.
+| Variant | Path | Tokens | Functionality | Use When |
+|---------|------|--------|---------------|----------|
+| **Main** | `SKILL.md` | ~400 | 89% | Default — formula notation |
+| **Compressed** | `compressed/SKILL.md` | ~975 | 88% | Prose variant, more readable |
+| **One-liner** | `oneliner/SKILL.md` | ~100 | 72% | Quick reference only |
+| **Reference** | `SKILL.reference.md` | ~2,500 | 91% | Full docs, human reading |
 
 ## Quick Start (30 seconds)
 
@@ -166,24 +166,24 @@ To improve calibration, report actual outcomes:
 - [skill-distiller-llm.md](../../go-pbd/docs/plans/2026-04-14-skill-distiller-llm.md) - Implementation plan (Complete)
 - [skill-compression-support.md](../../go-pbd/docs/plans/2026-04-14-skill-compression-support.md) - CLI-based compression (Option B, Draft)
 
-## Files & Variants
+## Directory Structure
 
-| Directory | Purpose | ClawHub |
-|-----------|---------|---------|
-| `skill-distiller/` | Main skill (formula, ~400 tokens) | `neon-skill-distiller` |
-| `skill-distiller-compressed/` | Prose variant (~975 tokens) | `neon-skill-distiller-compressed` |
-| `skill-distiller-oneliner/` | Quick reference (~100 tokens) | `neon-skill-distiller-oneliner` |
+```
+skill-distiller/
+├── SKILL.md              # Main (formula, ~400 tokens)
+├── SKILL.reference.md    # Full reference (~2,500 tokens)
+├── README.md             # This file
+├── compressed/
+│   └── SKILL.md          # Prose variant (~975 tokens)
+├── oneliner/
+│   └── SKILL.md          # Minimal variant (~100 tokens)
+├── test_integration.sh   # Ollama-based integration tests
+└── testdata/             # Test fixtures
+```
 
-**Note**: `skill-distiller-formula/` is deprecated — main skill now uses formula notation.
+**ClawHub**: `openclaw install neon-skill-distiller`
 
-**Local Files**:
-| File | Purpose |
-|------|---------|
-| `SKILL.md` | Formula-compressed skill (~400 tokens) |
-| `SKILL.reference.md` | Full human-readable version (~2,500 tokens) |
-| `test_integration.sh` | Ollama-based integration tests |
-| `testdata/` | Test fixtures |
-| `.learnings/skill-distiller/calibration.jsonl` | Compression calibration data |
+**Calibration data**: `.learnings/skill-distiller/calibration.jsonl`
 
 ## License
 

@@ -110,8 +110,8 @@ prune while preserving sentence structure
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| **skill-distiller** (this) | ~400 | 89% |
-| [skill-distiller-compressed](../skill-distiller-compressed/) | ~975 | 88% |
-| [skill-distiller-oneliner](../skill-distiller-oneliner/) | ~100 | 72% |
+| **main** (this) | ~400 | 89% (formula) |
+| [compressed](./compressed/) | ~975 | 88% (prose) |
+| [oneliner](./oneliner/) | ~100 | 72% |
 
 Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens, 91%)

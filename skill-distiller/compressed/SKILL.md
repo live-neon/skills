@@ -3,7 +3,7 @@ name: Skill Distiller (Compressed)
 version: 0.1.0
 description: Same skill compression power in half the context — 975 tokens vs 2,500.
 author: Live Neon <lee@liveneon.ai>
-homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-compressed
+homepage: https://github.com/live-neon/skills/tree/main/skill-distiller/compressed
 repository: live-neon/skills
 license: MIT
 user-invocable: true
@@ -21,7 +21,7 @@ tags:
 
 # Skill Distiller (Compressed)
 
-Self-compressed prose variant (~975 tokens, 88% functionality). Full reference: `SKILL.reference.md`.
+Self-compressed prose variant (~975 tokens, 88% functionality). Full reference: `../SKILL.reference.md`.
 
 ## Agent Identity
 
@@ -166,8 +166,8 @@ Parallel/serial decisions, performance hints, caching guidance. No score penalty
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| [skill-distiller](../skill-distiller/) (main) | ~400 | 89% (formula) |
-| **skill-distiller-compressed** (this) | ~975 | 88% (prose) |
-| [skill-distiller-oneliner](../skill-distiller-oneliner/) | ~100 | 72% |
+| [skill-distiller](../) (main) | ~400 | 89% (formula) |
+| **compressed** (this) | ~975 | 88% (prose) |
+| [oneliner](../oneliner/) | ~100 | 72% |
 
-Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens)
+Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens)

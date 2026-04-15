@@ -3,7 +3,7 @@ name: Skill Distiller (One-Liner)
 version: 0.1.0
 description: Skill compression reminder in 100 tokens — just trigger, action, result.
 author: Live Neon <lee@liveneon.ai>
-homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-oneliner
+homepage: https://github.com/live-neon/skills/tree/main/skill-distiller/oneliner
 repository: live-neon/skills
 license: MIT
 user-invocable: true
@@ -22,7 +22,7 @@ tags:
 
 # Skill Distiller (One-Liner)
 
-Minimal reference variant (~100 tokens, 72% functionality). Full reference: `SKILL.reference.md`.
+Minimal reference variant (~100 tokens, 72% functionality). Full reference: `../SKILL.reference.md`.
 
 **TRIGGER**: User asks to compress, distill, or reduce a skill's context usage
 
@@ -36,8 +36,8 @@ Minimal reference variant (~100 tokens, 72% functionality). Full reference: `SKI
 
 | Variant | Tokens | Functionality |
 |---------|--------|---------------|
-| [skill-distiller](../skill-distiller/) (main) | ~400 | 89% (formula) |
-| [skill-distiller-compressed](../skill-distiller-compressed/) | ~975 | 88% (prose) |
-| **skill-distiller-oneliner** (this) | ~100 | 72% |
+| [skill-distiller](../) (main) | ~400 | 89% (formula) |
+| [compressed](../compressed/) | ~975 | 88% (prose) |
+| **oneliner** (this) | ~100 | 72% |
 
-Full reference: [SKILL.reference.md](./SKILL.reference.md) (~2,500 tokens)
+Full reference: [SKILL.reference.md](../SKILL.reference.md) (~2,500 tokens)

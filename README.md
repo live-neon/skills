@@ -109,19 +109,18 @@ Skills for failure detection, constraint enforcement, and memory operations. See
 
 Skills for operating on other skills.
 
-| Skill | Description |
-|-------|-------------|
-| [skill-distiller](skill-distiller/) | Compress skills (~2,500 tokens, 91% functionality) |
-| [skill-distiller-compressed](skill-distiller-compressed/) | Compressed variant (~975 tokens, 88% functionality) |
-| [skill-distiller-formula](skill-distiller-formula/) | Math notation variant (~400 tokens, 89% functionality) |
-| [skill-distiller-oneliner](skill-distiller-oneliner/) | Quick reference (~100 tokens, 72% functionality) |
+| Skill | Path | Description |
+|-------|------|-------------|
+| [skill-distiller](skill-distiller/) | `skill-distiller/SKILL.md` | Main (formula, ~400 tokens, 89%) |
+| [compressed](skill-distiller/compressed/) | `skill-distiller/compressed/` | Prose variant (~975 tokens, 88%) |
+| [oneliner](skill-distiller/oneliner/) | `skill-distiller/oneliner/` | Quick reference (~100 tokens, 72%) |
+| reference | `skill-distiller/SKILL.reference.md` | Full docs (~2,500 tokens, 91%) |
 
-**Install skill-distiller** (uses `neon-` prefix on ClawHub):
+**Install**: `openclaw install neon-skill-distiller`
+
+**Manual** (Claude Code users):
 ```bash
-openclaw install neon-skill-distiller              # Full (~2,500 tokens)
-openclaw install neon-skill-distiller-compressed   # Compressed (~975 tokens)
-openclaw install neon-skill-distiller-formula      # Math notation (~400 tokens)
-openclaw install neon-skill-distiller-oneliner     # Quick reference (~100 tokens)
+ln -s /path/to/skills/skill-distiller ~/.claude/skills/skill-distiller
 ```
 
 ### Creative (Synthesis & Artifact Generation)
