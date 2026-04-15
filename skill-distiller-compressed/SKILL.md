@@ -1,8 +1,11 @@
 ---
-name: skill-distiller-compressed
+name: Skill Distiller (Compressed)
 version: 0.1.0
-description: Compress skills while preserving functionality (compressed variant, ~975 tokens)
+description: Same skill compression power in half the context — 975 tokens vs 2,500.
+author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-compressed
+repository: live-neon/skills
+license: MIT
 user-invocable: true
 disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
@@ -10,6 +13,9 @@ tags:
   - compression
   - skills
   - optimization
+  - context-window
+  - token-reduction
+  - lightweight
   - openclaw
 ---
 

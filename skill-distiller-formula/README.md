@@ -7,7 +7,7 @@ Uses legend + mathematical formulas instead of prose. The LLM reads and executes
 ## Installation
 
 ```bash
-openclaw install leegitw/skill-distiller-formula
+openclaw install neon-skill-distiller-formula
 ```
 
 ## Usage

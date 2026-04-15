@@ -17,7 +17,7 @@ This skill is available in four variants for different use cases:
 
 ## Quick Start (30 seconds)
 
-1. **Install**: `openclaw install leegitw/skill-distiller`
+1. **Install**: `openclaw install neon-skill-distiller`
 2. **Run**: `/skill-distiller path/to/skill.md`
 3. **See output**: Compressed skill + what was removed
 
@@ -37,7 +37,7 @@ Kept: all triggers, core instructions, constraints
 
 **ClawHub (recommended)**:
 ```bash
-openclaw install leegitw/skill-distiller
+openclaw install neon-skill-distiller
 ```
 
 **Manual (Claude Code users)**:
@@ -177,10 +177,10 @@ To improve calibration, report actual outcomes:
 
 | Directory | Purpose | ClawHub |
 |-----------|---------|---------|
-| `skill-distiller/` | Full skill (~2,500 tokens) | `leegitw/skill-distiller` |
-| `skill-distiller-compressed/` | Compressed variant (~975 tokens) | `leegitw/skill-distiller-compressed` |
-| `skill-distiller-formula/` | Math notation (~400 tokens) | `leegitw/skill-distiller-formula` |
-| `skill-distiller-oneliner/` | Quick reference (~100 tokens) | `leegitw/skill-distiller-oneliner` |
+| `skill-distiller/` | Full skill (~2,500 tokens) | `neon-skill-distiller` |
+| `skill-distiller-compressed/` | Compressed variant (~975 tokens) | `neon-skill-distiller-compressed` |
+| `skill-distiller-formula/` | Math notation (~400 tokens) | `neon-skill-distiller-formula` |
+| `skill-distiller-oneliner/` | Quick reference (~100 tokens) | `neon-skill-distiller-oneliner` |
 
 **Local Files**:
 | File | Purpose |

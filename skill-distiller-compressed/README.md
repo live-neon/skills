@@ -7,7 +7,7 @@ Same functionality as [skill-distiller](../skill-distiller/), smaller context fo
 ## Installation
 
 ```bash
-openclaw install leegitw/skill-distiller-compressed
+openclaw install neon-skill-distiller-compressed
 ```
 
 ## Usage

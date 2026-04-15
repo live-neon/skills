@@ -1,8 +1,11 @@
 ---
-name: skill-distiller
+name: Skill Distiller
 version: 0.1.0
-description: Compress skills while preserving functionality. Reduces context window usage by identifying and removing low-importance sections.
+description: Fit more skills in your context window — compress without losing what matters.
+author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller
+repository: live-neon/skills
+license: MIT
 user-invocable: true
 disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
@@ -10,7 +13,8 @@ tags:
   - compression
   - skills
   - optimization
-  - context
+  - context-window
+  - token-reduction
   - openclaw
 ---
 

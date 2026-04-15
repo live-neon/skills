@@ -1,8 +1,11 @@
 ---
-name: skill-distiller-formula
+name: Skill Distiller (Formula)
 version: 0.1.0
-description: Compress skills using legend + math notation (executable cheat sheet, ~400 tokens)
+description: Skill compression in 400 tokens — math notation the LLM executes directly.
+author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-formula
+repository: live-neon/skills
+license: MIT
 user-invocable: true
 disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
@@ -10,8 +13,11 @@ tags:
   - compression
   - skills
   - optimization
-  - openclaw
+  - context-window
+  - token-reduction
+  - math-notation
   - formula
+  - openclaw
 ---
 
 # Skill Distiller (Formula)

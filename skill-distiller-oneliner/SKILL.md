@@ -1,8 +1,11 @@
 ---
-name: skill-distiller-oneliner
+name: Skill Distiller (One-Liner)
 version: 0.1.0
-description: Compress skills while preserving functionality (quick reference, ~100 tokens)
+description: Skill compression reminder in 100 tokens — just trigger, action, result.
+author: Live Neon <lee@liveneon.ai>
 homepage: https://github.com/live-neon/skills/tree/main/skill-distiller-oneliner
+repository: live-neon/skills
+license: MIT
 user-invocable: true
 disable-model-invocation: true
 emoji: "\U0001F5DC\uFE0F"
@@ -10,6 +13,10 @@ tags:
   - compression
   - skills
   - optimization
+  - context-window
+  - token-reduction
+  - quick-reference
+  - minimal
   - openclaw
 ---
 

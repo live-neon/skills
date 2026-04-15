@@ -7,7 +7,7 @@ Minimal TRIGGER/ACTION/RESULT format for when you just need a reminder.
 ## Installation
 
 ```bash
-openclaw install leegitw/skill-distiller-oneliner
+openclaw install neon-skill-distiller-oneliner
 ```
 
 ## Usage
