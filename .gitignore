@@ -9,3 +9,7 @@ output/
 
 # ClawHub local state
 .clawhub/
+
+# Claude Code (machine-specific, not team config)
+.claude/settings.local.json
+CLAUDE.local.md
