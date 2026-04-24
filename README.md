@@ -256,3 +256,16 @@ MIT License - see [LICENSE](LICENSE)
 ---
 
 *Built by twins in Alaska.*
+
+---
+
+## Part of Live Neon
+
+This is a submodule of [live-neon](https://github.com/live-neon/live-neon), the umbrella repository for AI agent infrastructure.
+
+| Related | Link |
+|---------|------|
+| **Architecture** | [docs/vision/README.md](../docs/vision/README.md) |
+| **automation** | Uses skills in agentic workflows |
+| **garden** | Validates skill-extracted patterns via N-count |
+| **go-pbd** | PBD skills wrap the go-pbd CLI |
