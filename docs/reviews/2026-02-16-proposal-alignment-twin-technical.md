@@ -32,7 +32,7 @@ grep -c "47 skills\|47-skill\|forty-seven" docs/proposals/2026-02-13-agentic-ski
 
 The plan correctly identifies and addresses a real documentation debt problem. The specification claims "47 skills" while implementation has 7 consolidated skills. This divergence undermines the documentation hierarchy's authority.
 
-The plan is well-structured, follows the "Stage 0: Alignment Audit" pattern from memory-garden, and has already incorporated feedback from N=2 code review (Codex + Gemini). Technical verification confirms the divergences are real.
+The plan is well-structured, follows the "Stage 0: Alignment Audit" pattern from garden, and has already incorporated feedback from N=2 code review (Codex + Gemini). Technical verification confirms the divergences are real.
 
 ---
 
@@ -201,7 +201,7 @@ None. (Code review already addressed the important issues.)
 ## Strengths
 
 1. **Clear problem statement**: The divergence (47 vs 7 skills) is immediately understandable
-2. **Pattern-based**: Follows proven "Stage 0: Alignment Audit" from memory-garden
+2. **Pattern-based**: Follows proven "Stage 0: Alignment Audit" from garden
 3. **Already refined**: N=2 code review findings incorporated before twin review
 4. **Maintenance strategy**: Includes staleness detection and update triggers
 5. **Verification checklist**: Each claim can be validated with provided commands

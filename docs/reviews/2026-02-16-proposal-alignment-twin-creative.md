@@ -157,7 +157,7 @@ They do not need to read the original 1,400-line specification first.
 
 ### One Gap
 
-The plan references `memory-garden/docs/plans/010-architecture-documentation-hub.md` as the pattern source but does not explain what "Stage 0: Alignment Audit" pattern means. A reader unfamiliar with memory-garden cannot evaluate whether this plan correctly applies the pattern.
+The plan references `garden/docs/plans/010-architecture-documentation-hub.md` as the pattern source but does not explain what "Stage 0: Alignment Audit" pattern means. A reader unfamiliar with garden cannot evaluate whether this plan correctly applies the pattern.
 
 **Suggestion**: Add 2-3 sentences explaining the pattern's essence:
 > The "Stage 0: Alignment Audit" pattern establishes that implementation work should begin with systematic inventory of documentation-reality gaps. This prevents incremental drift from becoming overwhelming technical debt.

@@ -374,7 +374,7 @@ cd tests && npm test
 **Wrong**: Completing major restructuring (e.g., consolidation) without updating specification
 **Right**: Run alignment audit after major changes, update specification to reflect reality
 
-**Pattern** (from memory-garden Plan 010):
+**Pattern** (from garden Plan 010):
 1. After major architecture change → Run "Stage 0: Alignment Audit"
 2. Document divergences in a table (specification says X, reality is Y)
 3. Update specification to reflect current implementation
@@ -510,7 +510,7 @@ grep "skill-security-compliance.md" docs/workflows/skill-publish.md docs/workflo
 
 **Trigger**: Consolidation reduced 48 skills to 7, but specification still described 47 skills.
 
-**Pattern** (Stage 0 Alignment Audit from memory-garden):
+**Pattern** (Stage 0 Alignment Audit from garden):
 1. Create divergence table (spec says X, reality is Y)
 2. Update specification frontmatter with `last_aligned` date
 3. Update TL;DR with current skill count
@@ -610,7 +610,7 @@ After completing documentation updates, **close the loop**:
 ### Proposal Alignment
 
 - **[Proposal Alignment Plan](../plans/2026-02-16-proposal-alignment.md)** - Stage 0 alignment audit pattern
-- **Pattern Source**: memory-garden/docs/plans/010-architecture-documentation-hub.md (cross-project reference)
+- **Pattern Source**: garden/docs/plans/010-architecture-documentation-hub.md (cross-project reference)
 
 ### Defense in Depth References
 
@@ -623,4 +623,4 @@ After completing documentation updates, **close the loop**:
 *Workflow created 2026-02-13 to support standalone skills project documentation.*
 *Updated 2026-02-14: Added Next Steps section and phase-completion reference.*
 *Updated 2026-02-16: Added research documents to scope and examples.*
-*Updated 2026-02-16: Added proposal alignment guidance (pattern from memory-garden Plan 010).*
+*Updated 2026-02-16: Added proposal alignment guidance (pattern from garden Plan 010).*

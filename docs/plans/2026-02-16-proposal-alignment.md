@@ -11,7 +11,7 @@ depends_on:
 related_proposals:
   - docs/proposals/2026-02-13-agentic-skills-specification.md
   - docs/proposals/2026-02-13-openclaw-skills-for-agentic-system.md
-pattern_source: memory-garden/docs/plans/010-architecture-documentation-hub.md
+pattern_source: garden/docs/plans/010-architecture-documentation-hub.md
 code_review:
   status: complete
   date: 2026-02-16
@@ -51,7 +51,7 @@ separately in the ClawHub publication plan and does not have a corresponding pro
 
 **Solution**: Update the specification to reflect reality while preserving historical context.
 
-**Pattern**: This plan follows the "Stage 0: Alignment Audit" pattern from memory-garden's
+**Pattern**: This plan follows the "Stage 0: Alignment Audit" pattern from garden's
 Plan 010 (architecture-documentation-hub.md), which establishes that proposals/whitepapers
 are authoritative but must be updated when implementation diverges.
 
@@ -67,7 +67,7 @@ has diverged (through consolidation, restructuring, or scope changes), the align
 5. **Adds staleness detection** (e.g., `last_aligned` date, verification scripts)
 
 This pattern prevents specifications from becoming misleading while respecting their role
-as historical records of design intent. Origin: memory-garden Plan 010.
+as historical records of design intent. Origin: garden Plan 010.
 
 ---
 
@@ -637,7 +637,7 @@ criteria to add *to the specification itself* (documenting consolidation/decoupl
 
 ## References
 
-- **Pattern Source**: `memory-garden/docs/plans/010-architecture-documentation-hub.md`
+- **Pattern Source**: `garden/docs/plans/010-architecture-documentation-hub.md`
   - Stage 0: Whitepaper Alignment Audit pattern
   - Maintenance Strategy pattern
   - Document Hierarchy pattern
@@ -690,6 +690,6 @@ Plan reviewed by Technical Twin (双技) and Creative Twin (双創) on 2026-02-1
 ---
 
 *Plan created 2026-02-16. Addresses alignment gap between proposals and actual implementation.*
-*Pattern: Follows memory-garden's "Stage 0 Alignment Audit" approach.*
+*Pattern: Follows garden's "Stage 0 Alignment Audit" approach.*
 *Code review: N=2 (Codex + Gemini), all findings addressed.*
 *Twin review: N=2 (Technical + Creative), all findings addressed.*

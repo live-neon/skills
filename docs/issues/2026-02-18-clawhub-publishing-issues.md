@@ -40,7 +40,7 @@ clawhub publish agentic/governance --slug governance --name "Governance" --versi
 - `pattern-governance`
 - `knowledge-governance`
 - `neon-governance`
-- `mg-governance` (memory-garden)
+- `mg-governance` (garden)
 
 **Decision**: Use `agentic-governance` as the slug. This follows the pattern of prefixing with the skill category and clearly identifies it as part of the Neon Agentic Suite.
 
