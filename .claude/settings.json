@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "live-neon-core@live-neon": true
+  },
+  "extraKnownMarketplaces": {
+    "live-neon": {
+      "source": {
+        "source": "directory",
+        "path": ".."
+      }
+    }
+  }
+}
