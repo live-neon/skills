@@ -51,22 +51,27 @@ Documentation flows in a circular pattern — from abstract vision to concrete i
 
 | Directory | Purpose |
 |-----------|---------|
+| `architecture/` | System architecture |
+| `decisions/` | Architecture Decision Records (ADRs) |
 | `guides/` | Technical deep-dives (semantic similarity, core memory walkthrough) |
 | `implementation/` | Phase results and acceptance verification |
 | `issues/` | Review findings and remediation tracking |
-| `patterns/` | Validated patterns (N≥3 evidence) |
+| `patterns/` | Validated patterns (N>=3 evidence) |
 | `plans/` | Implementation plans for each phase |
 | `proposals/` | Specifications and architectural proposals |
 | `research/` | External research on hooks, learning theory, and industry patterns |
 | `reviews/` | Code review and twin review outputs |
 | `standards/` | Authoritative standards (CJK vocabulary, security compliance) |
 | `templates/` | Reusable templates (governance alerts) |
+| `vision/` | Strategic direction and goals |
 | `workflows/` | Process documentation (skill creation, publishing, documentation updates) |
 
 ## Key Documents
 
+- **[Vision](vision/README.md)** - Strategic direction and goals
+- **[Architecture](architecture/README.md)** - System architecture
+- **[Decisions](decisions/)** - Architecture Decision Records
 - **[Specification](proposals/2026-02-13-agentic-skills-specification.md)** - Main agentic skills specification
-- **[ARCHITECTURE.md](../ARCHITECTURE.md)** - System architecture (layers, data flow, skills inventory)
 - **[Phase Results](implementation/)** - Implementation status by phase
 - **[Skill Format Pattern](patterns/skill-format.md)** - Why Agentic and PBD use different formats
 
