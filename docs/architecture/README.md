@@ -687,4 +687,10 @@ To add a sub-command to an existing skill:
 
 ---
 
+## Related
+
+- [Ecosystem Architecture](../../../../docs/architecture/README.md) — Cross-project integration
+
+---
+
 *Architecture: 7 consolidated skills with CJK summary and section markers for JIT loading.*

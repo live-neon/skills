@@ -54,10 +54,11 @@ Silent failures are dishonest. Fail fast, fail loud.
 
 ## Gotchas
 
-- **Skills are self-contained** — Each skill directory is independent
+- **Skills are self-contained** — Each skill directory is independent ([ADR-001](docs/decisions/001-skill-consolidation.md))
 - **SKILL.md format required** — Follow Claude Code skills frontmatter spec
 - **ClawHub compatible** — Follow naming conventions for publishing
 - **Test before publishing** — Skills should have test coverage
+- **Three-layer architecture** — Agentic, Creative, System layers ([ADR-003](docs/decisions/003-three-layer-architecture.md))
 
 ---
 
