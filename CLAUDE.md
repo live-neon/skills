@@ -92,4 +92,4 @@ See ClawHub documentation for publishing requirements.
 - Each skill has its own directory
 - Test skills before publishing
 - Follow ClawHub naming conventions
-- New files cross-reference related files (code↔plan, skill↔guide, impl↔spec)
+- Bidirectional cross-references required for new files (`/cross-reference` skill)
