@@ -5,6 +5,48 @@ Documentation for the Live Neon Skills project.
 > **Note**: This is a navigation index for documentation. For system architecture,
 > see [ARCHITECTURE.md](../ARCHITECTURE.md).
 
+---
+
+## Documentation Lifecycle
+
+Documentation flows in a circular pattern — from abstract vision to concrete implementation, then learnings flow back up to inform the vision.
+
+**Cross-project philosophy**: See [live-neon/docs/guides/documentation-lifecycle.md](../../../docs/guides/documentation-lifecycle.md) for the full lifecycle guide.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   Proposals ──► Plans ──► Implementation ──► Patterns      │
+│       ▲                                          │          │
+│       │                                          ▼          │
+│       │                                      Standards      │
+│       │                                          │          │
+│       │                                          ▼          │
+│   Issues ◄── Reviews ◄── Workflows ◄── Guides              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Stage | Folder | Purpose | Feeds Into |
+|-------|--------|---------|------------|
+| Proposals | proposals/ | Specifications, architectural proposals | Plans |
+| Plans | plans/ | Implementation plans by phase | Implementation |
+| Implementation | implementation/ | Phase results, acceptance verification | Patterns |
+| Patterns | patterns/ | Validated patterns (N≥3 evidence) | Standards |
+| Standards | standards/ | Authoritative standards (CJK, security) | Guides |
+| Reference | reference/ | API and format reference | Guides |
+| Guides | guides/ | Technical deep-dives | Workflows |
+| Workflows | workflows/ | Process documentation | Reviews |
+| Reviews | reviews/ | Code review outputs | Issues |
+| Issues | issues/ | Review findings, remediation | Proposals |
+
+**Supporting folders**:
+- **research/** — External research on hooks, learning theory
+- **templates/** — Reusable templates (governance alerts)
+- **architecture/** — System architecture (via ARCHITECTURE.md)
+
+---
+
 ## Directory Structure
 
 | Directory | Purpose |
