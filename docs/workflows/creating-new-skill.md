@@ -205,12 +205,49 @@ category/skill-name/
 - Include concrete examples with expected output
 - Define all terminology in a terminology table
 - Link to related skills
+- **Use test questions for decision criteria** (see below)
 
 **Don't**:
 - Duplicate functionality from existing skills
 - Include implementation code (skills are prompts, not code)
 - Use vague language ("might", "could", "try to")
 - Assume context not provided in the skill
+- **Use example lists as primary decision mechanism**
+
+### Test Questions Over Examples
+
+**Critical**: When a skill needs to guide decisions (e.g., "when to use this", "what qualifies"), use **test questions** rather than **example lists**.
+
+**Why**: Examples cause LLMs to anchor on surface features rather than reasoning about underlying principles. Test questions force evaluation against criteria.
+
+| Pattern | Problem | Solution |
+|---------|---------|----------|
+| Example list | LLM pattern-matches against examples | Convert to test questions |
+| "Examples include: X, Y, Z" | Anchors on X, Y, Z specifically | "Ask: Does this meet criteria A, B, C?" |
+| Category list | Treated as exhaustive | "Ask: Is this [category characteristic]?" |
+
+**Before (anchoring-prone)**:
+```markdown
+## When to Use
+- Database schema changes
+- API contract modifications  
+- Data labeling methodology choices
+```
+
+**After (reasoning-based)**:
+```markdown
+## When to Use
+
+Ask these questions. If multiple are "yes", use this skill:
+
+| Question | What It Tests |
+|----------|---------------|
+| Is this hard to reverse once implemented? | Commitment level |
+| Does it affect multiple components? | Blast radius |
+| Will someone ask "why?" in 6 months? | Documentation need |
+```
+
+**Reference**: See [Examples Cause LLM Anchoring](../../../docs/observations/examples-cause-llm-anchoring/README.md) — N=2 observation validating this pattern.
 
 ### Output Schemas
 

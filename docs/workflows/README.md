@@ -8,24 +8,27 @@ Skills repo-specific workflows. For shared workflows, use the Live Neon Core plu
 
 Common workflows have been consolidated into the `live-neon-core` plugin:
 
-| Skill | Command |
-|-------|---------|
-| Plan | `/live-neon-core:plan` |
-| Observation | `/live-neon-core:observation` |
-| Documentation | `/live-neon-core:documentation-update` |
+| Skill | Command | Purpose |
+|-------|---------|---------|
+| Create Skill | `/create-skill` | Skill creation with validation and quality gates |
+| Plan | `/plan` | Implementation planning |
+| Observation | `/observation` | Pattern discovery and N-count tracking |
+| Documentation | `/documentation-update` | Post-implementation docs |
 
 See [plugins/README.md](../../../../plugins/README.md) for installation.
 
 ---
 
-## Project-Specific Workflows
+## Reference Documentation
 
-| Workflow | Purpose |
-|----------|---------|
-| [Creating New Skill](creating-new-skill.md) | Complete skill creation from validation to publication |
-| [Skill Publish](skill-publish.md) | Publishing workflow with security compliance |
-| [Phase Completion](phase-completion.md) | Checklist for completing implementation phases |
-| [Batch File Modification](batch-file-modification.md) | Bulk file changes with verification |
+These docs provide full details for the skills above:
+
+| Document | Skill | Purpose |
+|----------|-------|---------|
+| [Creating New Skill](creating-new-skill.md) | `/create-skill` | Full 6-phase reference |
+| [Skill Publish](skill-publish.md) | `/create-skill` | Security compliance details |
+| [Phase Completion](phase-completion.md) | `/plan` | Phase completion checklist |
+| [Batch File Modification](batch-file-modification.md) | — | Bulk file changes (procedural) |
 
 ---
 
