@@ -94,3 +94,13 @@ See ClawHub documentation for publishing requirements.
 - Test skills before publishing
 - Follow ClawHub naming conventions
 - Bidirectional cross-references required for new files (`/cross-reference` skill)
+
+---
+
+## Commit Messages
+
+**For agents, commit messages are team communication.** Humans have Slack, standups, and verbal exchanges. Agents have commits. Write them as if talking to a teammate who will read this tomorrow.
+
+- **Format**: `feat(scope): description` — first line is what, body is why
+- **Include learnings**: What surprised you, what patterns emerged, what you'd do differently
+- **Avoid**: `fix bug`, `update files`, `wip` — always explain WHY
