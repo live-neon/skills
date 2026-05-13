@@ -1,3 +1,13 @@
+---
+layer: claude
+summary:
+  core: "Claude Code skills collection — agentic and creative skills, ClawHub compatible, three-layer architecture (agentic, creative, system)"
+  practices: [fail-fast-on-truth, skill-md-format, clawhub-compatible, self-contained-skills]
+  dependencies: []
+status: active
+updated: 2026-05-12
+---
+
 <!--
 CLAUDE.md - Skills ($SKILLS)
 Lines: ~95/200 | Updated: 2026-04-24

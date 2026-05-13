@@ -1,3 +1,12 @@
+---
+layer: vision
+summary:
+  core: "AI that learns from mistakes, not just instructions — failure-anchored learning where R≥3 validated failures become runtime-enforced constraints"
+  dependencies: [garden, automation]
+status: active
+updated: 2026-05-12
+---
+
 # Skills Vision
 
 **Purpose**: Strategic direction for Live Neon skills ecosystem.
